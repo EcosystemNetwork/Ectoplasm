@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   initPriceTicker();
-  hydrateTheme();
 
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
@@ -70,7 +69,6 @@ async function connectWalletHandler(){
   const csprCloud = window.csprclick;
 
   if(!casperWalletProvider && !casperSigner && !csprCloud){
-    updateWalletStatus('No wallet detected');
     alert('No Casper wallet detected. Please install Casper Wallet, CasperSigner, or CSPR.CLOUD.');
     return;
   }
@@ -87,8 +85,6 @@ async function connectWalletHandler(){
       selectedWallet = choice.trim().toLowerCase();
     }
   }
-
-  updateWalletStatus('Checking wallets…');
 
   try{
     let connectedAccount = null;
@@ -143,6 +139,16 @@ async function connectWalletHandler(){
     console.error('Wallet connection failed', err);
     alert('Wallet connection failed: ' + (err.message || err));
     updateWalletStatus('Connection failed');
+  }
+}
+
+async function requestCasperWalletConnection(provider){
+  if(!provider?.requestConnection) return;
+  try{
+    return await provider.requestConnection({appId: CSPR_WALLET_APP_ID});
+  }catch(err){
+    console.warn('Casper Wallet connection with appId failed, retrying without appId', err);
+    return provider.requestConnection();
   }
 }
 
