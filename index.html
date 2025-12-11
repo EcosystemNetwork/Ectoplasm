@@ -256,57 +256,154 @@
             <div class="brand-mark" aria-hidden="true">
               <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
             </div>
-            <h2>Launchpad — ship Casper tokens in minutes</h2>
+            <h2>Pump.fun-style launchpad — go live in minutes</h2>
           </div>
-          <p class="lead">Bootstrap your Casper-native token with audited templates, clear tokenomics, and guided treasury setup. Ship faster while keeping your community safe.</p>
-          <ul class="launch-list">
-            <li>One-click contract deployment with CasperSigner and Casper Wallet</li>
-            <li>Tokenomics guardrails: supply caps, vesting cliffs, and lockups</li>
-            <li>Liquidity bootstrapping: route initial pools directly to Ectoplasm</li>
-            <li>Compliance-ready metadata and on-chain verification helpers</li>
-          </ul>
+          <p class="lead">Drop a Casper-native memecoin with a bonding curve, fair launch rules, and instant liquidity routes. We kept the playful pump.fun vibe while preserving Casper-grade security.</p>
+
+          <div class="pill-row" aria-label="Launchpad highlights">
+            <span class="pill">1-click deploy</span>
+            <span class="pill">Bonding curve</span>
+            <span class="pill">Fair launch</span>
+            <span class="pill">Community first</span>
+          </div>
+
+          <div class="launchpad-metrics" aria-label="Live launch metrics">
+            <div class="metric">
+              <small>Live tokens</small>
+              <strong>48</strong>
+              <span class="muted">shipping on Casper today</span>
+            </div>
+            <div class="metric">
+              <small>Liquidity routed</small>
+              <strong>$2.4M</strong>
+              <span class="muted">to Ectoplasm pools</span>
+            </div>
+            <div class="metric">
+              <small>Avg. fill</small>
+              <strong>92%</strong>
+              <span class="muted">of bonding curve completed</span>
+            </div>
+          </div>
+
+          <div class="launchpad-stream" aria-live="polite">
+            <div class="stream-head">
+              <h3>Trending (pump.fun style)</h3>
+              <a class="muted" href="#" onclick="event.preventDefault();">View feed</a>
+            </div>
+            <ul class="token-stream">
+              <li>
+                <div>
+                  <strong>👻 Ghost Cat</strong> · $GHOST
+                  <span class="muted">+$182% · 1h</span>
+                </div>
+                <span class="chip">Hot</span>
+              </li>
+              <li>
+                <div>
+                  <strong>🧪 PlasmaPunk</strong> · $PLASMA
+                  <span class="muted">+$94% · 1h</span>
+                </div>
+                <span class="chip">New</span>
+              </li>
+              <li>
+                <div>
+                  <strong>🌊 Ripple Ghost</strong> · $RGHST
+                  <span class="muted">+$61% · 1h</span>
+                </div>
+                <span class="chip">Surging</span>
+              </li>
+            </ul>
+          </div>
+
           <div class="launch-actions">
             <a class="btn primary" href="/docs" aria-label="Read the launchpad docs">Launch docs</a>
             <button class="btn ghost" type="button" onclick="alert('Launchpad coming soon — talk to us for early access!')">Request early access</button>
           </div>
         </div>
-        <div class="launchpad-card" aria-label="Launchpad configuration">
-          <h3>Configure your token</h3>
+
+        <div class="launchpad-card pump-card" aria-label="Pump.fun style launch configuration">
+          <div class="card-top">
+            <h3>Spin up a memecoin</h3>
+            <span class="status-badge">Bonding curve demo</span>
+          </div>
           <form class="launch-form" onsubmit="event.preventDefault(); alert('Launchpad submission (demo)');">
+            <div class="grid-two">
+              <label>
+                Project name
+                <input type="text" name="project" placeholder="Ghost Cats" required />
+              </label>
+              <label>
+                Token symbol
+                <input type="text" name="symbol" maxlength="6" placeholder="GHOST" required />
+              </label>
+            </div>
+
             <label>
-              Project name
-              <input type="text" name="project" placeholder="Casper Ninjas" required />
+              Banner / meme image URL
+              <input type="url" name="image" placeholder="https://.../banner.png" />
             </label>
+
+            <div class="grid-two">
+              <label>
+                Total supply
+                <div class="input-row tight">
+                  <input type="number" name="supply" min="1" step="1" placeholder="1,000,000" required />
+                  <span class="suffix">tokens</span>
+                </div>
+              </label>
+              <label>
+                Target liquidity
+                <div class="input-row tight">
+                  <input type="number" name="liquidity" min="0" step="100" placeholder="50,000" />
+                  <span class="suffix">USD</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="grid-two">
+              <label>
+                Bonding curve
+                <select name="curve">
+                  <option value="linear">Linear — slow ramp</option>
+                  <option value="sigmoid">Sigmoid — crowd-friendly</option>
+                  <option value="steep">Steep — degen mode</option>
+                </select>
+              </label>
+              <label>
+                Website / socials
+                <input type="url" name="site" placeholder="https://x.com/ghostcat" />
+              </label>
+            </div>
+
             <label>
-              Token symbol
-              <input type="text" name="symbol" maxlength="6" placeholder="NINJA" required />
-            </label>
-            <label>
-              Max supply
+              Hype budget (promo)
               <div class="input-row tight">
-                <input type="number" name="supply" min="1" step="1" placeholder="1,000,000" required />
-                <span class="suffix">CSPR</span>
+                <input type="range" id="promoBudget" name="promo" min="0" max="5000" value="1200" step="100" aria-describedby="promoBudgetLabel" />
+                <span class="suffix" id="promoBudgetLabel">1,200 CSPR</span>
               </div>
             </label>
-            <label>
-              Initial liquidity
-              <div class="input-row tight">
-                <input type="number" name="liquidity" min="0" step="100" placeholder="50,000" />
-                <span class="suffix">USD</span>
-              </div>
-            </label>
-            <label>
-              Vesting schedule
-              <select name="vesting">
-                <option value="none">No vesting</option>
-                <option value="3m">3 month cliff</option>
-                <option value="6m">6 month cliff</option>
-                <option value="12m">12 month linear</option>
-              </select>
-            </label>
+
+            <div class="launch-flags" role="group" aria-label="Launch rules">
+              <label class="flag">
+                <input type="checkbox" name="fairLaunch" checked />
+                <span>Fair launch: no team pre-mint</span>
+              </label>
+              <label class="flag">
+                <input type="checkbox" name="lockLiquidity" checked />
+                <span>Auto-lock first liquidity</span>
+              </label>
+              <label class="flag">
+                <input type="checkbox" name="antiBot" />
+                <span>Anti-bot guard for first block</span>
+              </label>
+            </div>
+
             <div class="launch-form-footer">
-              <small class="muted">Deploys to testnet for demo — requires Casper wallet signature.</small>
-              <button class="btn primary full" type="submit">Prepare launch</button>
+              <small class="muted">Demo only — deploys to Casper testnet with bonding curve presets inspired by pump.fun.</small>
+              <div class="grid-two">
+                <button class="btn ghost full" type="button" onclick="alert('Preview bonding curve (demo)');">Preview curve</button>
+                <button class="btn primary full" type="submit">Start launch</button>
+              </div>
             </div>
           </form>
         </div>

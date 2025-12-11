@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (connectWallet) connectWallet.addEventListener('click', connectWalletHandler);
 
   setupSwapDemo();
+  setupPromoSlider();
 });
 
 function hydrateTheme(){
@@ -205,4 +206,18 @@ function updateWalletStatus(message){
 
 function demoSwap(){
   alert('Demo swap executed (UI only). Connect CasperSigner or CSPR.CLOUD wallet to enable real swaps.');
+}
+
+function setupPromoSlider(){
+  const slider = document.getElementById('promoBudget');
+  const label = document.getElementById('promoBudgetLabel');
+  if(!slider || !label) return;
+
+  const render = () => {
+    const value = Number(slider.value || 0);
+    label.textContent = `${value.toLocaleString()} CSPR`;
+  };
+
+  slider.addEventListener('input', render);
+  render();
 }
