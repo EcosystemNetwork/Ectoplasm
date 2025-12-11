@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ectoplasm — Liquidity</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <a class="logo" href="/">
+        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+        <span>Ectoplasm</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Landing</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/launchpad.html">Launchpad</a>
+        <a href="/swap.html">Swap</a>
+        <a href="/liquidity.html" aria-current="page">Liquidity</a>
+        <a href="/privacy.html">Privacy</a>
+        <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
+        <button id="connectWallet" class="btn primary">Connect Wallet</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="brand-badge">
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <span>Liquidity hub</span>
+          </div>
+          <h1>Deep liquidity built around $ECTO</h1>
+          <p class="lead">Pair $ECTO with CSPR, stables, and ecosystem tokens to grow depth and reduce volatility. LPs earn swap fees and programmable rewards.</p>
+          <div class="hero-cta">
+            <a href="#pools" class="btn primary large">View pools</a>
+            <a href="/swap.html" class="btn ghost large">Trade now</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="card-top">
+            <h2>LP highlights</h2>
+            <span class="status-badge">Protections</span>
+          </div>
+          <ul class="launch-list">
+            <li>Adaptive fees for volatile vs. stable pairs</li>
+            <li>Smart order routing through deep books</li>
+            <li>Impermanent loss protection options</li>
+            <li>Auto-compounding vaults for select pools</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="pools" class="section">
+      <div class="container pools-grid">
+        <article class="pool-card">
+          <h3>Prime pairs</h3>
+          <p>Create pools like CSPR/$ECTO and USDC/$ECTO with auto-fee tiers and curated routing that keep spreads tight for traders.</p>
+          <ul>
+            <li>Adaptive fees for volatile vs. stable pairs</li>
+            <li>Deep routing through our smart order router</li>
+            <li>On-chain analytics to monitor utilization</li>
+          </ul>
+        </article>
+        <article class="pool-card">
+          <h3>LP incentives</h3>
+          <p>Stake your LP tokens to earn extra $ECTO emissions and partner rewards with built-in impermanent loss mitigations.</p>
+          <ul>
+            <li>Epoch-based boosts for long-term liquidity</li>
+            <li>Auto-compounding vaults for select pools</li>
+            <li>Transparent, auditable reward schedules</li>
+          </ul>
+        </article>
+        <article class="pool-card">
+          <h3>Risk controls</h3>
+          <p>Time-locked upgrades, curated listings, and progressive disclosure policies keep LPs informed and capital safer.</p>
+          <ul>
+            <li>On-chain guardrails for new assets</li>
+            <li>Multi-sig governance and audits</li>
+            <li>Clear treasury disclosures</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="/">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+        </a>
+        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="/docs">Docs</a>
+        <a href="/whitepaper.pdf">Whitepaper</a>
+        <a href="/audit-report.pdf">Audit</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ectoplasm — User Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <a class="logo" href="/">
+        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+        <span>Ectoplasm</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Landing</a>
+        <a href="/dashboard.html" aria-current="page">Dashboard</a>
+        <a href="/launchpad.html">Launchpad</a>
+        <a href="/swap.html">Swap</a>
+        <a href="/liquidity.html">Liquidity</a>
+        <a href="/privacy.html">Privacy</a>
+        <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
+        <button id="connectWallet" class="btn primary">Connect Wallet</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="brand-badge">
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <span>Daily return loop</span>
+          </div>
+          <h1>Your Ectoplasm dashboard</h1>
+          <p class="lead">Track your streak, finish daily tasks, and clear weekly quests to keep users returning. Rewards and XP ladder up to unlock new launchpad perks.</p>
+          <div class="hero-cta">
+            <a href="#daily" class="btn primary large">Finish tasks</a>
+            <a href="/launchpad.html" class="btn ghost large">Spend rewards</a>
+          </div>
+          <ul class="trust-list">
+            <li>Return streak: <strong id="streakDays">--</strong> days</li>
+            <li>XP: <strong id="xpTotal">--</strong></li>
+            <li>Quests refresh daily</li>
+          </ul>
+        </div>
+        <div class="hero-card" aria-labelledby="streak-title">
+          <div class="card-top">
+            <h2 id="streak-title">Streak & rewards</h2>
+            <span class="status-badge" id="walletStatus">Wallet disconnected</span>
+          </div>
+          <div class="streak-grid">
+            <div>
+              <p class="muted">Current streak</p>
+              <strong id="streakValue" class="streak-number">7</strong>
+              <small class="muted">Daily check-ins keep XP doubling</small>
+            </div>
+            <div>
+              <p class="muted">Weekly quest progress</p>
+              <div class="progress">
+                <div class="progress-bar" id="weeklyProgress" style="width: 40%"></div>
+              </div>
+              <small class="muted"><span id="weeklyPercent">40</span>% complete</small>
+            </div>
+          </div>
+          <div class="reward-row" id="rewardRow" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="daily" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+          </div>
+          <h2>Daily tasks</h2>
+        </div>
+        <p class="lead">A simple checklist for the day. Come back tomorrow to refresh the list and maintain your streak.</p>
+        <ul class="task-list" id="dailyTasks" aria-live="polite"></ul>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+          </div>
+          <h2>Weekly quests</h2>
+        </div>
+        <p class="lead">Extended objectives that encourage deeper engagement across the product surface.</p>
+        <div class="quest-grid" id="questGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+          </div>
+          <h2>Redeem rewards</h2>
+        </div>
+        <p class="lead">Swap XP for perks: fee rebates, launchpad boosts, and privacy pool multipliers.</p>
+        <div class="reward-grid" id="rewardCatalog"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="/">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+        </a>
+        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="/docs">Docs</a>
+        <a href="/whitepaper.pdf">Whitepaper</a>
+        <a href="/audit-report.pdf">Audit</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
