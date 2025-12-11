@@ -48,7 +48,8 @@ vercel --prod
 1. Replace placeholder images in `/assets/` with your real graphics (logo, OG image, audit badges)
 2. Update `whitepaper.pdf` and `audit-report.pdf` with actual documents
 3. Hook up wallet connect:
-   - Integrate CasperSigner or your preferred Casper wallet according to their docs
+   - Supports CasperSigner and CSPR.CLOUD wallet out of the box
+   - Extend with additional Casper wallets as needed according to their docs
    - Implement on-chain swap interactions in a secured backend or client-side contract calls
 4. Replace the CoinGecko API call in `script.js` if you prefer your own price oracle
 5. Update the documentation page in `docs/index.html` with your actual documentation

@@ -144,9 +144,9 @@ After deployment, you should:
    - Customize colors and branding
 
 3. **Integrate Wallet:**
-   - Implement CasperSigner integration
+   - CasperSigner and CSPR.CLOUD wallet support included
    - Connect to your smart contracts
-   - Test wallet connection flow
+   - Test wallet connection flow with both wallet types
 
 4. **Add Analytics:**
    - Set up Vercel Analytics or Google Analytics
