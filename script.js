@@ -65,7 +65,7 @@ async function connectWalletHandler(){
   // If both wallets available, let user choose
   let selectedWallet = null;
   if(hasCasperSigner && hasCsprCloud){
-    const choice = confirm('Click OK for CSPR.CLOUD wallet, Cancel for CasperSigner');
+    const choice = confirm('Multiple Casper wallets detected.\n\nClick OK to connect with CSPR.CLOUD\nClick Cancel to connect with CasperSigner');
     selectedWallet = choice ? 'csprcloud' : 'caspersigner';
   } else if(hasCsprCloud){
     selectedWallet = 'csprcloud';
@@ -83,6 +83,8 @@ async function connectWalletHandler(){
       if(accounts){
         connectedAccount = accounts;
         console.log('Connected to CSPR.CLOUD:', connectedAccount);
+      } else {
+        throw new Error('No active account found in CSPR.CLOUD wallet');
       }
     } else {
       // CasperSigner connection
