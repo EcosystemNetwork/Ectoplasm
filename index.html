@@ -22,6 +22,7 @@
       <nav class="nav" aria-label="Primary navigation">
         <a href="#features">Features</a>
         <a href="#how-it-works">How it works</a>
+        <a href="#launchpad">Launchpad</a>
         <a href="#roadmap">Roadmap</a>
         <a href="#audit">Security</a>
         <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
@@ -165,6 +166,65 @@
           <li><strong>Swap or provide liquidity</strong> — intuitive UI with advanced options.</li>
           <li><strong>Earn and track</strong> — transparent earnings and position history.</li>
         </ol>
+      </div>
+    </section>
+
+    <section id="launchpad" class="section">
+      <div class="container launchpad">
+        <div class="launchpad-copy">
+          <h2>Launchpad — ship Casper tokens in minutes</h2>
+          <p class="lead">Bootstrap your Casper-native token with audited templates, clear tokenomics, and guided treasury setup. Ship faster while keeping your community safe.</p>
+          <ul class="launch-list">
+            <li>One-click contract deployment with CasperSigner and Casper Wallet</li>
+            <li>Tokenomics guardrails: supply caps, vesting cliffs, and lockups</li>
+            <li>Liquidity bootstrapping: route initial pools directly to Ectoplasm</li>
+            <li>Compliance-ready metadata and on-chain verification helpers</li>
+          </ul>
+          <div class="launch-actions">
+            <a class="btn primary" href="/docs" aria-label="Read the launchpad docs">Launch docs</a>
+            <button class="btn ghost" type="button" onclick="alert('Launchpad coming soon — talk to us for early access!')">Request early access</button>
+          </div>
+        </div>
+        <div class="launchpad-card" aria-label="Launchpad configuration">
+          <h3>Configure your token</h3>
+          <form class="launch-form" onsubmit="event.preventDefault(); alert('Launchpad submission (demo)');">
+            <label>
+              Project name
+              <input type="text" name="project" placeholder="Casper Ninjas" required />
+            </label>
+            <label>
+              Token symbol
+              <input type="text" name="symbol" maxlength="6" placeholder="NINJA" required />
+            </label>
+            <label>
+              Max supply
+              <div class="input-row tight">
+                <input type="number" name="supply" min="1" step="1" placeholder="1,000,000" required />
+                <span class="suffix">CSPR</span>
+              </div>
+            </label>
+            <label>
+              Initial liquidity
+              <div class="input-row tight">
+                <input type="number" name="liquidity" min="0" step="100" placeholder="50,000" />
+                <span class="suffix">USD</span>
+              </div>
+            </label>
+            <label>
+              Vesting schedule
+              <select name="vesting">
+                <option value="none">No vesting</option>
+                <option value="3m">3 month cliff</option>
+                <option value="6m">6 month cliff</option>
+                <option value="12m">12 month linear</option>
+              </select>
+            </label>
+            <div class="launch-form-footer">
+              <small class="muted">Deploys to testnet for demo — requires Casper wallet signature.</small>
+              <button class="btn primary full" type="submit">Prepare launch</button>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
