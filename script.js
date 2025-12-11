@@ -133,5 +133,5 @@ function setupSwapDemo(){
 }
 
 function demoSwap(){
-  alert('Demo swap executed (UI only). Connect CasperSigner to enable real swaps.');
+  alert('Demo swap executed (UI only). Connect CasperSigner or CSPR.CLOUD wallet to enable real swaps.');
 }
