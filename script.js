@@ -79,7 +79,10 @@ function setupSwapDemo(){
   const toAmt = document.getElementById('toAmount');
   const priceImpact = document.getElementById('priceImpact');
 
-  if (!fromAmt || !toAmt || !priceImpact) return;
+  if (!fromAmt || !toAmt || !priceImpact) {
+    console.log('Swap demo elements not found on this page, skipping setup.');
+    return;
+  }
 
   fromAmt.addEventListener('input', () => {
     // naive demo: 1 CSPR = 0.5 ECT for UI demo
