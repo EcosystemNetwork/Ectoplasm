@@ -22,6 +22,7 @@
       <nav class="nav" aria-label="Primary navigation">
         <a href="#features">Features</a>
         <a href="#how-it-works">How it works</a>
+        <a href="#launchpad">Launchpad</a>
         <a href="#roadmap">Roadmap</a>
         <a href="#audit">Security</a>
         <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
@@ -47,7 +48,10 @@
           </ul>
         </div>
         <div class="hero-card" id="swap" aria-labelledby="swap-title">
-          <h2 id="swap-title">Swap (Demo)</h2>
+          <div class="card-top">
+            <h2 id="swap-title">Swap (Demo)</h2>
+            <span id="walletStatus" class="status-badge">Wallet disconnected</span>
+          </div>
           <form class="swap-card" onsubmit="event.preventDefault(); demoSwap();">
             <label>
               From
@@ -72,6 +76,21 @@
             <div class="swap-meta">
               <span>Price impact: <strong id="priceImpact">0.00%</strong></span>
               <span>Fee: <strong>0.25%</strong></span>
+            </div>
+            <div class="swap-controls">
+              <label class="inline">
+                Slippage
+                <div class="input-row tight">
+                  <input id="slippage" type="number" inputmode="decimal" step="0.1" min="0" aria-label="Slippage tolerance" value="0.5" />
+                  <span class="suffix">%</span>
+                </div>
+              </label>
+              <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
+            </div>
+            <div class="quick-amounts" aria-label="Quick amount buttons">
+              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='10'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">10</button>
+              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='100'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">100</button>
+              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='250'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">250</button>
             </div>
             <div class="swap-actions">
               <button type="submit" class="btn primary full">Swap</button>
@@ -114,6 +133,31 @@
       </div>
     </section>
 
+    <section class="section alt">
+      <div class="container stats-grid" aria-label="Protocol performance highlights">
+        <div class="stat-card">
+          <p class="muted">24h Volume</p>
+          <strong>$182M</strong>
+          <small>Deep liquidity across majors</small>
+        </div>
+        <div class="stat-card">
+          <p class="muted">Total Value Locked</p>
+          <strong>$612M</strong>
+          <small>Growing Casper-native liquidity</small>
+        </div>
+        <div class="stat-card">
+          <p class="muted">Average Confirmation</p>
+          <strong>1.3s</strong>
+          <small>Fast finality with safety checks</small>
+        </div>
+        <div class="stat-card">
+          <p class="muted">Uptime</p>
+          <strong>99.98%</strong>
+          <small>Monitored infra & failover</small>
+        </div>
+      </div>
+    </section>
+
     <section id="how-it-works" class="section alt">
       <div class="container">
         <h2>How it works</h2>
@@ -122,6 +166,65 @@
           <li><strong>Swap or provide liquidity</strong> — intuitive UI with advanced options.</li>
           <li><strong>Earn and track</strong> — transparent earnings and position history.</li>
         </ol>
+      </div>
+    </section>
+
+    <section id="launchpad" class="section">
+      <div class="container launchpad">
+        <div class="launchpad-copy">
+          <h2>Launchpad — ship Casper tokens in minutes</h2>
+          <p class="lead">Bootstrap your Casper-native token with audited templates, clear tokenomics, and guided treasury setup. Ship faster while keeping your community safe.</p>
+          <ul class="launch-list">
+            <li>One-click contract deployment with CasperSigner and Casper Wallet</li>
+            <li>Tokenomics guardrails: supply caps, vesting cliffs, and lockups</li>
+            <li>Liquidity bootstrapping: route initial pools directly to Ectoplasm</li>
+            <li>Compliance-ready metadata and on-chain verification helpers</li>
+          </ul>
+          <div class="launch-actions">
+            <a class="btn primary" href="/docs" aria-label="Read the launchpad docs">Launch docs</a>
+            <button class="btn ghost" type="button" onclick="alert('Launchpad coming soon — talk to us for early access!')">Request early access</button>
+          </div>
+        </div>
+        <div class="launchpad-card" aria-label="Launchpad configuration">
+          <h3>Configure your token</h3>
+          <form class="launch-form" onsubmit="event.preventDefault(); alert('Launchpad submission (demo)');">
+            <label>
+              Project name
+              <input type="text" name="project" placeholder="Casper Ninjas" required />
+            </label>
+            <label>
+              Token symbol
+              <input type="text" name="symbol" maxlength="6" placeholder="NINJA" required />
+            </label>
+            <label>
+              Max supply
+              <div class="input-row tight">
+                <input type="number" name="supply" min="1" step="1" placeholder="1,000,000" required />
+                <span class="suffix">CSPR</span>
+              </div>
+            </label>
+            <label>
+              Initial liquidity
+              <div class="input-row tight">
+                <input type="number" name="liquidity" min="0" step="100" placeholder="50,000" />
+                <span class="suffix">USD</span>
+              </div>
+            </label>
+            <label>
+              Vesting schedule
+              <select name="vesting">
+                <option value="none">No vesting</option>
+                <option value="3m">3 month cliff</option>
+                <option value="6m">6 month cliff</option>
+                <option value="12m">12 month linear</option>
+              </select>
+            </label>
+            <div class="launch-form-footer">
+              <small class="muted">Deploys to testnet for demo — requires Casper wallet signature.</small>
+              <button class="btn primary full" type="submit">Prepare launch</button>
+            </div>
+          </form>
+        </div>
       </div>
     </section>
 
@@ -144,6 +247,11 @@
           <img src="/assets/audit-placeholder.svg" alt="Audit badge" />
           <img src="/assets/insurance-placeholder.svg" alt="Insurance" />
         </div>
+        <ul class="safety-list">
+          <li>Deterministic builds and reproducible deployments</li>
+          <li>Multi-sig controlled upgrades with time-locked changes</li>
+          <li>Continuous monitoring for MEV and sandwich vectors</li>
+        </ul>
       </div>
     </section>
   </main>
