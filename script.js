@@ -51,22 +51,62 @@ function toggleTheme(){
   }
 }
 
-// Wallet connect scaffolding using CasperSigner
+// Wallet connect with support for CasperSigner and CSPR.CLOUD
 async function connectWalletHandler(){
-  // CasperSigner is the recommended wallet for Casper dApps
-  // https://docs.casper.network/clients/wallets/caspersigner
-  // This is a minimal example — please enhance for production (error handling, UI states).
-  if(!window.casperlabsHelper && !window.CasperWallet){
-    alert('CasperSigner not detected. Please install CasperSigner or use a supported wallet.');
+  // Detect available wallets
+  const hasCasperSigner = window.casperlabsHelper || window.CasperWallet;
+  const hasCsprCloud = window.csprclick;
+  
+  if(!hasCasperSigner && !hasCsprCloud){
+    alert('No Casper wallet detected. Please install CasperSigner or CSPR.CLOUD wallet.');
     return;
   }
+  
+  // If both wallets available, let user choose
+  let selectedWallet = null;
+  if(hasCasperSigner && hasCsprCloud){
+    const choice = confirm('Multiple Casper wallets detected.\n\nClick OK to connect with CSPR.CLOUD\nClick Cancel to connect with CasperSigner');
+    selectedWallet = choice ? 'csprcloud' : 'caspersigner';
+  } else if(hasCsprCloud){
+    selectedWallet = 'csprcloud';
+  } else {
+    selectedWallet = 'caspersigner';
+  }
+  
   try{
-    // Example using Casper Signer protocol; actual integration depends on the wallet API you choose.
-    // TODO: replace this flow with the latest CasperSigner connect method; this is a placeholder.
-    // Many wallets inject window.casperlabsHelper or support an external connection protocol.
-    console.log('Attempting wallet connect (placeholder).');
-    // Set a UI state or update button text:
-    document.getElementById('connectWallet').textContent = 'Connected';
+    let connectedAccount = null;
+    
+    if(selectedWallet === 'csprcloud'){
+      // CSPR.CLOUD wallet connection
+      console.log('Connecting to CSPR.CLOUD wallet...');
+      const accounts = await window.csprclick.getActiveAccount();
+      if(accounts){
+        connectedAccount = accounts;
+        console.log('Connected to CSPR.CLOUD:', connectedAccount);
+      } else {
+        throw new Error('No active account found in CSPR.CLOUD wallet');
+      }
+    } else {
+      // CasperSigner connection
+      console.log('Connecting to CasperSigner...');
+      // CasperSigner connection flow
+      if(window.casperlabsHelper){
+        connectedAccount = await window.casperlabsHelper.requestConnection();
+      } else if(window.CasperWallet){
+        connectedAccount = await window.CasperWallet.requestConnection();
+      }
+      console.log('Connected to CasperSigner:', connectedAccount);
+    }
+    
+    // Update UI on successful connection
+    const connectBtn = document.getElementById('connectWallet');
+    if(connectedAccount){
+      connectBtn.textContent = 'Connected';
+      connectBtn.classList.add('connected');
+      // Store wallet type for later use
+      window.connectedWallet = selectedWallet;
+      window.connectedAccount = connectedAccount;
+    }
   }catch(err){
     console.error('Wallet connection failed', err);
     alert('Wallet connection failed: ' + (err.message || err));
@@ -95,5 +135,5 @@ function setupSwapDemo(){
 }
 
 function demoSwap(){
-  alert('Demo swap executed (UI only). Connect CasperSigner to enable real swaps.');
+  alert('Demo swap executed (UI only). Connect CasperSigner or CSPR.CLOUD wallet to enable real swaps.');
 }
