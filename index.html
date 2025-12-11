@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ectoplasm — Fast, Secure DEX on Casper</title>
+  <meta name="description" content="Ectoplasm: the next-generation decentralized exchange on the Casper Network — fast, low-fee swaps, advanced orders, and audited smart contracts." />
+  <meta property="og:title" content="Ectoplasm — Fast, Secure DEX on Casper" />
+  <meta property="og:description" content="Next-generation DEX on Casper Network. Swap, provide liquidity, and earn securely with audited contracts and industry-leading UX." />
+  <meta property="og:image" content="/assets/og-image.png" />
+  <link rel="icon" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <a class="logo" href="/">
+        <!-- inline simple logo -->
+        <svg width="38" height="38" viewBox="0 0 24 24" aria-hidden="true"><defs/><path fill="currentColor" d="M12 2L2 7v10l10 5 10-5V7z"/></svg>
+        <span>Ectoplasm</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#audit">Security</a>
+        <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
+        <button id="connectWallet" class="btn primary">Connect Wallet</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <h1>Trade instantly on Casper — low fees, high security.</h1>
+          <p class="lead">Ectoplasm delivers fast, gas-efficient swaps and advanced liquidity tools built for the Casper ecosystem. Audited contracts. Intuitive UX. Built for traders and builders.</p>
+          <div class="hero-cta">
+            <a href="#swap" class="btn primary large">Try Swap</a>
+            <a href="#features" class="btn ghost large">Explore Features</a>
+          </div>
+          <ul class="trust-list" aria-hidden="false">
+            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
+            <li>Audited smart contracts</li>
+            <li>Low & transparent fees</li>
+          </ul>
+        </div>
+        <div class="hero-card" id="swap" aria-labelledby="swap-title">
+          <h2 id="swap-title">Swap (Demo)</h2>
+          <form class="swap-card" onsubmit="event.preventDefault(); demoSwap();">
+            <label>
+              From
+              <div class="input-row">
+                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="From amount"/>
+                <select id="fromToken" aria-label="From token">
+                  <option value="cspr">CSPR</option>
+                  <option value="ect">ECT</option>
+                </select>
+              </div>
+            </label>
+            <label>
+              To
+              <div class="input-row">
+                <input id="toAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="To amount" disabled/>
+                <select id="toToken" aria-label="To token">
+                  <option value="ect">ECT</option>
+                  <option value="cspr">CSPR</option>
+                </select>
+              </div>
+            </label>
+            <div class="swap-meta">
+              <span>Price impact: <strong id="priceImpact">0.00%</strong></span>
+              <span>Fee: <strong>0.25%</strong></span>
+            </div>
+            <div class="swap-actions">
+              <button type="submit" class="btn primary full">Swap</button>
+            </div>
+            <small class="muted">Demo UI: connect CasperSigner to enable live swaps. All on-chain transactions are signed by your wallet.</small>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="container">
+        <h2>Why Ectoplasm is superior</h2>
+        <div class="features-grid">
+          <article>
+            <h3>Optimized for Casper</h3>
+            <p>Native integration with Casper primitives and CasperSigner for the best performance and UX on-chain.</p>
+          </article>
+          <article>
+            <h3>Audited & Transparent</h3>
+            <p>Security-first: audits, immutability, and on-chain verifiability of all contracts and pools.</p>
+          </article>
+          <article>
+            <h3>Lower Fees & Slippage Controls</h3>
+            <p>Customizable fee tiers and advanced order types to reduce slippage and improve execution.</p>
+          </article>
+          <article>
+            <h3>Limit Orders & Advanced Orders</h3>
+            <p>Exchange-grade order types for traders—limit, stop, and TWAP orders coming soon.</p>
+          </article>
+          <article>
+            <h3>Liquidity Farming with Protections</h3>
+            <p>Impermanent loss minimizers, fee rebates, and flexible farm epochs for liquidity providers.</p>
+          </article>
+          <article>
+            <h3>Accessible UX</h3>
+            <p>Progressive onboarding, gas estimations, and clear confirmations to win users from competitors.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section alt">
+      <div class="container">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><strong>Connect your wallet</strong> — CasperSigner ready.</li>
+          <li><strong>Swap or provide liquidity</strong> — intuitive UI with advanced options.</li>
+          <li><strong>Earn and track</strong> — transparent earnings and position history.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="roadmap" class="section">
+      <div class="container">
+        <h2>Roadmap</h2>
+        <ul class="roadmap">
+          <li><strong>Q1:</strong> Mainnet launch, basic swaps, liquidity pools</li>
+          <li><strong>Q2:</strong> Limit orders, LP protections, audits</li>
+          <li><strong>Q3:</strong> Cross-chain bridges, more assets, governance</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="audit" class="section alt">
+      <div class="container">
+        <h2>Security & Audits</h2>
+        <p>We prioritize safety. Contracts will be audited by top firms and results published on-chain and in our docs.</p>
+        <div class="badges">
+          <img src="/assets/audit-placeholder.svg" alt="Audit badge" />
+          <img src="/assets/insurance-placeholder.svg" alt="Insurance" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="/">
+          <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2L2 7v10l10 5 10-5V7z"/></svg>
+          <span>Ectoplasm</span>
+        </a>
+        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="/docs">Docs</a>
+        <a href="/whitepaper.pdf">Whitepaper</a>
+        <a href="/audit-report.pdf">Audit</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
