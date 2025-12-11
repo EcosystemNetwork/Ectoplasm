@@ -18,6 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
   setupSwapDemo();
 });
 
+function hydrateTheme(){
+  const stored = localStorage.getItem('ectoplasm-theme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  const desired = stored || (prefersLight ? 'light' : 'dark');
+  setTheme(desired);
+}
+
 async function initPriceTicker(){
   const el = document.getElementById('priceTicker');
   if (!el) return; // Element not on this page
@@ -40,17 +47,19 @@ async function initPriceTicker(){
 }
 
 function toggleTheme(){
-  const btn = document.getElementById('themeToggle');
   const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-  if(isDark){
-    document.documentElement.setAttribute('data-theme', 'light');
-    btn.textContent = 'Light';
-    btn.setAttribute('aria-pressed', 'true');
-  }else{
-    document.documentElement.setAttribute('data-theme', 'dark');
-    btn.textContent = 'Dark';
-    btn.setAttribute('aria-pressed', 'false');
+  setTheme(isDark ? 'light' : 'dark');
+}
+
+function setTheme(theme){
+  const btn = document.getElementById('themeToggle');
+  const next = theme === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', theme);
+  if (btn){
+    btn.textContent = `${next} mode`;
+    btn.setAttribute('aria-pressed', theme === 'light');
   }
+  localStorage.setItem('ectoplasm-theme', theme);
 }
 
 // Wallet connect with support for CasperWallet (CSPR Wallet), CasperSigner and CSPR.CLOUD
@@ -124,10 +133,22 @@ async function connectWalletHandler(){
       connectBtn.classList.add('connected');
       window.connectedWallet = selectedWallet;
       window.connectedAccount = connectedAccount;
+      updateWalletStatus(`Connected via ${selectedWallet}`);
     }
   }catch(err){
     console.error('Wallet connection failed', err);
     alert('Wallet connection failed: ' + (err.message || err));
+    updateWalletStatus('Connection failed');
+  }
+}
+
+async function requestCasperWalletConnection(provider){
+  if(!provider?.requestConnection) return;
+  try{
+    return await provider.requestConnection({appId: CSPR_WALLET_APP_ID});
+  }catch(err){
+    console.warn('Casper Wallet connection with appId failed, retrying without appId', err);
+    return provider.requestConnection();
   }
 }
 
@@ -146,6 +167,8 @@ function setupSwapDemo(){
   const fromAmt = document.getElementById('fromAmount');
   const toAmt = document.getElementById('toAmount');
   const priceImpact = document.getElementById('priceImpact');
+  const slippage = document.getElementById('slippage');
+  const swapHealth = document.getElementById('swapHealth');
 
   if (!fromAmt || !toAmt || !priceImpact) {
     console.log('Swap demo elements not found on this page, skipping setup.');
@@ -159,7 +182,25 @@ function setupSwapDemo(){
     toAmt.value = (val * rate).toFixed(6);
     const impact = Math.min(0.5, (val/1000)); // demo price impact
     priceImpact.textContent = (impact*100).toFixed(2) + '%';
+    if (swapHealth){
+      const severity = impact > 0.2 ? 'warn' : 'good';
+      swapHealth.textContent = severity === 'warn' ? 'High impact — adjust size' : 'Optimal routing';
+      swapHealth.dataset.state = severity;
+    }
   });
+
+  if(slippage){
+    slippage.addEventListener('input', () => {
+      slippage.value = Math.min(Math.max(parseFloat(slippage.value) || 0.1, 0.1), 5).toString();
+    });
+  }
+}
+
+function updateWalletStatus(message){
+  const badge = document.getElementById('walletStatus');
+  if(badge){
+    badge.textContent = message;
+  }
 }
 
 function demoSwap(){
