@@ -267,19 +267,10 @@
             <span class="pill">Community first</span>
           </div>
 
-          <div class="rail-head">
-            <div>
-              <p class="muted">Live pump.fun-style rail</p>
-              <strong>50 mock tokens racing in a row</strong>
-            </div>
-            <button class="btn primary" type="button" data-open-mint>Create token</button>
-          </div>
-          <div class="token-rail" id="tokenRail" role="list" aria-label="Pump.fun style live token rail"></div>
-
           <div class="launchpad-metrics" aria-label="Live launch metrics">
             <div class="metric">
               <small>Live tokens</small>
-              <strong>50</strong>
+              <strong>48</strong>
               <span class="muted">shipping on Casper today</span>
             </div>
             <div class="metric">
@@ -335,47 +326,7 @@
             <h3>Spin up a memecoin</h3>
             <span class="status-badge">Bonding curve demo</span>
           </div>
-          <div class="card-body">
-            <p class="muted">Preview the guardrails we ship for every Casper launch: fair bonding curves, auto-liquidity, and anti-bot warmups.</p>
-            <div class="launch-card-tags">
-              <span class="pill">No team pre-mint</span>
-              <span class="pill">Liquidity lock</span>
-              <span class="pill">Anti-bot gate</span>
-              <span class="pill">Promo budget</span>
-            </div>
-            <div class="quick-stats">
-              <div>
-                <small class="muted">Default supply</small>
-                <strong>1,000,000</strong>
-              </div>
-              <div>
-                <small class="muted">Curve preset</small>
-                <strong>Sigmoid</strong>
-              </div>
-              <div>
-                <small class="muted">Launch fee</small>
-                <strong>0.25%</strong>
-              </div>
-            </div>
-            <div class="launch-actions">
-              <button class="btn primary full" type="button" data-open-mint>Create token</button>
-              <button class="btn ghost full" type="button" onclick="alert('Preview bonding curve (demo)');">Preview bonding curve</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mint-drawer" id="mintDrawer" aria-hidden="true" role="dialog" aria-label="Create a mock token">
-        <div class="mint-drawer__backdrop" data-close-mint></div>
-        <div class="mint-drawer__panel">
-          <div class="drawer-head">
-            <div>
-              <p class="muted">Create your own</p>
-              <h3>Mint a Casper memecoin</h3>
-            </div>
-            <button class="icon-button" type="button" aria-label="Close mint drawer" data-close-mint>×</button>
-          </div>
-          <form class="launch-form" id="mintForm">
+          <form class="launch-form" onsubmit="event.preventDefault(); alert('Launchpad submission (demo)');">
             <div class="grid-two">
               <label>
                 Project name
@@ -451,7 +402,7 @@
               <small class="muted">Demo only — deploys to Casper testnet with bonding curve presets inspired by pump.fun.</small>
               <div class="grid-two">
                 <button class="btn ghost full" type="button" onclick="alert('Preview bonding curve (demo)');">Preview curve</button>
-                <button class="btn primary full" type="submit">Mint mock token</button>
+                <button class="btn primary full" type="submit">Start launch</button>
               </div>
             </div>
           </form>
