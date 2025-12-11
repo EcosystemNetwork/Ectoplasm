@@ -80,6 +80,16 @@ main{flex:1;display:block}
 .chip{border:1px solid rgba(232,255,249,0.12);background:var(--glass);color:inherit;padding:8px 12px;border-radius:999px;cursor:pointer}
 .chip:hover{border-color:rgba(255,255,255,0.15)}
 
+.status-badge{font-size:0.85rem;padding:6px 10px;border-radius:999px;background:var(--glass);color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
+.swap-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0}
+.swap-controls .inline{flex:1}
+.suffix{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02)}
+.swap-health{padding:10px 12px;border-radius:10px;background:rgba(0,255,170,0.08);border:1px solid rgba(0,255,170,0.15);color:#17d29a;font-weight:600;font-size:0.9rem}
+.swap-health[data-state="warn"]{background:rgba(255,180,0,0.1);border-color:rgba(255,180,0,0.24);color:#ffb400}
+.quick-amounts{display:flex;gap:8px;margin:10px 0}
+.chip{border:1px solid rgba(255,255,255,0.08);background:var(--glass);color:inherit;padding:8px 12px;border-radius:999px;cursor:pointer}
+.chip:hover{border-color:rgba(255,255,255,0.15)}
+
 .swap-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:0.9rem;margin-bottom:12px}
 .swap-actions{display:block}
 
