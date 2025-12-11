@@ -1,18 +1,20 @@
 // Basic interactions: live price ticker, theme toggle, wallet connect scaffolding.
 // NOTE: For production, handle errors, rate limits, CORS, and secure API keys where needed.
 
+const CSPR_WALLET_APP_ID = '019ae32b-4115-7d44-b2c3-a8091354c9a2';
+
 document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
-  
+
   initPriceTicker();
-  
+
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-  
+
   const connectWallet = document.getElementById('connectWallet');
   if (connectWallet) connectWallet.addEventListener('click', connectWalletHandler);
-  
+
   setupSwapDemo();
 });
 
@@ -51,45 +53,60 @@ function toggleTheme(){
   }
 }
 
-// Wallet connect with support for CasperSigner and CSPR.CLOUD
+// Wallet connect with support for CasperWallet (CSPR Wallet), CasperSigner and CSPR.CLOUD
 async function connectWalletHandler(){
-  // Detect available wallets
-  const hasCasperSigner = window.casperlabsHelper || window.CasperWallet;
-  const hasCsprCloud = window.csprclick;
-  
-  if(!hasCasperSigner && !hasCsprCloud){
-    alert('No Casper wallet detected. Please install CasperSigner or CSPR.CLOUD wallet.');
+  const casperWalletProvider = typeof window.CasperWalletProvider === 'function' ? window.CasperWalletProvider() : null;
+  const casperSigner = window.casperlabsHelper || window.CasperWallet;
+  const csprCloud = window.csprclick;
+
+  if(!casperWalletProvider && !casperSigner && !csprCloud){
+    alert('No Casper wallet detected. Please install Casper Wallet, CasperSigner, or CSPR.CLOUD.');
     return;
   }
-  
-  // If both wallets available, let user choose
-  let selectedWallet = null;
-  if(hasCasperSigner && hasCsprCloud){
-    const choice = confirm('Multiple Casper wallets detected.\n\nClick OK to connect with CSPR.CLOUD\nClick Cancel to connect with CasperSigner');
-    selectedWallet = choice ? 'csprcloud' : 'caspersigner';
-  } else if(hasCsprCloud){
-    selectedWallet = 'csprcloud';
-  } else {
-    selectedWallet = 'caspersigner';
+
+  const choices = [];
+  if(casperWalletProvider) choices.push('casperwallet');
+  if(casperSigner) choices.push('caspersigner');
+  if(csprCloud) choices.push('csprcloud');
+
+  let selectedWallet = choices[0];
+  if(choices.length > 1){
+    const choice = prompt(`Select wallet (${choices.join(', ')}):`, choices[0]);
+    if(choice && choices.includes(choice.trim().toLowerCase())){
+      selectedWallet = choice.trim().toLowerCase();
+    }
   }
-  
+
   try{
     let connectedAccount = null;
-    
-    if(selectedWallet === 'csprcloud'){
-      // CSPR.CLOUD wallet connection
+
+    if(selectedWallet === 'casperwallet'){
+      console.log('Connecting to Casper Wallet...');
+      if(!casperWalletProvider){
+        throw new Error('Casper Wallet provider not available.');
+      }
+      await requestCasperWalletConnection(casperWalletProvider);
+      connectedAccount = await casperWalletProvider.getActivePublicKey();
+      console.log('Connected to Casper Wallet:', connectedAccount);
+    } else if(selectedWallet === 'csprcloud'){
       console.log('Connecting to CSPR.CLOUD wallet...');
-      const accounts = await window.csprclick.getActiveAccount();
-      if(accounts){
-        connectedAccount = accounts;
+      if(typeof csprCloud.requestConnection === 'function'){
+        await csprCloud.requestConnection({appId: CSPR_WALLET_APP_ID});
+      } else if(typeof csprCloud.connect === 'function'){
+        await csprCloud.connect({appId: CSPR_WALLET_APP_ID});
+      }
+      if(typeof csprCloud.getActiveAccount !== 'function'){
+        throw new Error('CSPR.CLOUD wallet API is unavailable.');
+      }
+      const account = await csprCloud.getActiveAccount();
+      if(account){
+        connectedAccount = account;
         console.log('Connected to CSPR.CLOUD:', connectedAccount);
       } else {
         throw new Error('No active account found in CSPR.CLOUD wallet');
       }
     } else {
-      // CasperSigner connection
       console.log('Connecting to CasperSigner...');
-      // CasperSigner connection flow
       if(window.casperlabsHelper){
         connectedAccount = await window.casperlabsHelper.requestConnection();
       } else if(window.CasperWallet){
@@ -97,19 +114,30 @@ async function connectWalletHandler(){
       }
       console.log('Connected to CasperSigner:', connectedAccount);
     }
-    
-    // Update UI on successful connection
+
     const connectBtn = document.getElementById('connectWallet');
     if(connectedAccount){
-      connectBtn.textContent = 'Connected';
+      const shortKey = typeof connectedAccount === 'string' && connectedAccount.length > 12
+        ? `${connectedAccount.slice(0, 6)}…${connectedAccount.slice(-4)}`
+        : connectedAccount;
+      connectBtn.textContent = `Connected: ${shortKey}`;
       connectBtn.classList.add('connected');
-      // Store wallet type for later use
       window.connectedWallet = selectedWallet;
       window.connectedAccount = connectedAccount;
     }
   }catch(err){
     console.error('Wallet connection failed', err);
     alert('Wallet connection failed: ' + (err.message || err));
+  }
+}
+
+async function requestCasperWalletConnection(provider){
+  if(!provider?.requestConnection) return;
+  try{
+    return await provider.requestConnection({appId: CSPR_WALLET_APP_ID});
+  }catch(err){
+    console.warn('Casper Wallet connection with appId failed, retrying without appId', err);
+    return provider.requestConnection();
   }
 }
 
