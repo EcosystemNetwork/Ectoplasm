@@ -2,15 +2,24 @@
 // NOTE: For production, handle errors, rate limits, CORS, and secure API keys where needed.
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('year').textContent = new Date().getFullYear();
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  
   initPriceTicker();
-  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-  document.getElementById('connectWallet').addEventListener('click', connectWallet);
+  
+  const themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+  
+  const connectWallet = document.getElementById('connectWallet');
+  if (connectWallet) connectWallet.addEventListener('click', connectWalletHandler);
+  
   setupSwapDemo();
 });
 
 async function initPriceTicker(){
   const el = document.getElementById('priceTicker');
+  if (!el) return; // Element not on this page
+  
   const fetchPrice = async () => {
     try{
       // CoinGecko id for Casper Network is 'casper-network'
@@ -43,7 +52,7 @@ function toggleTheme(){
 }
 
 // Wallet connect scaffolding using CasperSigner
-async function connectWallet(){
+async function connectWalletHandler(){
   // CasperSigner is the recommended wallet for Casper dApps
   // https://docs.casper.network/clients/wallets/caspersigner
   // This is a minimal example — please enhance for production (error handling, UI states).
@@ -69,6 +78,11 @@ function setupSwapDemo(){
   const fromAmt = document.getElementById('fromAmount');
   const toAmt = document.getElementById('toAmount');
   const priceImpact = document.getElementById('priceImpact');
+
+  if (!fromAmt || !toAmt || !priceImpact) {
+    console.log('Swap demo elements not found on this page, skipping setup.');
+    return;
+  }
 
   fromAmt.addEventListener('input', () => {
     // naive demo: 1 CSPR = 0.5 ECT for UI demo
