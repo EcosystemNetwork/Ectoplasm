@@ -121,6 +121,7 @@ main{flex:1;display:block}
 .launchpad-card h3{margin-top:0;margin-bottom:12px}
 .launch-list{color:var(--muted);padding-left:18px;line-height:1.6}
 .launch-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+.launch-actions .btn.full{flex:1}
 .launch-form label{display:block;margin-bottom:12px;font-size:0.95rem}
 .launch-form input,.launch-form select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:transparent;color:inherit}
 .launch-form-footer{display:flex;flex-direction:column;gap:8px;margin-top:8px}
