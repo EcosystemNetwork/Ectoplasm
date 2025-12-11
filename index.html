@@ -27,11 +27,12 @@
         <span>Ectoplasm</span>
       </a>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="#features">Features</a>
-        <a href="#how-it-works">How it works</a>
-        <a href="#launchpad">Launchpad</a>
-        <a href="#roadmap">Roadmap</a>
-        <a href="#audit">Security</a>
+        <a href="/">Landing</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/launchpad.html">Launchpad</a>
+        <a href="/swap.html">Swap</a>
+        <a href="/liquidity.html">Liquidity</a>
+        <a href="/privacy.html">Privacy</a>
         <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
         <button id="connectWallet" class="btn primary">Connect Wallet</button>
       </nav>
@@ -46,68 +47,42 @@
             <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
             <span>Casper-native DEX</span>
           </div>
-          <h1>Trade instantly on Casper — low fees, high security.</h1>
-          <p class="lead">Ectoplasm delivers fast, gas-efficient swaps and advanced liquidity tools built for the Casper ecosystem. Audited contracts. Intuitive UX. Built for traders and builders.</p>
+          <h1>Welcome to Ectoplasm — a complete on-chain experience.</h1>
+          <p class="lead">This landing page explains the mission. Dedicated pages guide you to the swap terminal, liquidity tools, privacy pools, pump.fun style launchpad, and a gamified user dashboard that brings you back every day.</p>
           <div class="hero-cta">
-            <a href="#swap" class="btn primary large">Try Swap</a>
-            <a href="#features" class="btn ghost large">Explore Features</a>
+            <a href="/dashboard.html" class="btn primary large">Open Dashboard</a>
+            <a href="/launchpad.html" class="btn ghost large">Explore Launchpad</a>
           </div>
           <ul class="trust-list" aria-hidden="false">
             <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
             <li>Audited smart contracts</li>
-            <li>Low & transparent fees</li>
+            <li>Dedicated feature pages</li>
           </ul>
         </div>
-        <div class="hero-card" id="swap" aria-labelledby="swap-title">
+        <div class="hero-card" aria-labelledby="map-title">
           <div class="card-top">
-            <h2 id="swap-title">Swap (Demo)</h2>
-            <span id="walletStatus" class="status-badge">Wallet disconnected</span>
+            <h2 id="map-title">Everything in its place</h2>
+            <span class="status-badge">Multi-page layout</span>
           </div>
-          <form class="swap-card" onsubmit="event.preventDefault(); demoSwap();">
-            <label>
-              From
-              <div class="input-row">
-                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="From amount"/>
-                <select id="fromToken" aria-label="From token">
-                  <option value="cspr">CSPR</option>
-                  <option value="ecto">ECTO</option>
-                </select>
-              </div>
-            </label>
-            <label>
-              To
-              <div class="input-row">
-                <input id="toAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="To amount" disabled/>
-                <select id="toToken" aria-label="To token">
-                  <option value="ecto">ECTO</option>
-                  <option value="cspr">CSPR</option>
-                </select>
-              </div>
-            </label>
-            <div class="swap-meta">
-              <span>Price impact: <strong id="priceImpact">0.00%</strong></span>
-              <span>Fee: <strong>0.25%</strong></span>
+          <div class="feature-map">
+            <div>
+              <h3>Core actions</h3>
+              <ul>
+                <li><a href="/swap.html">Swap terminal</a> for fast trades</li>
+                <li><a href="/liquidity.html">Liquidity & farms</a> with rewards</li>
+                <li><a href="/privacy.html">Privacy pools</a> for shielded swaps</li>
+                <li><a href="/launchpad.html">Launchpad</a> with 50 mock tokens</li>
+              </ul>
             </div>
-            <div class="swap-controls">
-              <label class="inline">
-                Slippage
-                <div class="input-row tight">
-                  <input id="slippage" type="number" inputmode="decimal" step="0.1" min="0" aria-label="Slippage tolerance" value="0.5" />
-                  <span class="suffix">%</span>
-                </div>
-              </label>
-              <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
+            <div>
+              <h3>Retention</h3>
+              <ul>
+                <li><a href="/dashboard.html">User dashboard</a> with daily quests</li>
+                <li>Return streaks & XP rewards</li>
+                <li>Tasks tied to on-chain actions</li>
+              </ul>
             </div>
-            <div class="quick-amounts" aria-label="Quick amount buttons">
-              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='10'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">10</button>
-              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='100'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">100</button>
-              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='250'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">250</button>
-            </div>
-            <div class="swap-actions">
-              <button type="submit" class="btn primary full">Swap</button>
-            </div>
-            <small class="muted">Demo UI: connect CasperSigner or CSPR.CLOUD wallet to enable live swaps. All on-chain transactions are signed by your wallet.</small>
-          </form>
+          </div>
         </div>
       </div>
     </section>
@@ -118,32 +93,38 @@
           <div class="brand-mark" aria-hidden="true">
             <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
           </div>
-          <h2>Why Ectoplasm is superior</h2>
+          <h2>Start from the landing, branch to a feature</h2>
         </div>
         <div class="features-grid">
           <article>
-            <h3>Optimized for Casper</h3>
-            <p>Native integration with Casper primitives and multiple wallet options (CasperSigner, CSPR.CLOUD) for the best performance and UX on-chain.</p>
+            <h3>Swap</h3>
+            <p>Fast Casper-native swapping with slippage control and a clean terminal on its own page.</p>
+            <a class="chip" href="/swap.html">Open swap terminal</a>
           </article>
           <article>
-            <h3>Audited & Transparent</h3>
-            <p>Security-first: audits, immutability, and on-chain verifiability of all contracts and pools.</p>
+            <h3>Liquidity & Farming</h3>
+            <p>Depth-focused pools and rewards live on a dedicated liquidity page for LPs.</p>
+            <a class="chip" href="/liquidity.html">View liquidity tools</a>
           </article>
           <article>
-            <h3>Lower Fees & Slippage Controls</h3>
-            <p>Customizable fee tiers and advanced order types to reduce slippage and improve execution.</p>
+            <h3>Launchpad</h3>
+            <p>Pump.fun style creation with fifty mock tokens visible in the launchpad library.</p>
+            <a class="chip" href="/launchpad.html">See launchpad</a>
           </article>
           <article>
-            <h3>Limit Orders & Advanced Orders</h3>
-            <p>Exchange-grade order types for traders—limit, stop, and TWAP orders coming soon.</p>
+            <h3>Privacy</h3>
+            <p>Shielded swaps and contributor rewards live in a standalone privacy hub.</p>
+            <a class="chip" href="/privacy.html">Explore privacy pools</a>
           </article>
           <article>
-            <h3>Liquidity Farming with Protections</h3>
-            <p>Impermanent loss minimizers, fee rebates, and flexible farm epochs for liquidity providers.</p>
+            <h3>Gamified Dashboard</h3>
+            <p>Daily quests, streaks, and XP designed to pull users back every day.</p>
+            <a class="chip" href="/dashboard.html">Open dashboard</a>
           </article>
           <article>
-            <h3>Accessible UX</h3>
-            <p>Progressive onboarding, gas estimations, and clear confirmations to win users from competitors.</p>
+            <h3>Docs</h3>
+            <p>Launchpad rules, audits, and governance notes stay discoverable via docs.</p>
+            <a class="chip" href="/docs">Read docs</a>
           </article>
         </div>
       </div>
@@ -178,235 +159,10 @@
       <div class="container">
         <h2>How it works</h2>
         <ol class="steps">
-          <li><strong>Connect your wallet</strong> — CasperSigner & CSPR.CLOUD supported.</li>
-          <li><strong>Swap or provide liquidity</strong> — intuitive UI with advanced options.</li>
-          <li><strong>Earn and track</strong> — transparent earnings and position history.</li>
+          <li><strong>Land here</strong> — learn the mission and pick a destination.</li>
+          <li><strong>Use the dashboard</strong> — complete daily tasks and quests.</li>
+          <li><strong>Choose a feature</strong> — swap, provide liquidity, launch tokens, or explore privacy.</li>
         </ol>
-      </div>
-    </section>
-
-    <section id="liquidity" class="section">
-      <div class="container">
-        <div class="section-heading">
-          <div class="brand-mark" aria-hidden="true">
-            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
-          </div>
-          <h2>Liquidity pools centered on $ECTO</h2>
-        </div>
-        <p class="lead">Pair $ECTO with CSPR, stables, and ecosystem tokens to grow depth and reduce volatility. LPs earn swap fees and programmatic rewards tuned for Casper performance.</p>
-        <div class="pools-grid">
-          <article class="pool-card">
-            <h3>Prime pairs</h3>
-            <p>Create pools like CSPR/$ECTO and USDC/$ECTO with auto-fee tiers and curated routing that keep spreads tight for traders.</p>
-            <ul>
-              <li>Adaptive fees for volatile vs. stable pairs</li>
-              <li>Deep routing through our smart order router</li>
-              <li>On-chain analytics to monitor utilization</li>
-            </ul>
-          </article>
-          <article class="pool-card">
-            <h3>LP incentives</h3>
-            <p>Stake your LP tokens to earn extra $ECTO emissions and partner rewards with built-in impermanent loss mitigations.</p>
-            <ul>
-              <li>Epoch-based boosts for long-term liquidity</li>
-              <li>Auto-compounding vaults for select pools</li>
-              <li>Transparent, auditable reward schedules</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="privacy-pools" class="section alt">
-      <div class="container">
-        <div class="section-heading">
-          <div class="brand-mark" aria-hidden="true">
-            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
-          </div>
-          <h2>Privacy pools that pay you to protect users</h2>
-        </div>
-        <p class="lead">Opt into privacy-preserving pools that shield swaps while rewarding contributors for keeping Casper transactions confidential.</p>
-        <div class="privacy-grid">
-          <article class="pool-card">
-            <h3>Earn for privacy work</h3>
-            <p>Provide relaying, proving, or liquidity services to privacy pools and earn a share of fees plus bonus $ECTO for uptime.</p>
-            <ul>
-              <li>Contribution tiers for validators, relayers, and LPs</li>
-              <li>Performance-weighted payouts measured on-chain</li>
-              <li>Clear dashboards to track your privacy yield</li>
-            </ul>
-          </article>
-          <article class="pool-card">
-            <h3>Safety-first privacy</h3>
-            <p>Zero-knowledge safeguards, compliance-friendly controls, and transparent audits keep privacy pools secure for everyone.</p>
-            <ul>
-              <li>Selective disclosure for regulated flows</li>
-              <li>Continuous monitoring for anomalous activity</li>
-              <li>Community governance over privacy parameters</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="launchpad" class="section">
-      <div class="container launchpad">
-        <div class="launchpad-copy">
-          <div class="section-heading">
-            <div class="brand-mark" aria-hidden="true">
-              <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
-            </div>
-            <h2>Pump.fun-style launchpad — go live in minutes</h2>
-          </div>
-          <p class="lead">Drop a Casper-native memecoin with a bonding curve, fair launch rules, and instant liquidity routes. We kept the playful pump.fun vibe while preserving Casper-grade security.</p>
-
-          <div class="pill-row" aria-label="Launchpad highlights">
-            <span class="pill">1-click deploy</span>
-            <span class="pill">Bonding curve</span>
-            <span class="pill">Fair launch</span>
-            <span class="pill">Community first</span>
-          </div>
-
-          <div class="launchpad-metrics" aria-label="Live launch metrics">
-            <div class="metric">
-              <small>Live tokens</small>
-              <strong>48</strong>
-              <span class="muted">shipping on Casper today</span>
-            </div>
-            <div class="metric">
-              <small>Liquidity routed</small>
-              <strong>$2.4M</strong>
-              <span class="muted">to Ectoplasm pools</span>
-            </div>
-            <div class="metric">
-              <small>Avg. fill</small>
-              <strong>92%</strong>
-              <span class="muted">of bonding curve completed</span>
-            </div>
-          </div>
-
-          <div class="launchpad-stream" aria-live="polite">
-            <div class="stream-head">
-              <h3>Trending (pump.fun style)</h3>
-              <a class="muted" href="#" onclick="event.preventDefault();">View feed</a>
-            </div>
-            <ul class="token-stream">
-              <li>
-                <div>
-                  <strong>👻 Ghost Cat</strong> · $GHOST
-                  <span class="muted">+$182% · 1h</span>
-                </div>
-                <span class="chip">Hot</span>
-              </li>
-              <li>
-                <div>
-                  <strong>🧪 PlasmaPunk</strong> · $PLASMA
-                  <span class="muted">+$94% · 1h</span>
-                </div>
-                <span class="chip">New</span>
-              </li>
-              <li>
-                <div>
-                  <strong>🌊 Ripple Ghost</strong> · $RGHST
-                  <span class="muted">+$61% · 1h</span>
-                </div>
-                <span class="chip">Surging</span>
-              </li>
-            </ul>
-          </div>
-
-          <div class="launch-actions">
-            <a class="btn primary" href="/docs" aria-label="Read the launchpad docs">Launch docs</a>
-            <button class="btn ghost" type="button" data-open-mint>Request early access</button>
-          </div>
-        </div>
-
-        <div class="launchpad-card pump-card" aria-label="Pump.fun style launch configuration">
-          <div class="card-top">
-            <h3>Spin up a memecoin</h3>
-            <span class="status-badge">Bonding curve demo</span>
-          </div>
-          <form class="launch-form" onsubmit="event.preventDefault(); alert('Launchpad submission (demo)');">
-            <div class="grid-two">
-              <label>
-                Project name
-                <input type="text" name="project" placeholder="Ghost Cats" required />
-              </label>
-              <label>
-                Token symbol
-                <input type="text" name="symbol" maxlength="6" placeholder="GHOST" required />
-              </label>
-            </div>
-
-            <label>
-              Banner / meme image URL
-              <input type="url" name="image" placeholder="https://.../banner.png" />
-            </label>
-
-            <div class="grid-two">
-              <label>
-                Total supply
-                <div class="input-row tight">
-                  <input type="number" name="supply" min="1" step="1" placeholder="1,000,000" required />
-                  <span class="suffix">tokens</span>
-                </div>
-              </label>
-              <label>
-                Target liquidity
-                <div class="input-row tight">
-                  <input type="number" name="liquidity" min="0" step="100" placeholder="50,000" />
-                  <span class="suffix">USD</span>
-                </div>
-              </label>
-            </div>
-
-            <div class="grid-two">
-              <label>
-                Bonding curve
-                <select name="curve">
-                  <option value="linear">Linear — slow ramp</option>
-                  <option value="sigmoid">Sigmoid — crowd-friendly</option>
-                  <option value="steep">Steep — degen mode</option>
-                </select>
-              </label>
-              <label>
-                Website / socials
-                <input type="url" name="site" placeholder="https://x.com/ghostcat" />
-              </label>
-            </div>
-
-            <label>
-              Hype budget (promo)
-              <div class="input-row tight">
-                <input type="range" id="promoBudget" name="promo" min="0" max="5000" value="1200" step="100" aria-describedby="promoBudgetLabel" />
-                <span class="suffix" id="promoBudgetLabel">1,200 CSPR</span>
-              </div>
-            </label>
-
-            <div class="launch-flags" role="group" aria-label="Launch rules">
-              <label class="flag">
-                <input type="checkbox" name="fairLaunch" checked />
-                <span>Fair launch: no team pre-mint</span>
-              </label>
-              <label class="flag">
-                <input type="checkbox" name="lockLiquidity" checked />
-                <span>Auto-lock first liquidity</span>
-              </label>
-              <label class="flag">
-                <input type="checkbox" name="antiBot" />
-                <span>Anti-bot guard for first block</span>
-              </label>
-            </div>
-
-            <div class="launch-form-footer">
-              <small class="muted">Demo only — deploys to Casper testnet with bonding curve presets inspired by pump.fun.</small>
-              <div class="grid-two">
-                <button class="btn ghost full" type="button" onclick="alert('Preview bonding curve (demo)');">Preview curve</button>
-                <button class="btn primary full" type="submit">Start launch</button>
-              </div>
-            </div>
-          </form>
-        </div>
       </div>
     </section>
 

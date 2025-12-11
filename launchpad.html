@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ectoplasm — Launchpad</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <a class="logo" href="/">
+        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+        <span>Ectoplasm</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Landing</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/launchpad.html" aria-current="page">Launchpad</a>
+        <a href="/swap.html">Swap</a>
+        <a href="/liquidity.html">Liquidity</a>
+        <a href="/privacy.html">Privacy</a>
+        <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
+        <button id="connectWallet" class="btn primary">Connect Wallet</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="brand-badge">
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <span>Launch new tokens</span>
+          </div>
+          <h1>Pump.fun style launchpad</h1>
+          <p class="lead">Deploy Casper-native memecoins with bonding curves and transparent rules. The library below lists fifty mock tokens so you can validate the layout.</p>
+          <div class="hero-cta">
+            <a href="#tokenLibrary" class="btn primary large">View 50 tokens</a>
+            <button class="btn ghost large" type="button" data-open-mint>Request early access</button>
+          </div>
+          <ul class="trust-list">
+            <li><strong>Bonding curve presets</strong></li>
+            <li><strong>Auto-liquidity routing</strong></li>
+            <li><strong id="tokenCount">50</strong> mock tokens listed</li>
+          </ul>
+        </div>
+        <div class="hero-card pump-card">
+          <div class="card-top">
+            <h2>Launch configuration</h2>
+            <span class="status-badge">Demo form</span>
+          </div>
+          <form class="launch-form" onsubmit="event.preventDefault(); alert('Launchpad submission (demo)');">
+            <label>
+              Project name
+              <input type="text" name="project" placeholder="Ghost Cats" required />
+            </label>
+            <label>
+              Token symbol
+              <input type="text" name="symbol" maxlength="6" placeholder="GHOST" required />
+            </label>
+            <div class="grid-two">
+              <label>
+                Bonding curve
+                <select name="curve">
+                  <option value="linear">Linear — slow ramp</option>
+                  <option value="sigmoid">Sigmoid — crowd-friendly</option>
+                  <option value="steep">Steep — degen mode</option>
+                </select>
+              </label>
+              <label>
+                Hype budget (promo)
+                <div class="input-row tight">
+                  <input type="range" id="promoBudget" name="promo" min="0" max="5000" value="1200" step="100" aria-describedby="promoBudgetLabel" />
+                  <span class="suffix" id="promoBudgetLabel">1,200 CSPR</span>
+                </div>
+              </label>
+            </div>
+            <div class="launch-form-footer">
+              <small class="muted">Demo only — deploys to Casper testnet with pump.fun inspired presets.</small>
+              <button class="btn primary full" type="submit">Start launch</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="tokenLibrary" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+          </div>
+          <h2>Launchpad library — 50 mock tokens</h2>
+        </div>
+        <p class="lead">Browse the mock list to confirm visibility for every token you publish. Sort by growth, volume, or freshness.</p>
+        <div class="table-controls">
+          <label class="inline">
+            Filter
+            <input type="search" id="tokenFilter" placeholder="Search by name or symbol" />
+          </label>
+          <span class="muted" id="filterResult">Showing 50 tokens</span>
+        </div>
+        <div class="table" role="table" aria-label="Launchpad token library">
+          <div class="table-head" role="row">
+            <span role="columnheader">Name</span>
+            <span role="columnheader">Symbol</span>
+            <span role="columnheader">24h</span>
+            <span role="columnheader">Liquidity</span>
+            <span role="columnheader">Status</span>
+          </div>
+          <div id="tokenTable" class="table-body" role="rowgroup"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="/">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+        </a>
+        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="/docs">Docs</a>
+        <a href="/whitepaper.pdf">Whitepaper</a>
+        <a href="/audit-report.pdf">Audit</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

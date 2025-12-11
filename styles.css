@@ -67,6 +67,8 @@ main{flex:1;display:block}
 
 .hero-card{background:linear-gradient(180deg, rgba(86,255,211,0.06), transparent);padding:18px;border-radius:var(--radius);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 48px rgba(0,0,0,0.26)}
 .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.feature-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;color:var(--muted)}
+.feature-map ul{padding-left:18px;line-height:1.6;margin:6px 0 0}
 .swap-card label{display:block;margin-bottom:12px;font-size:0.9rem}
 .input-row{display:flex;gap:8px;align-items:center}
 .input-row.tight{gap:4px}
@@ -150,6 +152,29 @@ main{flex:1;display:block}
 
 .badges img{height:64px;margin-right:12px;opacity:0.95}
 .safety-list{color:var(--muted);padding-left:18px;line-height:1.6}
+
+.task-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.task-list li{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px 14px;border-radius:12px;border:1px solid rgba(232,255,249,0.08)}
+.task-list label{display:flex;align-items:center;gap:10px;cursor:pointer}
+.task-list input{width:18px;height:18px}
+
+.quest-grid,.reward-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.quest-card .progress,.reward-card .progress{margin:8px 0}
+.streak-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
+.streak-number{font-size:2.4rem}
+.progress{background:rgba(232,255,249,0.08);height:10px;border-radius:999px;overflow:hidden}
+.progress-bar{height:100%;background:var(--accent);border-radius:999px}
+.reward-row{margin-top:12px;padding:10px;border-radius:10px;background:var(--glass);border:1px solid rgba(232,255,249,0.08)}
+
+.table{border:1px solid rgba(232,255,249,0.08);border-radius:12px;overflow:hidden;background:var(--card);box-shadow:0 12px 30px rgba(0,0,0,0.15)}
+.table-head,.table-row{display:grid;grid-template-columns:2fr 1.1fr 0.8fr 1.2fr 1fr;gap:10px;padding:12px 14px;align-items:center}
+.table-head{background:rgba(119,240,248,0.05);font-weight:700;color:#9be7d4;text-transform:uppercase;font-size:0.85rem;letter-spacing:0.05em}
+.table-body{display:flex;flex-direction:column}
+.table-row:nth-child(even){background:rgba(232,255,249,0.03)}
+.table-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0}
+.table-controls input{padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.12);background:transparent;color:inherit}
+.pos{color:#7ef0e8}
+.neg{color:#ffb4a2}
 
 .site-footer{background:rgba(3,26,32,0.72);backdrop-filter:blur(6px);padding:16px 0;border-top:1px solid rgba(232,255,249,0.06);margin-top:auto}
 .footer-grid{display:flex;justify-content:space-between;align-items:center;gap:12px}

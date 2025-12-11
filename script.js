@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  hydrateTheme();
   initPriceTicker();
 
   const themeToggle = document.getElementById('themeToggle');
@@ -17,6 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupSwapDemo();
   setupPromoSlider();
+  renderDashboard();
+  renderLaunchpadTokens();
 });
 
 function hydrateTheme(){
@@ -153,16 +156,6 @@ async function requestCasperWalletConnection(provider){
   }
 }
 
-async function requestCasperWalletConnection(provider){
-  if(!provider?.requestConnection) return;
-  try{
-    return await provider.requestConnection({appId: CSPR_WALLET_APP_ID});
-  }catch(err){
-    console.warn('Casper Wallet connection with appId failed, retrying without appId', err);
-    return provider.requestConnection();
-  }
-}
-
 // Simple swap demo calculation to make UI interactive.
 function setupSwapDemo(){
   const fromAmt = document.getElementById('fromAmount');
@@ -220,4 +213,134 @@ function setupPromoSlider(){
 
   slider.addEventListener('input', render);
   render();
+}
+
+// Dashboard renderer for daily tasks, quests, and rewards
+function renderDashboard(){
+  const dailyTarget = document.getElementById('dailyTasks');
+  const questGrid = document.getElementById('questGrid');
+  const rewardGrid = document.getElementById('rewardCatalog');
+  const streakVal = document.getElementById('streakValue');
+  const streakDays = document.getElementById('streakDays');
+  const xpTotal = document.getElementById('xpTotal');
+  const weeklyProgress = document.getElementById('weeklyProgress');
+  const weeklyPercent = document.getElementById('weeklyPercent');
+  const rewardRow = document.getElementById('rewardRow');
+
+  if (!dailyTarget && !questGrid && !rewardGrid) return;
+
+  const streak = 7;
+  const xp = 1260;
+  const dailyTasks = [
+    { title: 'Check-in and claim streak bonus', xp: 40 },
+    { title: 'Complete one swap on Casper', xp: 120 },
+    { title: 'Stake liquidity into any $ECTO pair', xp: 200 },
+    { title: 'Vote on one governance proposal', xp: 90 }
+  ];
+
+  const weeklyQuests = [
+    { title: 'Clear 5 swaps with <0.5% slippage', reward: 'Badge + 200 XP', progress: 60 },
+    { title: 'Provide liquidity for 3 consecutive days', reward: 'Boosted APR day', progress: 40 },
+    { title: 'Participate in privacy pool relay', reward: 'Shield bonus + 180 XP', progress: 20 }
+  ];
+
+  const rewards = [
+    { title: 'Swap fee rebate', cost: '400 XP', detail: '5% off for 24h' },
+    { title: 'Launchpad priority slot', cost: '900 XP', detail: 'Jump queue for next cohort' },
+    { title: 'Privacy multiplier', cost: '700 XP', detail: '1.2x rewards on relays for 48h' }
+  ];
+
+  if (streakVal) streakVal.textContent = streak;
+  if (streakDays) streakDays.textContent = streak;
+  if (xpTotal) xpTotal.textContent = xp.toLocaleString();
+  if (weeklyProgress) weeklyProgress.style.width = `${weeklyQuests[0].progress}%`;
+  if (weeklyPercent) weeklyPercent.textContent = weeklyQuests[0].progress;
+
+  if (dailyTarget){
+    dailyTarget.innerHTML = '';
+    dailyTasks.forEach(task => {
+      const li = document.createElement('li');
+      li.innerHTML = `<label><input type="checkbox" /> <span>${task.title}</span></label><span class="pill">+${task.xp} XP</span>`;
+      dailyTarget.appendChild(li);
+    });
+  }
+
+  if (questGrid){
+    questGrid.innerHTML = '';
+    weeklyQuests.forEach(quest => {
+      const card = document.createElement('article');
+      card.className = 'pool-card quest-card';
+      card.innerHTML = `
+        <h3>${quest.title}</h3>
+        <p class="muted">Reward: ${quest.reward}</p>
+        <div class="progress">
+          <div class="progress-bar" style="width:${quest.progress}%"></div>
+        </div>
+        <small class="muted">${quest.progress}% complete</small>
+      `;
+      questGrid.appendChild(card);
+    });
+  }
+
+  if (rewardGrid){
+    rewardGrid.innerHTML = '';
+    rewards.forEach(reward => {
+      const card = document.createElement('article');
+      card.className = 'pool-card reward-card';
+      card.innerHTML = `
+        <h3>${reward.title}</h3>
+        <p class="muted">${reward.detail}</p>
+        <span class="pill">${reward.cost}</span>
+      `;
+      rewardGrid.appendChild(card);
+    });
+  }
+
+  if (rewardRow){
+    rewardRow.innerHTML = `<p class="muted">Next reward unlocks in <strong>2 tasks</strong>. Keep the streak alive!</p>`;
+  }
+}
+
+// Launchpad token list for 50 mock assets
+function renderLaunchpadTokens(){
+  const table = document.getElementById('tokenTable');
+  const filterInput = document.getElementById('tokenFilter');
+  const filterResult = document.getElementById('filterResult');
+  const tokenCount = document.getElementById('tokenCount');
+
+  if (!table) return;
+
+  const tokens = Array.from({ length: 50 }, (_, i) => {
+    const index = i + 1;
+    const name = `Mock Token ${index.toString().padStart(2, '0')}`;
+    const symbol = `M${index.toString().padStart(2, '0')}`;
+    const change = (Math.sin(index) * 8).toFixed(2);
+    const liquidity = 50_000 + (index * 1234);
+    const status = index % 3 === 0 ? 'Hot' : (index % 2 === 0 ? 'Trending' : 'New');
+    return { name, symbol, change, liquidity, status };
+  });
+
+  const render = () => {
+    const term = filterInput?.value?.toLowerCase().trim() || '';
+    const visible = !term ? tokens : tokens.filter(t => `${t.name} ${t.symbol}`.toLowerCase().includes(term));
+    table.innerHTML = visible.map(token => `
+      <div class="table-row" role="row">
+        <span role="cell">${token.name}</span>
+        <span role="cell">${token.symbol}</span>
+        <span role="cell" class="${Number(token.change) >= 0 ? 'pos' : 'neg'}">${token.change}%</span>
+        <span role="cell">${formatCurrency(token.liquidity)}</span>
+        <span role="cell"><span class="chip">${token.status}</span></span>
+      </div>
+    `).join('');
+
+    if (filterResult) filterResult.textContent = `Showing ${visible.length} of ${tokens.length} tokens`;
+    if (tokenCount) tokenCount.textContent = tokens.length.toString();
+  };
+
+  render();
+  if (filterInput) filterInput.addEventListener('input', render);
+}
+
+function formatCurrency(value){
+  return `$${value.toLocaleString()}`;
 }

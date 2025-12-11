@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ectoplasm — Privacy Pools</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <a class="logo" href="/">
+        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+        <span>Ectoplasm</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Landing</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/launchpad.html">Launchpad</a>
+        <a href="/swap.html">Swap</a>
+        <a href="/liquidity.html">Liquidity</a>
+        <a href="/privacy.html" aria-current="page">Privacy</a>
+        <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
+        <button id="connectWallet" class="btn primary">Connect Wallet</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="brand-badge">
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <span>Privacy pools</span>
+          </div>
+          <h1>Shield swaps, earn rewards</h1>
+          <p class="lead">Opt into privacy-preserving pools that shield swaps while rewarding contributors for keeping Casper transactions confidential.</p>
+          <div class="hero-cta">
+            <a href="#pools" class="btn primary large">View privacy pools</a>
+            <a href="/dashboard.html" class="btn ghost large">See rewards</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="card-top">
+            <h2>Safety-first privacy</h2>
+            <span class="status-badge">ZK + controls</span>
+          </div>
+          <ul class="launch-list">
+            <li>Selective disclosure for regulated flows</li>
+            <li>Continuous monitoring for anomalous activity</li>
+            <li>Contribution tiers for validators, relayers, and LPs</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="pools" class="section alt">
+      <div class="container privacy-grid">
+        <article class="pool-card">
+          <h3>Earn for privacy work</h3>
+          <p>Provide relaying, proving, or liquidity services to privacy pools and earn a share of fees plus bonus $ECTO for uptime.</p>
+          <ul>
+            <li>Performance-weighted payouts measured on-chain</li>
+            <li>Clear dashboards to track your privacy yield</li>
+            <li>Compliance-friendly safeguards</li>
+          </ul>
+        </article>
+        <article class="pool-card">
+          <h3>Compliance layer</h3>
+          <p>Governance-driven allowlists and time-locked disclosures balance user protection with regulatory expectations.</p>
+          <ul>
+            <li>Community governance over privacy parameters</li>
+            <li>Time delays for sensitive actions</li>
+            <li>Independent audits published to docs</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="/">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+        </a>
+        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="/docs">Docs</a>
+        <a href="/whitepaper.pdf">Whitepaper</a>
+        <a href="/audit-report.pdf">Audit</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

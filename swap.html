@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ectoplasm — Swap</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <a class="logo" href="/">
+        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+        <span>Ectoplasm</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Landing</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/launchpad.html">Launchpad</a>
+        <a href="/swap.html" aria-current="page">Swap</a>
+        <a href="/liquidity.html">Liquidity</a>
+        <a href="/privacy.html">Privacy</a>
+        <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
+        <button id="connectWallet" class="btn primary">Connect Wallet</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="brand-badge">
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <span>Swap terminal</span>
+          </div>
+          <h1>Swap on Casper with clarity</h1>
+          <p class="lead">A dedicated swap page keeps the trading surface focused: slippage controls, quick amounts, and connection support for CasperSigner or CSPR.CLOUD.</p>
+          <div class="hero-cta">
+            <a href="#swap" class="btn primary large">Start swapping</a>
+            <a href="/liquidity.html" class="btn ghost large">Provide liquidity</a>
+          </div>
+          <ul class="trust-list">
+            <li><strong id="priceTicker">CSPR $--.--</strong></li>
+            <li>Advanced order routing</li>
+            <li>Wallet status visible in-card</li>
+          </ul>
+        </div>
+        <div class="hero-card" id="swap" aria-labelledby="swap-title">
+          <div class="card-top">
+            <h2 id="swap-title">Swap (Demo)</h2>
+            <span id="walletStatus" class="status-badge">Wallet disconnected</span>
+          </div>
+          <form class="swap-card" onsubmit="event.preventDefault(); demoSwap();">
+            <label>
+              From
+              <div class="input-row">
+                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="From amount"/>
+                <select id="fromToken" aria-label="From token">
+                  <option value="cspr">CSPR</option>
+                  <option value="ecto">ECTO</option>
+                </select>
+              </div>
+            </label>
+            <label>
+              To
+              <div class="input-row">
+                <input id="toAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="To amount" disabled/>
+                <select id="toToken" aria-label="To token">
+                  <option value="ecto">ECTO</option>
+                  <option value="cspr">CSPR</option>
+                </select>
+              </div>
+            </label>
+            <div class="swap-meta">
+              <span>Price impact: <strong id="priceImpact">0.00%</strong></span>
+              <span>Fee: <strong>0.25%</strong></span>
+            </div>
+            <div class="swap-controls">
+              <label class="inline">
+                Slippage
+                <div class="input-row tight">
+                  <input id="slippage" type="number" inputmode="decimal" step="0.1" min="0" aria-label="Slippage tolerance" value="0.5" />
+                  <span class="suffix">%</span>
+                </div>
+              </label>
+              <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
+            </div>
+            <div class="quick-amounts" aria-label="Quick amount buttons">
+              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='10'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">10</button>
+              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='100'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">100</button>
+              <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='250'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">250</button>
+            </div>
+            <div class="swap-actions">
+              <button type="submit" class="btn primary full">Swap</button>
+            </div>
+            <small class="muted">Demo UI: connect CasperSigner or CSPR.CLOUD wallet to enable live swaps. All on-chain transactions are signed by your wallet.</small>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="/">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+        </a>
+        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="/docs">Docs</a>
+        <a href="/whitepaper.pdf">Whitepaper</a>
+        <a href="/audit-report.pdf">Audit</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
