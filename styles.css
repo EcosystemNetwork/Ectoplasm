@@ -125,6 +125,28 @@ main{flex:1;display:block}
 .launch-form input,.launch-form select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:transparent;color:inherit}
 .launch-form-footer{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 
+.pill-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.pill{padding:8px 12px;border-radius:999px;border:1px solid rgba(232,255,249,0.12);background:rgba(119,240,248,0.06);color:inherit;font-weight:600;font-size:0.9rem}
+
+.launchpad-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0}
+.metric{background:var(--card);border:1px solid rgba(232,255,249,0.08);border-radius:12px;padding:12px;box-shadow:0 12px 30px rgba(0,0,0,0.18)}
+.metric small{color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:700;font-size:0.75rem}
+.metric strong{display:block;font-size:1.4rem;margin:6px 0}
+
+.launchpad-stream{background:var(--card);border:1px solid rgba(232,255,249,0.08);border-radius:12px;padding:12px;margin:8px 0 0;box-shadow:0 12px 30px rgba(0,0,0,0.16)}
+.stream-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.token-stream{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.token-stream li{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:10px;background:rgba(119,240,248,0.06);border:1px solid rgba(232,255,249,0.08)}
+.token-stream strong{margin-right:8px}
+
+.pump-card{background:linear-gradient(180deg, rgba(86,255,211,0.08), rgba(4,19,26,0.1));border-color:rgba(119,240,248,0.25)}
+.grid-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.launch-flags{display:grid;gap:8px;margin:6px 0}
+.flag{display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:rgba(119,240,248,0.05)}
+.flag input{margin:0}
+
+.launchpad .status-badge{background:rgba(119,240,248,0.08);border-color:rgba(119,240,248,0.25);color:#7ef0e8}
+
 .badges img{height:64px;margin-right:12px;opacity:0.95}
 .safety-list{color:var(--muted);padding-left:18px;line-height:1.6}
 
