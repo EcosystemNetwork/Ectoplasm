@@ -176,7 +176,7 @@ function setupSwapDemo(){
   }
 
   fromAmt.addEventListener('input', () => {
-    // naive demo: 1 CSPR = 0.5 ECT for UI demo
+    // naive demo: 1 CSPR = 0.5 ECTO for UI demo
     const val = parseFloat(fromAmt.value) || 0;
     const rate = 0.5;
     toAmt.value = (val * rate).toFixed(6);
