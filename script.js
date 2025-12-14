@@ -208,7 +208,14 @@ function setupSwapDemo(){
   const toAmt = document.getElementById('toAmount');
   const priceImpactDetail = document.getElementById('priceImpactDetail');
   const slippage = document.getElementById('slippage');
+  const swapHealth = document.getElementById('swapHealth');
+  const orderTabs = Array.from(document.querySelectorAll('[data-order-tab]'));
+  const orderPill = document.getElementById('orderPill');
+  const swapTitle = document.getElementById('swap-title');
+  const orderSummary = document.getElementById('orderSummary');
   const actionBtn = document.getElementById('swapActionBtn');
+  const limitControls = document.getElementById('limitControls');
+  const limitPrice = document.getElementById('limitPrice');
 
   if (!fromAmt || !toAmt) return;
 
@@ -230,8 +237,74 @@ function setupSwapDemo(){
     });
   }
 
-  if(actionBtn){
-    actionBtn.textContent = 'Get started';
+  const selectTokens = (fromValue, toValue) => {
+    const fromToken = document.getElementById('fromToken');
+    const toToken = document.getElementById('toToken');
+    if(fromToken && fromValue) fromToken.value = fromValue;
+    if(toToken && toValue) toToken.value = toValue;
+  };
+
+  const modeCopy = {
+    swap: {
+      pill: 'Swap',
+      title: 'Balanced, fast swaps on Casper.',
+      summary: 'Instant AMM routing with slippage guard and fee clarity.',
+      action: 'swap',
+      showLimit: false,
+      tokens: null
+    },
+    limit: {
+      pill: 'Limit',
+      title: 'Post limit orders with off-chain resting and on-chain execution.',
+      summary: 'Set a trigger price and let the relayer post once your terms are met.',
+      action: 'place limit',
+      showLimit: true,
+      tokens: null
+    },
+    buy: {
+      pill: 'Buy',
+      title: 'Buy ECTO with CSPR while respecting your price cap.',
+      summary: 'Define a ceiling price to protect buys in volatile markets.',
+      action: 'buy',
+      showLimit: true,
+      tokens: { from: 'cspr', to: 'ecto' }
+    },
+    sell: {
+      pill: 'Sell',
+      title: 'Sell ECTO back to CSPR with tight routing.',
+      summary: 'Lock a minimum receive amount before executing a sale.',
+      action: 'sell',
+      showLimit: true,
+      tokens: { from: 'ecto', to: 'cspr' }
+    }
+  };
+
+  const setMode = (mode) => {
+    const config = modeCopy[mode] || modeCopy.swap;
+    orderTabs.forEach((btn) => {
+      const active = btn.dataset.orderTab === mode;
+      btn.classList.toggle('active', active);
+      btn.classList.toggle('ghost', !active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    if(orderPill) orderPill.textContent = config.pill;
+    if(swapTitle) swapTitle.textContent = config.title;
+    if(orderSummary) orderSummary.textContent = config.summary;
+    if(actionBtn) actionBtn.textContent = `Connect wallet to ${config.action}`;
+    if(limitControls){
+      limitControls.hidden = !config.showLimit;
+      if(config.showLimit && limitPrice && !limitPrice.value){
+        limitPrice.value = (parseFloat(toAmt.value) * 2 || 0.5).toFixed(4);
+      }
+    }
+    if(config.tokens){
+      selectTokens(config.tokens.from, config.tokens.to);
+    }
+  };
+
+  if(orderTabs.length){
+    orderTabs.forEach((btn) => btn.addEventListener('click', () => setMode(btn.dataset.orderTab)));
+    setMode('swap');
   }
 }
 

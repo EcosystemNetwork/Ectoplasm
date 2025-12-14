@@ -110,22 +110,36 @@
     <section class="hero swap-hero" id="swap">
       <div class="container swap-layout">
         <div class="swap-heading">
-          <h1>Swap anytime, anywhere.</h1>
-          <p class="muted">Buy and sell crypto on 16+ networks including Ethereum, Unichain, and Base.</p>
+          <h1>Swap, limit, buy, or sell</h1>
+          <p class="muted">A trimmed-down swapper inspired by Uniswap — with extra order types one tap away.</p>
         </div>
-        <div class="hero-card swap-shell">
-          <div class="swap-card-header">
-            <div class="pill subtle">Swap</div>
-            <div class="quick-icons" aria-label="Swap controls">
-              <button type="button" class="icon-btn" data-popout-target="settingsPopout" aria-label="Swap settings" aria-haspopup="true" aria-expanded="false" aria-controls="settingsPopout">
-                <span aria-hidden="true">⚙️</span>
-              </button>
-              <button type="button" class="icon-btn" data-popout-target="detailsPopout" aria-label="Trade details" aria-haspopup="true" aria-expanded="false" aria-controls="detailsPopout">
-                <span aria-hidden="true">📊</span>
-              </button>
-              <button type="button" class="icon-btn" data-popout-target="networkPopout" aria-label="Network and wallet status" aria-haspopup="true" aria-expanded="false" aria-controls="networkPopout">
-                <span aria-hidden="true">🌐</span>
-              </button>
+        <div class="hero-card swap-shell" aria-labelledby="swap-title">
+          <div class="swap-toolbar compact">
+            <div class="swap-title-stack">
+              <div class="pill" id="orderPill">Swap</div>
+              <p class="muted" id="swap-title">Balanced, fast swaps on Casper.</p>
+            </div>
+            <div class="swap-quick-actions" aria-label="Swap controls">
+              <div class="swap-tabs" role="tablist" aria-label="Order type">
+                <button type="button" class="pill active" data-order-tab="swap" role="tab" aria-selected="true">Swap</button>
+                <button type="button" class="pill ghost" data-order-tab="limit" role="tab" aria-selected="false">Limit</button>
+                <button type="button" class="pill ghost" data-order-tab="buy" role="tab" aria-selected="false">Buy</button>
+                <button type="button" class="pill ghost" data-order-tab="sell" role="tab" aria-selected="false">Sell</button>
+              </div>
+              <div class="quick-icons" aria-label="Inline tools">
+                <button type="button" class="icon-btn" data-popout-target="settingsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="settingsPopout">
+                  <span class="visually-hidden">Open swap settings</span>
+                  <span aria-hidden="true">⚙️</span>
+                </button>
+                <button type="button" class="icon-btn" data-popout-target="detailsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="detailsPopout">
+                  <span class="visually-hidden">Open trade details</span>
+                  <span aria-hidden="true">📊</span>
+                </button>
+                <button type="button" class="icon-btn" data-popout-target="networkPopout" aria-haspopup="true" aria-expanded="false" aria-controls="networkPopout">
+                  <span class="visually-hidden">Open network and wallet status</span>
+                  <span aria-hidden="true">🌐</span>
+                </button>
+              </div>
             </div>
           </div>
           <form class="swap-form swap-form-compact" onsubmit="event.preventDefault(); demoSwap();">
@@ -166,9 +180,30 @@
               </div>
             </label>
 
-            <div class="swap-actions">
-              <button type="submit" class="btn primary full" id="swapActionBtn">Get started</button>
+            <div class="order-controls" id="limitControls" hidden>
+              <div class="input-row tight compact">
+                <label for="limitPrice" class="muted">Limit price</label>
+                <div class="input-row tight compact">
+                  <input id="limitPrice" type="number" inputmode="decimal" step="0.0001" min="0" aria-label="Limit price" placeholder="0.00" />
+                  <span class="suffix">CSPR</span>
+                </div>
+              </div>
+              <p class="muted small">Set a trigger price for your limit, buy, or sell. Orders rest off-chain until executed.</p>
             </div>
+
+            <div class="swap-inline-meta">
+              <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
+              <div class="swap-mini-grid" aria-label="Execution details">
+                <span class="muted">Impact <strong id="priceImpact">0.00%</strong></span>
+                <span class="muted">Fee 0.25%</span>
+                <span class="muted">Network <strong>Casper</strong></span>
+              </div>
+            </div>
+
+            <div class="swap-actions">
+              <button type="submit" class="btn primary full" id="swapActionBtn">Connect wallet to swap</button>
+            </div>
+            <small class="muted" id="orderSummary">Demo UI: connect CasperSigner or CSPR.CLOUD wallet to enable live swaps. All on-chain transactions are signed by your wallet.</small>
           </form>
 
           <div class="swap-popouts" aria-live="polite">
