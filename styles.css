@@ -82,7 +82,7 @@ main{flex:1;display:block}
 .site-header{position:sticky;top:0;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-bottom:1px solid rgba(255,255,255,0.02);z-index:50}
 
 .hero{padding:64px 0 100px}
-.swap-hero{position:relative;overflow:hidden;display:flex;align-items:center;background:radial-gradient(320px 320px at 60% 18%, rgba(119,240,248,0.12), transparent 50%) var(--bg);padding-top:32px;padding-bottom:72px}
+.swap-hero{position:relative;overflow:hidden;min-height:calc(100vh - 120px);display:flex;align-items:flex-start;background:radial-gradient(320px 320px at 60% 18%, rgba(119,240,248,0.12), transparent 50%) var(--bg);padding-top:48px;padding-bottom:96px}
 .swap-hero::before{content:"";position:absolute;inset:-14% 45% auto auto;background:radial-gradient(420px 420px at 30% 40%, rgba(119,240,248,0.2), transparent 60%);filter:blur(16px);opacity:0.85;pointer-events:none}
 .swap-hero::after{content:"";position:absolute;inset:22% -28% -28% 42%;background:radial-gradient(520px 520px at 60% 30%, rgba(255,255,255,0.05), transparent 58%);pointer-events:none;filter:blur(12px);}
 .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
