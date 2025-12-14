@@ -17,17 +17,18 @@
  * 2. Base & Reset Styles
  * 3. Layout & Container Styles
  * 4. Navigation & Header
- * 5. Typography & Text Styles
- * 6. Buttons & Interactive Elements
- * 7. Hero & Landing Sections
- * 8. Cards & Panels
- * 9. Swap Interface Components
- * 10. Forms & Inputs
- * 11. Popovers & Dropdowns
- * 12. Dashboard & Gamification
- * 13. Launchpad Components
- * 14. Utility Classes
- * 15. Responsive Media Queries
+ * 5. Buttons & Interactive Elements
+ * 6. Hero & Landing Sections
+ * 7. Cards & Panels
+ * 8. Swap Interface Components
+ * 9. Forms & Inputs
+ * 10. Popovers & Dropdowns
+ * 11. Content Sections
+ * 12. Launchpad Components
+ * 13. Dashboard & Gamification
+ * 14. Table Components
+ * 15. Footer & Misc
+ * 16. Responsive Media Queries
  * 
  * @version 1.0.0
  * @license MIT
@@ -467,8 +468,6 @@ main{flex:1;display:block}
 /**
  * Token row components - Large input areas for token amounts
  */
-.swap-form{display:flex;flex-direction:column;gap:14px}
-.swap-form-compact{gap:18px;padding:8px 0}
 .token-row{background:rgba(255,255,255,0.04);padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 18px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:8px}
 .token-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
 .token-input{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
