@@ -117,17 +117,23 @@
           <h1>Swap anytime, anywhere.</h1>
         </div>
         <div class="hero-card swap-shell" aria-labelledby="swap-title">
-          <div class="swap-header">
+          <div class="swap-toolbar">
             <div class="swap-tabs" role="tablist" aria-label="Swap modes">
               <button class="pill active" role="tab" aria-selected="true">Swap</button>
               <button class="pill ghost" role="tab" aria-selected="false" disabled>Limit</button>
             </div>
-            <div class="network-pill">Casper mainnet</div>
+            <div class="toolbar-actions">
+              <button type="button" class="icon-btn" aria-label="Preferences">⚙️</button>
+              <div class="network-pill">Casper mainnet</div>
+            </div>
           </div>
           <div class="swap-card glass">
             <div class="card-top">
-              <h2 id="swap-title">Swap (Demo)</h2>
-              <span id="walletStatus" class="status-badge">Wallet disconnected</span>
+              <div>
+                <p class="muted tiny">Swap (Demo)</p>
+                <h2 id="swap-title">Ectoplasm Swap</h2>
+              </div>
+              <span id="walletStatus" class="status-badge subtle">Wallet disconnected</span>
             </div>
             <div class="swap-meta muted">Balance visible after connecting your wallet</div>
             <form class="swap-form" onsubmit="event.preventDefault(); demoSwap();">
@@ -148,7 +154,7 @@
               </label>
 
               <div class="arrow-divider" aria-hidden="true">
-                <span class="arrow">↓</span>
+                <span class="arrow-circle">↓</span>
                 <span class="muted">1 CSPR = 0.5 ECTO (demo)</span>
               </div>
 
