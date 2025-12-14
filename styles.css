@@ -494,12 +494,21 @@ main{flex:1;display:block}
 .swap-breakdown dt{font-weight:700;color:#e8fff9;margin-bottom:4px}
 .swap-breakdown dd{margin:0;color:var(--muted)}
 .swap-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:0.95rem;margin-bottom:2px}
+/**
+ * Swap controls section
+ */
 .swap-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}
+
+/**
+ * Slippage controls
+ */
 .slippage-col{display:flex;flex-direction:column;gap:6px;flex:1;min-width:240px}
 .pill-row.tight{gap:6px;flex-wrap:wrap}
-.input-row.compact input{padding:8px 10px;font-size:0.95rem;border-radius:10px}
 .swap-controls .inline{flex:1}
-.suffix{padding:10px;border-radius:8px;border:1px solid rgba(232,255,249,0.08);background:rgba(0,0,0,0.08)}
+
+/**
+ * Swap action buttons
+ */
 .swap-actions{display:block;margin-top:6px}
 
 /* ============================================================================
