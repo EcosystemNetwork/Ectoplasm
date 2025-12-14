@@ -206,15 +206,11 @@ async function requestCasperWalletConnection(provider){
 function setupSwapDemo(){
   const fromAmt = document.getElementById('fromAmount');
   const toAmt = document.getElementById('toAmount');
-  const priceImpact = document.getElementById('priceImpact');
   const priceImpactDetail = document.getElementById('priceImpactDetail');
   const slippage = document.getElementById('slippage');
-  const swapHealth = document.getElementById('swapHealth');
+  const actionBtn = document.getElementById('swapActionBtn');
 
-  if (!fromAmt || !toAmt || !priceImpact) {
-    console.log('Swap demo elements not found on this page, skipping setup.');
-    return;
-  }
+  if (!fromAmt || !toAmt) return;
 
   fromAmt.addEventListener('input', () => {
     // naive demo: 1 CSPR = 0.5 ECTO for UI demo
@@ -223,14 +219,8 @@ function setupSwapDemo(){
     toAmt.value = (val * rate).toFixed(6);
     const impact = Math.min(0.5, (val/1000)); // demo price impact
     const impactText = (impact*100).toFixed(2) + '%';
-    priceImpact.textContent = impactText;
     if(priceImpactDetail){
       priceImpactDetail.textContent = impactText;
-    }
-    if (swapHealth){
-      const severity = impact > 0.2 ? 'warn' : 'good';
-      swapHealth.textContent = severity === 'warn' ? 'High impact — adjust size' : 'Optimal routing';
-      swapHealth.dataset.state = severity;
     }
   });
 
@@ -238,6 +228,10 @@ function setupSwapDemo(){
     slippage.addEventListener('input', () => {
       slippage.value = Math.min(Math.max(parseFloat(slippage.value) || 0.1, 0.1), 5).toString();
     });
+  }
+
+  if(actionBtn){
+    actionBtn.textContent = 'Get started';
   }
 }
 
