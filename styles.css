@@ -1,77 +1,246 @@
+/**
+ * Ectoplasm DEX - Stylesheet
+ * 
+ * A comprehensive, modern CSS file for the Ectoplasm DEX platform.
+ * Built with accessibility, performance, and visual polish in mind.
+ * 
+ * Features:
+ * - Dark/light theme support via CSS custom properties
+ * - Fully responsive design with mobile-first approach
+ * - Glass-morphism and gradient effects
+ * - Accessible form controls and interactive elements
+ * - Semantic color system
+ * - Component-based architecture
+ * 
+ * Table of Contents:
+ * 1. CSS Custom Properties (Theme Variables)
+ * 2. Base & Reset Styles
+ * 3. Layout & Container Styles
+ * 4. Navigation & Header
+ * 5. Typography & Text Styles
+ * 6. Buttons & Interactive Elements
+ * 7. Hero & Landing Sections
+ * 8. Cards & Panels
+ * 9. Swap Interface Components
+ * 10. Forms & Inputs
+ * 11. Popovers & Dropdowns
+ * 12. Dashboard & Gamification
+ * 13. Launchpad Components
+ * 14. Utility Classes
+ * 15. Responsive Media Queries
+ * 
+ * @version 1.0.0
+ * @license MIT
+ */
+
+/* ============================================================================
+   1. CSS CUSTOM PROPERTIES - THEME VARIABLES
+   ============================================================================ */
+
+/**
+ * Root theme variables (Dark mode - default)
+ * These custom properties enable easy theme switching and consistent styling
+ */
 :root{
-  --bg: #04131a;
-  --card: #07242c;
-  --muted: #8ccfc0;
-  --accent: linear-gradient(135deg,#4cf5c7 0%,#77f0f8 100%);
-  --glass: rgba(86,255,211,0.08);
-  --radius: 12px;
-  --max-width: 1150px;
-  color-scheme: dark;
-  color: #e8fff9;
+  /* Color palette */
+  --bg: #04131a;              /* Main background color */
+  --card: #07242c;            /* Card and panel background */
+  --muted: #8ccfc0;           /* Muted/secondary text color */
+  --accent: linear-gradient(135deg,#4cf5c7 0%,#77f0f8 100%); /* Primary accent gradient */
+  --glass: rgba(86,255,211,0.08); /* Glass-morphism overlay */
+  
+  /* Layout & spacing */
+  --radius: 12px;             /* Default border radius */
+  --max-width: 1150px;        /* Maximum content width */
+  
+  /* System preferences */
+  color-scheme: dark;         /* Tells browser to use dark scrollbars, etc. */
+  color: #e8fff9;             /* Default text color */
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  -webkit-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjustment */
 }
 
+/**
+ * Light theme overrides
+ * Applied when [data-theme="light"] is set on <html>
+ */
 [data-theme="light"]{
-  --bg: #e8f7f3;
-  --card: #ffffff;
-  --muted: #2f4f47;
-  --glass: rgba(0,134,115,0.08);
-  --accent: linear-gradient(135deg,#1ed8a2 0%,#54e8f3 100%);
+  --bg: #e8f7f3;              /* Light background */
+  --card: #ffffff;            /* White cards */
+  --muted: #2f4f47;           /* Darker muted text for contrast */
+  --glass: rgba(0,134,115,0.08); /* Adjusted glass effect for light mode */
+  --accent: linear-gradient(135deg,#1ed8a2 0%,#54e8f3 100%); /* Adjusted accent gradient */
   color-scheme: light;
-  color: #052026;
+  color: #052026;             /* Dark text on light background */
   background: #e8f7f3;
 }
 
+/* ============================================================================
+   2. BASE & RESET STYLES
+   ============================================================================ */
+
+/**
+ * Universal box-sizing
+ * Makes width/height calculations include padding and border
+ */
 *{box-sizing:border-box}
+
+/**
+ * Form elements inherit font styles
+ * Ensures buttons, inputs, etc. use the same font as body
+ */
 button,input,select,textarea{font:inherit}
+
+/**
+ * Remove spinner controls from number inputs
+ * Provides cleaner UI for numerical inputs
+ */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type="number"]{-moz-appearance:textfield}
+
+/**
+ * Full-height layout foundation
+ * Ensures footer stays at bottom even with minimal content
+ */
 html,body{height:100%}
+
+/**
+ * Body styles with gradient background
+ * Creates atmospheric background with multiple radial gradients
+ */
 body{
   margin:0;
+  /* Multi-layer radial gradient background for depth */
   background:
     radial-gradient(120px 120px at 18% 16%, rgba(119,240,248,0.22), transparent 42%),
     radial-gradient(220px 220px at 88% 0%, rgba(76,245,199,0.14), transparent 50%),
     radial-gradient(260px 260px at 82% 84%, rgba(119,240,248,0.08), transparent 52%),
     var(--bg);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  -webkit-font-smoothing:antialiased;   /* Better font rendering on macOS/iOS */
+  -moz-osx-font-smoothing:grayscale;    /* Better font rendering on Firefox */
   line-height:1.45;
+  /* Flexbox layout to push footer to bottom */
   display:flex;
   flex-direction:column;
   min-height:100vh;
 }
+
+/**
+ * Main content area
+ * Flexes to fill available space, pushing footer down
+ */
 main{flex:1;display:block}
 
+/* ============================================================================
+   3. LAYOUT & CONTAINER STYLES
+   ============================================================================ */
+
+/**
+ * Main content container
+ * Centers content with max-width and provides consistent padding
+ */
 .container{max-width:var(--max-width);margin:0 auto;padding:28px}
+
+/**
+ * Header grid layout
+ * Flexbox layout for header with logo on left, nav on right
+ */
 .header-grid{display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+/* ============================================================================
+   4. NAVIGATION & HEADER
+   ============================================================================ */
+
+/**
+ * Logo menu wrapper
+ * Contains the logo and positions the dropdown menu
+ */
 .logo-menu{position:relative;display:flex;align-items:center}
+
+/**
+ * Logo component
+ * Displays logo image with text, used in header and footer
+ */
 .logo{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;font-weight:600}
 .logo img{width:38px;height:38px;display:block;object-fit:contain;flex:none;filter:drop-shadow(0 6px 18px rgba(119,240,248,0.25))}
 .logo span{line-height:1}
+
+/**
+ * Logo toggle button
+ * Opens the mega menu when clicked
+ */
 .logo-toggle{border:0;background:transparent;padding:6px 8px;border-radius:12px;cursor:pointer;font:inherit}
 .logo-toggle:hover{background:rgba(232,255,249,0.04);box-shadow:0 0 0 1px rgba(232,255,249,0.08)}
 .logo-toggle:focus-visible{outline:2px solid rgba(119,240,248,0.6);outline-offset:3px}
+
+/**
+ * Chevron indicator for dropdown
+ */
 .chevron{font-size:0.9rem;color:var(--muted)}
+
+/**
+ * Mega menu panel
+ * Large dropdown menu with multiple sections and product links
+ * Uses backdrop-filter for glass-morphism effect
+ */
 .logo-menu-panel{position:absolute;top:calc(100% + 12px);left:0;background:rgba(6,26,34,0.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 50px rgba(0,0,0,0.42),0 0 0 1px rgba(119,240,248,0.12);border-radius:16px;padding:16px;min-width:620px;max-width:min(720px, 96vw);z-index:90}
+
+/**
+ * Mega menu grid layout
+ * Three-column grid for organized menu sections
+ */
 .menu-grid{display:grid;grid-template-columns:1.4fr 0.9fr 0.9fr;gap:14px}
+
+/**
+ * Menu section containers
+ * Each section has subtle background and border
+ */
 .menu-section{background:rgba(232,255,249,0.02);border:1px solid rgba(232,255,249,0.04);border-radius:12px;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+
+/**
+ * Menu section headings
+ * Uppercase labels for menu categories
+ */
 .menu-heading{font-weight:800;letter-spacing:0.02em;text-transform:uppercase;font-size:0.85rem;margin-bottom:8px;color:#b5f5e8}
+
+/**
+ * Menu items
+ * Interactive links with hover effects
+ */
 .menu-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border-radius:10px;color:inherit;text-decoration:none;border:1px solid transparent;transition:border-color 0.15s ease, background 0.15s ease}
 .menu-item:hover{border-color:rgba(119,240,248,0.25);background:rgba(119,240,248,0.06)}
 .menu-item strong{display:block;font-size:1rem;margin-bottom:4px}
 .menu-item p{margin:0;color:var(--muted);font-size:0.9rem}
+
+/**
+ * Menu lists
+ * Simpler list-style menu items
+ */
 .menu-list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
 .menu-list a{color:inherit;text-decoration:none;padding:10px;border-radius:10px;border:1px solid transparent;display:block}
 .menu-list a:hover{border-color:rgba(119,240,248,0.25);background:rgba(119,240,248,0.06)}
+
+/**
+ * Menu footer CTA section
+ * Highlighted area at bottom of mega menu
+ */
 .menu-footer{margin-top:12px;padding:12px;border-radius:12px;border:1px solid rgba(232,255,249,0.06);background:linear-gradient(120deg, rgba(119,240,248,0.1), rgba(76,245,199,0.12));display:flex;align-items:center;justify-content:space-between;gap:12px}
 .menu-footer p{margin:6px 0 0;color:var(--muted)}
 .menu-footer .btn{white-space:nowrap}
+
+/**
+ * Primary navigation
+ * Horizontal navigation links
+ */
 .nav{display:flex;gap:12px;align-items:center}
 .nav a{color:var(--muted);text-decoration:none;padding:8px;border-radius:8px;transition:color 0.2s ease, background 0.2s ease}
 .nav a:hover{color:#e8fff9;background:var(--glass)}
+
+/**
+ * Accessibility helper
+ * Hides content visually while keeping it accessible to screen readers
+ */
 .visually-hidden{position:absolute;clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden;padding:0;border:0}
 
 .btn{font-weight:600;border:0;padding:9px 14px;border-radius:10px;cursor:pointer}
