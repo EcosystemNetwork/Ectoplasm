@@ -145,13 +145,13 @@
           <form class="swap-form swap-form-compact" onsubmit="event.preventDefault(); demoSwap();">
             <label class="token-row">
               <div class="token-row-top">
-                <span class="muted">From</span>
+                <span class="muted">Sell</span>
                 <span class="balance">Balance: 0</span>
               </div>
               <div class="token-input">
-                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="From amount" />
+                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Sell amount" />
                 <div class="token-selector">
-                  <select id="fromToken" aria-label="From token">
+                  <select id="fromToken" aria-label="Sell token">
                     <option value="cspr">CSPR</option>
                     <option value="ecto">ECTO</option>
                   </select>
@@ -166,13 +166,13 @@
 
             <label class="token-row">
               <div class="token-row-top">
-                <span class="muted">To</span>
-                <span class="balance">Receive est.</span>
+                <span class="muted">Buy</span>
+                <span class="balance">Estimated</span>
               </div>
               <div class="token-input">
-                <input id="toAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="To amount" disabled />
+                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" disabled />
                 <div class="token-selector">
-                  <select id="toToken" aria-label="To token">
+                  <select id="toToken" aria-label="Buy token">
                     <option value="ecto">ECTO</option>
                     <option value="cspr">CSPR</option>
                   </select>
