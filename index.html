@@ -109,27 +109,17 @@
   <main>
     <section class="hero swap-hero" id="swap">
       <div class="container swap-layout">
-        <div class="swap-heading">
-          <h1>Swap anytime, anywhere</h1>
-          <p class="muted">A focused interface inspired by Uniswap, with extra controls tucked away in lightweight pop outs.</p>
-        </div>
-        <div class="hero-card swap-shell" aria-labelledby="swap-title">
-          <div class="swap-toolbar compact">
-            <div class="swap-title-stack">
-              <div class="pill">Swap</div>
-              <p class="muted" id="swap-title">Balanced, fast swaps on Casper.</p>
-            </div>
-            <div class="swap-quick-actions" aria-label="Swap controls">
-              <button type="button" class="icon-btn" data-popout-target="settingsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="settingsPopout">
-                <span class="visually-hidden">Open swap settings</span>
+        <div class="hero-card swap-shell">
+          <div class="swap-card-header">
+            <div class="pill subtle">Swap</div>
+            <div class="quick-icons" aria-label="Swap controls">
+              <button type="button" class="icon-btn" data-popout-target="settingsPopout" aria-label="Swap settings" aria-haspopup="true" aria-expanded="false" aria-controls="settingsPopout">
                 <span aria-hidden="true">⚙️</span>
               </button>
-              <button type="button" class="icon-btn" data-popout-target="detailsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="detailsPopout">
-                <span class="visually-hidden">Open trade details</span>
+              <button type="button" class="icon-btn" data-popout-target="detailsPopout" aria-label="Trade details" aria-haspopup="true" aria-expanded="false" aria-controls="detailsPopout">
                 <span aria-hidden="true">📊</span>
               </button>
-              <button type="button" class="icon-btn" data-popout-target="networkPopout" aria-haspopup="true" aria-expanded="false" aria-controls="networkPopout">
-                <span class="visually-hidden">Open network and wallet status</span>
+              <button type="button" class="icon-btn" data-popout-target="networkPopout" aria-label="Network and wallet status" aria-haspopup="true" aria-expanded="false" aria-controls="networkPopout">
                 <span aria-hidden="true">🌐</span>
               </button>
             </div>
@@ -137,13 +127,13 @@
           <form class="swap-form swap-form-compact" onsubmit="event.preventDefault(); demoSwap();">
             <label class="token-row">
               <div class="token-row-top">
-                <span class="muted">From</span>
+                <span class="muted">Sell</span>
                 <span class="balance">Balance: 0</span>
               </div>
               <div class="token-input">
-                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="From amount" />
+                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Sell amount" />
                 <div class="token-selector">
-                  <select id="fromToken" aria-label="From token">
+                  <select id="fromToken" aria-label="Sell token">
                     <option value="cspr">CSPR</option>
                     <option value="ecto">ECTO</option>
                   </select>
@@ -158,13 +148,13 @@
 
             <label class="token-row">
               <div class="token-row-top">
-                <span class="muted">To</span>
-                <span class="balance">Receive est.</span>
+                <span class="muted">Buy</span>
+                <span class="balance">Estimated</span>
               </div>
               <div class="token-input">
-                <input id="toAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="To amount" disabled />
+                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" disabled />
                 <div class="token-selector">
-                  <select id="toToken" aria-label="To token">
+                  <select id="toToken" aria-label="Buy token">
                     <option value="ecto">ECTO</option>
                     <option value="cspr">CSPR</option>
                   </select>
@@ -172,15 +162,9 @@
               </div>
             </label>
 
-            <div class="swap-inline-meta">
-              <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
-              <span class="muted">Price impact <strong id="priceImpact">0.00%</strong> · Fee 0.25%</span>
-            </div>
-
             <div class="swap-actions">
-              <button type="submit" class="btn primary full">Connect wallet to swap</button>
+              <button type="submit" class="btn primary full" id="swapActionBtn">Get started</button>
             </div>
-            <small class="muted">Demo UI: connect CasperSigner or CSPR.CLOUD wallet to enable live swaps. All on-chain transactions are signed by your wallet.</small>
           </form>
 
           <div class="swap-popouts" aria-live="polite">
