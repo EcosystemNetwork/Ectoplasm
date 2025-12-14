@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const connectWallet = document.getElementById('connectWallet');
   if (connectWallet) connectWallet.addEventListener('click', connectWalletHandler);
 
+  setupLogoMenu();
   setupSwapDemo();
   setupPromoSlider();
   renderDashboard();
@@ -144,6 +145,50 @@ async function connectWalletHandler(){
     alert('Wallet connection failed: ' + (err.message || err));
     updateWalletStatus('Connection failed');
   }
+}
+
+function setupLogoMenu(){
+  const toggle = document.getElementById('logoMenuToggle');
+  const menu = document.getElementById('logoMenu');
+  if(!toggle || !menu) return;
+
+  const closeMenu = () => {
+    menu.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+
+  const openMenu = () => {
+    menu.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+  };
+
+  toggle.addEventListener('click', () => {
+    if(menu.hidden){
+      openMenu();
+    } else {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if(menu.hidden) return;
+    if(!menu.contains(e.target) && !toggle.contains(e.target)){
+      closeMenu();
+    }
+  });
+
+  menu.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      closeMenu();
+      toggle.focus();
+    }
+  });
+
+  toggle.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape'){
+      closeMenu();
+    }
+  });
 }
 
 async function requestCasperWalletConnection(provider){

@@ -22,10 +22,77 @@
 <body>
   <header class="site-header">
     <div class="container header-grid">
-      <a class="logo" href="/">
-        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
-        <span>Ectoplasm</span>
-      </a>
+      <div class="logo-menu">
+        <button type="button" class="logo logo-toggle" id="logoMenuToggle" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="logo-menu-panel" id="logoMenu" hidden>
+          <div class="menu-grid">
+            <div class="menu-section">
+              <div class="menu-heading">Products</div>
+              <a class="menu-item" href="/">
+                <div>
+                  <strong>Wallet</strong>
+                  <p>Swap, secure, protocol</p>
+                </div>
+                <span class="pill">Live</span>
+              </a>
+              <a class="menu-item" href="/swap.html">
+                <div>
+                  <strong>UniswapX</strong>
+                  <p>The meta-aggregator</p>
+                </div>
+                <span class="pill">Beta</span>
+              </a>
+              <a class="menu-item" href="/api">
+                <div>
+                  <strong>API</strong>
+                  <p>High-volume, performant</p>
+                </div>
+                <span class="pill">High volume</span>
+              </a>
+              <a class="menu-item" href="/launchpad.html">
+                <div>
+                  <strong>Unichain</strong>
+                  <p>The Uniswap Chain</p>
+                </div>
+                <span class="pill">Base</span>
+              </a>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Use for</div>
+              <ul class="menu-list">
+                <li><a href="/#swap">Swap crypto</a></li>
+                <li><a href="/liquidity.html">Provide liquidity</a></li>
+                <li><a href="/launchpad.html">Launch tokens</a></li>
+                <li><a href="/dashboard.html">Track positions</a></li>
+              </ul>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Company</div>
+              <ul class="menu-list">
+                <li><a href="/docs/roadmap.html">About</a></li>
+                <li><a href="/docs/careers.html">Careers</a></li>
+                <li><a href="/docs/blog.html">Blog</a></li>
+              </ul>
+              <div class="menu-heading">Legal &amp; Privacy</div>
+              <ul class="menu-list">
+                <li><a href="/privacy.html">Privacy</a></li>
+                <li><a href="/docs/terms.html">Terms</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="menu-footer">
+            <div>
+              <div class="menu-heading">Get the app</div>
+              <p>Swap and sell crypto on 16+ networks including Ethereum, Unichain, and Base.</p>
+            </div>
+            <a class="btn primary" href="/swap.html">Get app</a>
+          </div>
+        </div>
+      </div>
       <nav class="nav" aria-label="Primary navigation">
         <a href="/#swap" aria-current="page">Swap</a>
         <a href="/#overview">Overview</a>
@@ -41,23 +108,13 @@
 
   <main>
     <section class="hero swap-hero" id="swap">
-      <div class="container hero-grid">
-        <div class="hero-copy">
+      <div class="container swap-layout">
+        <div class="swap-heading">
           <div class="brand-badge">
             <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
-            <span>Trade first</span>
+            <span>Swap anytime, anywhere</span>
           </div>
-          <h1>Start swapping immediately — no extra landing screen.</h1>
-          <p class="lead">A Uniswap-inspired, single-card terminal sits at the very top of the experience. Connect your wallet, set slippage, and move between CSPR and ECTO with clear routing and instant feedback.</p>
-          <div class="hero-cta">
-            <a href="#swap" class="btn primary large">Launch swap</a>
-            <a href="#overview" class="btn ghost large">Scroll to overview</a>
-          </div>
-          <ul class="trust-list" aria-hidden="false">
-            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
-            <li>Casper mainnet routing</li>
-            <li>Wallet status shown inline</li>
-          </ul>
+          <h1>Swap anytime, anywhere.</h1>
         </div>
         <div class="hero-card swap-shell" aria-labelledby="swap-title">
           <div class="swap-header">
@@ -159,6 +216,17 @@
               <small class="muted">Demo UI: connect CasperSigner or CSPR.CLOUD wallet to enable live swaps. All on-chain transactions are signed by your wallet.</small>
             </form>
           </div>
+        </div>
+        <div class="hero-copy swap-copy">
+          <p class="lead">A focused swap card sits front and center. Connect your wallet, set slippage, and move between CSPR and ECTO with clear routing and instant feedback.</p>
+          <div class="hero-cta">
+            <a href="#swap" class="btn primary large">Get started</a>
+          </div>
+          <ul class="trust-list" aria-hidden="false">
+            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
+            <li>Casper mainnet routing</li>
+            <li>Wallet status shown inline</li>
+          </ul>
         </div>
       </div>
     </section>
