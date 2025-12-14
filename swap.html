@@ -4,7 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ectoplasm — Swap</title>
+  <meta http-equiv="refresh" content="0; url=/#swap" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    window.location.replace('/#swap');
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -14,10 +18,10 @@
         <span>Ectoplasm</span>
       </a>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Landing</a>
+        <a href="/#swap" aria-current="page">Swap</a>
+        <a href="/#overview">Overview</a>
         <a href="/dashboard.html">Dashboard</a>
         <a href="/launchpad.html">Launchpad</a>
-        <a href="/swap.html" aria-current="page">Swap</a>
         <a href="/liquidity.html">Liquidity</a>
         <a href="/privacy.html">Privacy</a>
         <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
@@ -27,125 +31,30 @@
   </header>
 
   <main>
-    <section class="hero swap-hero">
+    <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
           <div class="brand-badge">
             <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
-            <span>Trade flow</span>
+            <span>Redirecting</span>
           </div>
-          <h1>Swap assets with a Uniswap-grade surface</h1>
-          <p class="lead">A crisp, single-card layout that mirrors the Uniswap experience: minimal chrome, clear balances, and instant access to slippage controls, routing, and wallet state.</p>
+          <h1>The swapper now lives on the home page.</h1>
+          <p class="lead">We're sending you to the combined swap + overview experience. If you're not redirected automatically, use the button below.</p>
           <div class="hero-cta">
-            <a href="#swap" class="btn primary large">Open swap</a>
-            <a href="/liquidity.html" class="btn ghost large">Pool liquidity</a>
+            <a href="/#swap" class="btn primary large">Go to swapper</a>
+            <a href="/#overview" class="btn ghost large">See the overview</a>
           </div>
-          <ul class="trust-list">
-            <li><strong id="priceTicker">CSPR $--.--</strong></li>
-            <li>Casper mainnet routing</li>
-            <li>Wallet status shown inline</li>
-          </ul>
         </div>
-        <div class="hero-card swap-shell" id="swap" aria-labelledby="swap-title">
-          <div class="swap-header">
-            <div class="swap-tabs" role="tablist" aria-label="Swap modes">
-              <button class="pill active" role="tab" aria-selected="true">Swap</button>
-              <button class="pill ghost" role="tab" aria-selected="false" disabled>Limit</button>
-            </div>
-            <div class="network-pill">Casper mainnet</div>
+        <div class="hero-card">
+          <div class="card-top">
+            <h2>What's changed</h2>
+            <span class="status-badge">Unified entry</span>
           </div>
-          <div class="swap-card glass">
-            <div class="card-top">
-              <h2 id="swap-title">Swap (Demo)</h2>
-              <span id="walletStatus" class="status-badge">Wallet disconnected</span>
-            </div>
-            <div class="swap-meta muted">Balance visible after connecting your wallet</div>
-            <form class="swap-form" onsubmit="event.preventDefault(); demoSwap();">
-              <label class="token-row">
-                <div class="token-row-top">
-                  <span class="muted">From</span>
-                  <span class="balance">Balance: --</span>
-                </div>
-                <div class="token-input">
-                  <input id="fromAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="From amount"/>
-                  <div class="token-selector">
-                    <select id="fromToken" aria-label="From token">
-                      <option value="cspr">CSPR</option>
-                      <option value="ecto">ECTO</option>
-                    </select>
-                  </div>
-                </div>
-              </label>
-
-              <div class="arrow-divider" aria-hidden="true">
-                <span class="arrow">↓</span>
-                <span class="muted">1 CSPR = 0.5 ECTO (demo)</span>
-              </div>
-
-              <label class="token-row">
-                <div class="token-row-top">
-                  <span class="muted">To</span>
-                  <span class="balance">Receive est.</span>
-                </div>
-                <div class="token-input">
-                  <input id="toAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="To amount" disabled/>
-                  <div class="token-selector">
-                    <select id="toToken" aria-label="To token">
-                      <option value="ecto">ECTO</option>
-                      <option value="cspr">CSPR</option>
-                    </select>
-                  </div>
-                </div>
-              </label>
-
-              <div class="swap-meta">
-                <span>Price impact <strong id="priceImpact">0.00%</strong></span>
-                <span>Fee <strong>0.25%</strong></span>
-              </div>
-
-              <div class="swap-controls">
-                <div class="slippage-col">
-                  <label class="muted" for="slippage">Slippage tolerance</label>
-                  <div class="pill-row tight">
-                    <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.1%</button>
-                    <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.5'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.5%</button>
-                    <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">1%</button>
-                    <div class="input-row tight compact">
-                      <input id="slippage" type="number" inputmode="decimal" step="0.1" min="0" aria-label="Slippage tolerance" value="0.5" />
-                      <span class="suffix">%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
-              </div>
-
-              <div class="quick-amounts" aria-label="Quick amount buttons">
-                <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='10'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">10</button>
-                <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='100'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">100</button>
-                <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='250'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">250</button>
-              </div>
-
-              <dl class="swap-breakdown">
-                <div>
-                  <dt>Minimum received</dt>
-                  <dd>Respecting slippage controls</dd>
-                </div>
-                <div>
-                  <dt>Route</dt>
-                  <dd>Auto (best path)</dd>
-                </div>
-                <div>
-                  <dt>Network</dt>
-                  <dd>Casper mainnet</dd>
-                </div>
-              </dl>
-
-              <div class="swap-actions">
-                <button type="submit" class="btn primary full">Connect wallet to swap</button>
-              </div>
-              <small class="muted">Demo UI: connect CasperSigner or CSPR.CLOUD wallet to enable live swaps. All on-chain transactions are signed by your wallet.</small>
-            </form>
-          </div>
+          <ul class="trust-list" aria-label="Navigation options">
+            <li>Swap terminal is now the landing surface</li>
+            <li>Original landing content sits beneath the swap</li>
+            <li>All feature pages remain linked</li>
+          </ul>
         </div>
       </div>
     </section>

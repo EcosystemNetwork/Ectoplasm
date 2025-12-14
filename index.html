@@ -8,7 +8,7 @@
   <meta property="og:title" content="Ectoplasm — Fast, Secure DEX on Casper" />
   <meta property="og:description" content="Next-generation DEX on Casper Network. Swap, provide liquidity, and earn securely with audited contracts and industry-leading UX." />
   <meta property="og:image" content="/assets/og-image.png" />
-  
+
   <!-- Favicons -->
   <link rel="icon" type="image/ico+xml" href="/assets/favicon.ico" />
   <link rel="icon" type="image/ico+xml" sizes="16x16" href="/assets/favicon-16x16.ico" />
@@ -16,7 +16,7 @@
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.ico" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#1ed8a2" />
-  
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -27,10 +27,10 @@
         <span>Ectoplasm</span>
       </a>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Landing</a>
+        <a href="/#swap" aria-current="page">Swap</a>
+        <a href="/#overview">Overview</a>
         <a href="/dashboard.html">Dashboard</a>
         <a href="/launchpad.html">Launchpad</a>
-        <a href="/swap.html">Swap</a>
         <a href="/liquidity.html">Liquidity</a>
         <a href="/privacy.html">Privacy</a>
         <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
@@ -40,42 +40,165 @@
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero swap-hero" id="swap">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="brand-badge">
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <span>Trade first</span>
+          </div>
+          <h1>Start swapping immediately — no extra landing screen.</h1>
+          <p class="lead">A Uniswap-inspired, single-card terminal sits at the very top of the experience. Connect your wallet, set slippage, and move between CSPR and ECTO with clear routing and instant feedback.</p>
+          <div class="hero-cta">
+            <a href="#swap" class="btn primary large">Launch swap</a>
+            <a href="#overview" class="btn ghost large">Scroll to overview</a>
+          </div>
+          <ul class="trust-list" aria-hidden="false">
+            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
+            <li>Casper mainnet routing</li>
+            <li>Wallet status shown inline</li>
+          </ul>
+        </div>
+        <div class="hero-card swap-shell" aria-labelledby="swap-title">
+          <div class="swap-header">
+            <div class="swap-tabs" role="tablist" aria-label="Swap modes">
+              <button class="pill active" role="tab" aria-selected="true">Swap</button>
+              <button class="pill ghost" role="tab" aria-selected="false" disabled>Limit</button>
+            </div>
+            <div class="network-pill">Casper mainnet</div>
+          </div>
+          <div class="swap-card glass">
+            <div class="card-top">
+              <h2 id="swap-title">Swap (Demo)</h2>
+              <span id="walletStatus" class="status-badge">Wallet disconnected</span>
+            </div>
+            <div class="swap-meta muted">Balance visible after connecting your wallet</div>
+            <form class="swap-form" onsubmit="event.preventDefault(); demoSwap();">
+              <label class="token-row">
+                <div class="token-row-top">
+                  <span class="muted">From</span>
+                  <span class="balance">Balance: --</span>
+                </div>
+                <div class="token-input">
+                  <input id="fromAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="From amount"/>
+                  <div class="token-selector">
+                    <select id="fromToken" aria-label="From token">
+                      <option value="cspr">CSPR</option>
+                      <option value="ecto">ECTO</option>
+                    </select>
+                  </div>
+                </div>
+              </label>
+
+              <div class="arrow-divider" aria-hidden="true">
+                <span class="arrow">↓</span>
+                <span class="muted">1 CSPR = 0.5 ECTO (demo)</span>
+              </div>
+
+              <label class="token-row">
+                <div class="token-row-top">
+                  <span class="muted">To</span>
+                  <span class="balance">Receive est.</span>
+                </div>
+                <div class="token-input">
+                  <input id="toAmount" type="number" inputmode="decimal" placeholder="0.00" min="0" step="any" aria-label="To amount" disabled/>
+                  <div class="token-selector">
+                    <select id="toToken" aria-label="To token">
+                      <option value="ecto">ECTO</option>
+                      <option value="cspr">CSPR</option>
+                    </select>
+                  </div>
+                </div>
+              </label>
+
+              <div class="swap-meta">
+                <span>Price impact <strong id="priceImpact">0.00%</strong></span>
+                <span>Fee <strong>0.25%</strong></span>
+              </div>
+
+              <div class="swap-controls">
+                <div class="slippage-col">
+                  <label class="muted" for="slippage">Slippage tolerance</label>
+                  <div class="pill-row tight">
+                    <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.1%</button>
+                    <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.5'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.5%</button>
+                    <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">1%</button>
+                    <div class="input-row tight compact">
+                      <input id="slippage" type="number" inputmode="decimal" step="0.1" min="0" aria-label="Slippage tolerance" value="0.5" />
+                      <span class="suffix">%</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
+              </div>
+
+              <div class="quick-amounts" aria-label="Quick amount buttons">
+                <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='10'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">10</button>
+                <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='100'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">100</button>
+                <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='250'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">250</button>
+              </div>
+
+              <dl class="swap-breakdown">
+                <div>
+                  <dt>Minimum received</dt>
+                  <dd>Respecting slippage controls</dd>
+                </div>
+                <div>
+                  <dt>Route</dt>
+                  <dd>Auto (best path)</dd>
+                </div>
+                <div>
+                  <dt>Network</dt>
+                  <dd>Casper mainnet</dd>
+                </div>
+              </dl>
+
+              <div class="swap-actions">
+                <button type="submit" class="btn primary full">Connect wallet to swap</button>
+              </div>
+              <small class="muted">Demo UI: connect CasperSigner or CSPR.CLOUD wallet to enable live swaps. All on-chain transactions are signed by your wallet.</small>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section landing-overview" id="overview">
       <div class="container hero-grid">
         <div class="hero-copy">
           <div class="brand-badge" aria-label="Ectoplasm brand mark">
             <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
-            <span>Casper-native DEX</span>
+            <span>Everything below the swap</span>
           </div>
-          <h1>Welcome to Ectoplasm — a complete on-chain experience.</h1>
-          <p class="lead">This landing page explains the mission. Dedicated pages guide you to the swap terminal, liquidity tools, privacy pools, pump.fun style launchpad, and a gamified user dashboard that brings you back every day.</p>
+          <h2>After the swap card, the full Ectoplasm story continues.</h2>
+          <p class="lead">The original landing content now lives directly under the trading surface. Scroll to learn how liquidity, the launchpad, privacy tools, and the gamified dashboard round out the Casper-native DEX.</p>
           <div class="hero-cta">
             <a href="/dashboard.html" class="btn primary large">Open Dashboard</a>
             <a href="/launchpad.html" class="btn ghost large">Explore Launchpad</a>
           </div>
           <ul class="trust-list" aria-hidden="false">
-            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
             <li>Audited smart contracts</li>
             <li>Dedicated feature pages</li>
+            <li>Built for return visits</li>
           </ul>
         </div>
         <div class="hero-card" aria-labelledby="map-title">
           <div class="card-top">
-            <h2 id="map-title">Everything in its place</h2>
+            <h3 id="map-title">Everything in its place</h3>
             <span class="status-badge">Multi-page layout</span>
           </div>
           <div class="feature-map">
             <div>
-              <h3>Core actions</h3>
+              <h4>Core actions</h4>
               <ul>
-                <li><a href="/swap.html">Swap terminal</a> for fast trades</li>
+                <li><a href="/#swap">Swap terminal</a> for fast trades</li>
                 <li><a href="/liquidity.html">Liquidity & farms</a> with rewards</li>
                 <li><a href="/privacy.html">Privacy pools</a> for shielded swaps</li>
                 <li><a href="/launchpad.html">Launchpad</a> with 50 mock tokens</li>
               </ul>
             </div>
             <div>
-              <h3>Retention</h3>
+              <h4>Retention</h4>
               <ul>
                 <li><a href="/dashboard.html">User dashboard</a> with daily quests</li>
                 <li>Return streaks & XP rewards</li>
@@ -93,13 +216,13 @@
           <div class="brand-mark" aria-hidden="true">
             <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
           </div>
-          <h2>Start from the landing, branch to a feature</h2>
+          <h2>Explore the pages that live beneath the swapper</h2>
         </div>
         <div class="features-grid">
           <article>
             <h3>Swap</h3>
-            <p>Fast Casper-native swapping with slippage control and a clean terminal on its own page.</p>
-            <a class="chip" href="/swap.html">Open swap terminal</a>
+            <p>Fast Casper-native swapping with slippage control and a clean terminal anchored on the home page.</p>
+            <a class="chip" href="/#swap">Open swap terminal</a>
           </article>
           <article>
             <h3>Liquidity & Farming</h3>
@@ -159,9 +282,9 @@
       <div class="container">
         <h2>How it works</h2>
         <ol class="steps">
-          <li><strong>Land here</strong> — learn the mission and pick a destination.</li>
-          <li><strong>Use the dashboard</strong> — complete daily tasks and quests.</li>
-          <li><strong>Choose a feature</strong> — swap, provide liquidity, launch tokens, or explore privacy.</li>
+          <li><strong>Land on the swapper</strong> — connect and trade immediately.</li>
+          <li><strong>Scroll for depth</strong> — see dashboards, liquidity tools, privacy pools, and launchpad access.</li>
+          <li><strong>Return daily</strong> — quests, streaks, and on-chain tasks keep users engaged.</li>
         </ol>
       </div>
     </section>
