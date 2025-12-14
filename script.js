@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setupLogoMenu();
   setupSwapDemo();
+  setupPopouts();
   setupPromoSlider();
   renderDashboard();
   renderLaunchpadTokens();
@@ -206,6 +207,7 @@ function setupSwapDemo(){
   const fromAmt = document.getElementById('fromAmount');
   const toAmt = document.getElementById('toAmount');
   const priceImpact = document.getElementById('priceImpact');
+  const priceImpactDetail = document.getElementById('priceImpactDetail');
   const slippage = document.getElementById('slippage');
   const swapHealth = document.getElementById('swapHealth');
 
@@ -220,7 +222,11 @@ function setupSwapDemo(){
     const rate = 0.5;
     toAmt.value = (val * rate).toFixed(6);
     const impact = Math.min(0.5, (val/1000)); // demo price impact
-    priceImpact.textContent = (impact*100).toFixed(2) + '%';
+    const impactText = (impact*100).toFixed(2) + '%';
+    priceImpact.textContent = impactText;
+    if(priceImpactDetail){
+      priceImpactDetail.textContent = impactText;
+    }
     if (swapHealth){
       const severity = impact > 0.2 ? 'warn' : 'good';
       swapHealth.textContent = severity === 'warn' ? 'High impact — adjust size' : 'Optimal routing';
@@ -233,6 +239,45 @@ function setupSwapDemo(){
       slippage.value = Math.min(Math.max(parseFloat(slippage.value) || 0.1, 0.1), 5).toString();
     });
   }
+}
+
+function setupPopouts(){
+  const triggers = Array.from(document.querySelectorAll('[data-popout-target]'));
+  if(!triggers.length) return;
+
+  const entries = triggers
+    .map((btn) => ({btn, popout: document.getElementById(btn.dataset.popoutTarget)}))
+    .filter((entry) => entry.popout);
+
+  const closeAll = () => {
+    entries.forEach(({btn, popout}) => {
+      popout.setAttribute('hidden', '');
+      btn.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  entries.forEach(({btn, popout}) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpen = !popout.hasAttribute('hidden');
+      closeAll();
+      if(!isOpen){
+        popout.removeAttribute('hidden');
+        btn.setAttribute('aria-expanded', 'true');
+        const focusable = popout.querySelector('button, [href], input, select, textarea');
+        if(focusable) focusable.focus();
+      }
+    });
+
+    popout.addEventListener('click', (e) => e.stopPropagation());
+    popout.querySelectorAll('[data-popout-close]').forEach((closeBtn) => closeBtn.addEventListener('click', closeAll));
+  });
+
+  document.addEventListener('click', closeAll);
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') closeAll();
+  });
 }
 
 function updateWalletStatus(message){
