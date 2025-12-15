@@ -234,6 +234,7 @@ main{flex:1;display:block}
 .nav{display:flex;gap:12px;align-items:center}
 .nav a{color:var(--muted);text-decoration:none;padding:8px;border-radius:8px;transition:color 0.2s ease, background 0.2s ease}
 .nav a:hover{color:#e8fff9;background:var(--glass)}
+.nav a.active,.nav a[aria-current="page"]{color:#e8fff9;background:var(--glass)}
 
 /**
  * Accessibility helper
@@ -334,6 +335,7 @@ main{flex:1;display:block}
 .token-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
 .token-input{display:flex;align-items:center;gap:8px}
 .token-input input{font-size:1.5rem;font-weight:700;border-radius:12px;padding:0;background:transparent;border:0;min-width:0;flex:1;color:inherit}
+.token-input input[readonly]{opacity:1}
 .token-selector select{-moz-appearance:none;-webkit-appearance:none;appearance:none;padding:10px 14px;border-radius:14px;border:1px solid rgba(119,240,248,0.25);background:rgba(8,26,34,0.82);color:#e8fff9;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.28);min-width:120px;font-size:0.95rem}
 .token-selector select{flex-shrink:0}
 .token-selector{position:relative}

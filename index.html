@@ -17,6 +17,16 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#1ed8a2" />
 
+  <script>
+    // Set theme ASAP to avoid flashes when navigating between pages
+    (function(){
+      const stored = localStorage.getItem('ectoplasm-theme');
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      const theme = stored || (prefersLight ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -114,7 +124,7 @@
         </div>
       </div>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/#swap" aria-current="page">Swap</a>
+        <a href="/#swap">Swap</a>
         <a href="/#overview">Overview</a>
         <a href="/dashboard.html">Dashboard</a>
         <a href="/launchpad.html">Launchpad</a>
@@ -184,7 +194,7 @@
                 <span class="balance">Estimated</span>
               </div>
               <div class="token-input">
-                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" disabled />
+                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" readonly />
                 <div class="token-selector">
                   <select id="toToken" aria-label="Buy token">
                     <option value="ecto">ECTO</option>
@@ -195,7 +205,7 @@
             </label>
 
             <div class="swap-actions">
-              <button type="submit" class="btn primary full" id="swapActionBtn">Connect wallet to swap</button>
+              <a class="btn primary full" id="swapActionBtn" href="/#swap" data-activate-swap>Let's Begin</a>
             </div>
             <small class="muted" id="orderSummary" hidden></small>
           </form>
