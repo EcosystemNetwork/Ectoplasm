@@ -346,6 +346,7 @@ main{flex:1;display:block}
 .swap-health{padding:6px 8px;border-radius:8px;background:rgba(0,255,170,0.08);border:1px solid rgba(0,255,170,0.18);color:#17d29a;font-weight:700;font-size:0.82rem;box-shadow:0 6px 18px rgba(0,0,0,0.16)}
 .swap-health[data-state="warn"]{background:rgba(255,180,0,0.1);border-color:rgba(255,180,0,0.24);color:#ffb400}
 .swap-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(120px,1fr));gap:8px;align-items:center}
+.settings-mini-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
 .order-controls{background:rgba(232,255,249,0.02);border:1px solid rgba(232,255,249,0.08);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:4px}
 .order-controls .input-row label{margin-bottom:4px}
 .order-controls .suffix{background:rgba(232,255,249,0.06);border-left:1px solid rgba(232,255,249,0.12)}
