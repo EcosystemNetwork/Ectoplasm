@@ -140,7 +140,9 @@
     <section class="hero swap-hero" id="swap">
       <div class="container swap-layout">
         <div class="swap-heading">
-          <h1 id="swap-heading-title">Swapping when & wherever you want to.</h1>
+          <p class="eyebrow">Casper-native Uniswap flow</p>
+          <h1 id="swap-heading-title">Trade, send, and bridge with a swapper that feels familiar.</h1>
+          <p class="subhead">Live pricing, responsive routing, and instant reversals so you can move value the way you do on Uniswap—without leaving Casper.</p>
         </div>
         <div class="hero-card swap-shell" aria-labelledby="swap-heading-title">
           <div class="swap-toolbar compact">
@@ -208,6 +210,24 @@
               <a class="btn primary full" id="swapActionBtn" href="/#swap" data-activate-swap>Let's Begin</a>
             </div>
             <small class="muted" id="orderSummary" hidden></small>
+            <div class="swap-meta" aria-live="polite">
+              <div class="meta-row">
+                <span class="muted">Rate</span>
+                <strong id="rateDisplay">--</strong>
+              </div>
+              <div class="meta-row">
+                <span class="muted">Route</span>
+                <strong>Auto · Casper mainnet</strong>
+              </div>
+              <div class="meta-row">
+                <span class="muted">Network fee</span>
+                <strong id="feeDisplay">~0.003 CSPR</strong>
+              </div>
+              <div class="meta-row">
+                <span class="muted">Minimum received</span>
+                <strong id="minReceived">--</strong>
+              </div>
+            </div>
           </form>
 
           <div class="swap-popouts" aria-live="polite">
@@ -298,15 +318,16 @@
             </div>
           </div>
         </div>
-        <div class="hero-copy swap-copy">
-          <p class="lead">A focused swap card sits front and center. Connect your wallet, set slippage, and move between CSPR and ECTO with clear routing and instant feedback.</p>
+        <div class="hero-copy swap-copy active">
+          <p class="lead">Front-and-center swapping with safety defaults baked in. Flip pairs instantly, preview slippage, and track live Casper pricing without digging through settings.</p>
           <div class="hero-cta">
             <a href="#swap" class="btn primary large">Get started</a>
+            <a href="/swap.html" class="btn ghost large">Open full swapper</a>
           </div>
           <ul class="trust-list" aria-hidden="false">
-            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
-            <li>Casper mainnet routing</li>
-            <li>Wallet status shown inline</li>
+            <li><strong id="priceTicker">CSPR $--.--</strong> spot oracle feed</li>
+            <li>Auto-routing with price impact guardrails</li>
+            <li>Quick amount presets &amp; slippage controls</li>
           </ul>
         </div>
       </div>
