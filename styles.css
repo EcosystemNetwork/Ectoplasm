@@ -133,20 +133,7 @@ body{
  */
 main{flex:1;display:block}
 
-/* ============================================================================
-   3. LAYOUT & CONTAINER STYLES
-   ============================================================================ */
-
-/**
- * Main content container
- * Centers content with max-width and provides consistent padding
- */
-.container{max-width:var(--max-width);margin:0 auto;padding:28px}
-
-/**
- * Header grid layout
- * Flexbox layout for header with logo on left, nav on right
- */
+.container{max-width:var(--max-width);margin:0 auto;padding:16px}
 .header-grid{display:flex;align-items:center;justify-content:space-between;gap:16px}
 
 /* ============================================================================
@@ -244,28 +231,10 @@ main{flex:1;display:block}
  */
 .visually-hidden{position:absolute;clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden;padding:0;border:0}
 
-/* ============================================================================
-   5. BUTTONS & INTERACTIVE ELEMENTS
-   ============================================================================ */
-
-/**
- * Base button styles
- * Shared styles for all button variants
- */
-.btn{font-weight:600;border:0;padding:9px 14px;border-radius:10px;cursor:pointer}
-
-/**
- * Button variants
- * - ghost: Transparent with border (secondary actions)
- * - primary: Gradient background (primary actions)
- */
+.btn{font-weight:600;border:0;padding:8px 12px;border-radius:10px;cursor:pointer}
 .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(232,255,249,0.08)}
 .btn.primary{background:var(--accent);background-size:200%;color:#021024}
-
-/**
- * Button size modifiers
- */
-.btn.large{padding:12px 20px}
+.btn.large{padding:10px 16px}
 .btn.full{width:100%}
 
 /**
@@ -274,26 +243,8 @@ main{flex:1;display:block}
  */
 .site-header{position:sticky;top:0;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-bottom:1px solid rgba(255,255,255,0.02);z-index:50}
 
-/* ============================================================================
-   6. HERO & LANDING SECTIONS
-   ============================================================================ */
-
-/**
- * Base hero section
- * Large top section with spacing
- */
-.hero{padding:64px 0 100px}
-
-/**
- * Swap hero variant
- * Special hero section for swap page with gradient background and overlay effects
- */
-.swap-hero{position:relative;overflow:hidden;min-height:auto;display:flex;align-items:flex-start;background:linear-gradient(180deg, #0f1018 0%, #0b0d14 100%);padding-top:0;padding-bottom:52px}
-
-/**
- * Decorative gradient overlays for swap hero
- * Creates atmospheric visual effects with blurred radial gradients
- */
+.hero{padding:20px 0 28px}
+.swap-hero{position:relative;overflow:hidden;min-height:auto;display:flex;align-items:flex-start;background:linear-gradient(180deg, #0f1018 0%, #0b0d14 100%);padding-top:0;padding-bottom:12px}
 .swap-hero::before{content:"";position:absolute;inset:-10% 30% auto auto;background:radial-gradient(420px 420px at 30% 40%, rgba(255,86,199,0.18), transparent 60%);filter:blur(18px);opacity:0.9;pointer-events:none}
 .swap-hero::after{content:"";position:absolute;inset:22% -28% -28% 42%;background:radial-gradient(520px 520px at 60% 30%, rgba(78,108,255,0.08), transparent 58%);pointer-events:none;filter:blur(14px);}
 
@@ -302,24 +253,15 @@ main{flex:1;display:block}
  * Two-column layout for hero content and card
  */
 .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
-.swap-layout{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;max-width:820px;margin:0 auto}
-.swap-heading{display:flex;flex-direction:column;align-items:center;gap:6px}
-.swap-heading h1{margin:24px 0 6px}
-
-/**
- * Swap shell container
- * Main card container for swap interface with glass-morphism effect
- */
-.swap-shell{position:relative;background:linear-gradient(160deg, rgba(18,20,34,0.94), rgba(10,12,22,0.98));border:1px solid rgba(255,255,255,0.06);box-shadow:0 24px 54px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:28px;padding:22px;max-width:480px;width:100%;margin-top:4px;overflow:visible}
-
+.swap-layout{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;max-width:820px;margin:0 auto}
+.swap-heading{display:flex;flex-direction:column;align-items:center;gap:1px}
+.swap-heading h1{margin:2px 0 1px;font-size:1.4rem}
+.swap-heading p{font-size:0.8rem;margin:0}
+.swap-shell{position:relative;background:linear-gradient(160deg, rgba(18,20,34,0.94), rgba(10,12,22,0.98));border:1px solid rgba(255,255,255,0.06);box-shadow:0 24px 54px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-radius:18px;padding:12px;max-width:480px;width:100%;margin-top:1px;overflow:visible}
 .swap-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px}
-.swap-card-header .pill.subtle{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:8px 14px;border-radius:999px;font-weight:700;font-size:0.95rem}
+.swap-card-header .pill.subtle{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:6px 12px;border-radius:999px;font-weight:700;font-size:0.85rem}
 .swap-card-header .quick-icons{gap:10px}
-
-/**
- * Hero content areas
- */
-.swap-copy{max-width:700px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.swap-copy{max-width:700px;display:none;flex-direction:column;align-items:center;gap:8px}
 .swap-copy .hero-cta{justify-content:center;flex-wrap:wrap}
 .swap-copy .trust-list{justify-content:center;flex-wrap:wrap}
 
@@ -327,25 +269,12 @@ main{flex:1;display:block}
  * Typography for hero sections
  */
 .hero-copy h1{font-size:clamp(1.6rem,3.6vw,2.8rem);margin:24px 0 12px}
-.lead{color:var(--muted);max-width:54ch}
-
-/**
- * Brand badge component
- * Highlighted badge with icon and text
- */
+.lead{color:var(--muted);max-width:54ch;font-size:0.9rem}
 .brand-badge{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:rgba(119,240,248,0.12);border:1px solid rgba(119,240,248,0.28);color:#7ef0e8;font-weight:700;letter-spacing:0.01em;text-transform:none;font-size:0.95rem;margin-bottom:10px;box-shadow:0 10px 26px rgba(0,0,0,0.24)}
 .brand-badge img{width:26px;height:26px;object-fit:contain}
-
-/**
- * Call-to-action button group
- */
-.hero-cta{display:flex;gap:12px;margin:18px 0}
-
-/**
- * Trust list - horizontal list of badges
- */
-.trust-list{display:flex;gap:12px;list-style:none;padding:0;margin:0;color:var(--muted)}
-.trust-list li{background:var(--glass);padding:8px 12px;border-radius:999px;font-size:0.92rem}
+.hero-cta{display:flex;gap:10px;margin:12px 0}
+.trust-list{display:flex;gap:8px;list-style:none;padding:0;margin:0;color:var(--muted)}
+.trust-list li{background:var(--glass);padding:6px 10px;border-radius:999px;font-size:0.85rem}
 
 /* ============================================================================
    7. CARDS & PANELS
@@ -356,56 +285,15 @@ main{flex:1;display:block}
  * Card with gradient background used in hero sections
  */
 .hero-card{background:linear-gradient(180deg, rgba(86,255,211,0.06), transparent);padding:18px;border-radius:var(--radius);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 48px rgba(0,0,0,0.26)}
-
-/**
- * Card header section
- */
-.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
-
-/**
- * Feature map grid
- * Grid layout for feature lists
- */
-.feature-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;color:var(--muted)}
-.feature-map ul{padding-left:18px;line-height:1.6;margin:6px 0 0}
-
-/**
- * Glass-morphism card
- * Card with blur effect and semi-transparent background
- */
-.glass{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(6,26,34,0.85));border:1px solid rgba(232,255,249,0.08);border-radius:18px;padding:16px;box-shadow:0 18px 48px rgba(0,0,0,0.24)}
-
-/* ============================================================================
-   8. SWAP INTERFACE COMPONENTS
-   ============================================================================ */
-
-/**
- * Swap toolbar
- * Top bar with mode tabs and utility buttons
- */
-.swap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
-.swap-toolbar.compact{margin-bottom:6px}
-
-/**
- * Swap title stack
- * Mode pill and description text
- */
-.swap-title-stack{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left}
+.swap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.swap-toolbar.compact{margin-bottom:4px}
+.swap-title-stack{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left}
 .swap-title-stack .pill{background:rgba(119,240,248,0.18);border-color:rgba(119,240,248,0.3);color:#e8fff9}
-.swap-title-stack p{margin:0;font-size:0.95rem}
-
-/**
- * Quick actions group
- */
+.swap-title-stack p{margin:0;font-size:0.88rem}
 .swap-quick-actions{display:flex;align-items:center;gap:8px}
-.quick-icons{display:flex;align-items:center;gap:6px}
-
-/**
- * Swap mode tabs
- * Tab buttons for switching between swap modes (swap, limit, buy, sell)
- */
-.swap-tabs{display:flex;gap:8px}
-.swap-tabs .pill{padding:9px 14px;border-radius:999px;border:1px solid rgba(232,255,249,0.16);background:rgba(232,255,249,0.04);color:inherit;cursor:pointer;font-weight:700}
+.quick-icons{display:flex;align-items:center;gap:4px}
+.swap-tabs{display:flex;gap:6px}
+.swap-tabs .pill{padding:7px 12px;border-radius:999px;border:1px solid rgba(232,255,249,0.16);background:rgba(232,255,249,0.04);color:inherit;cursor:pointer;font-weight:700;font-size:0.85rem}
 .swap-tabs .pill.active{background:linear-gradient(120deg, rgba(119,240,248,0.2), rgba(76,245,199,0.22));border-color:rgba(119,240,248,0.3);color:#e8fff9;box-shadow:0 0 0 1px rgba(119,240,248,0.14)}
 .swap-tabs .pill.ghost{background:transparent;color:var(--muted)}
 
@@ -413,12 +301,7 @@ main{flex:1;display:block}
  * Toolbar actions
  */
 .toolbar-actions{display:flex;align-items:center;gap:10px}
-
-/**
- * Icon button
- * Small circular button with icon for settings, details, network
- */
-.icon-btn{border:1px solid rgba(232,255,249,0.12);background:rgba(255,255,255,0.04);color:inherit;padding:10px 12px;border-radius:14px;cursor:pointer;display:grid;place-items:center;min-width:42px;min-height:42px;box-shadow:0 10px 28px rgba(0,0,0,0.25);transition:transform 0.1s ease, border-color 0.15s ease, background 0.15s ease}
+.icon-btn{border:1px solid rgba(232,255,249,0.12);background:rgba(255,255,255,0.04);color:inherit;padding:8px 10px;border-radius:12px;cursor:pointer;display:grid;place-items:center;min-width:38px;min-height:38px;box-shadow:0 10px 28px rgba(0,0,0,0.25);transition:transform 0.1s ease, border-color 0.15s ease, background 0.15s ease}
 .icon-btn:hover{border-color:rgba(119,240,248,0.25);background:rgba(119,240,248,0.08);transform:translateY(-1px)}
 .icon-btn:focus-visible{outline:2px solid rgba(119,240,248,0.5);outline-offset:2px}
 .icon-btn.ghost{background:transparent;box-shadow:none}
@@ -435,55 +318,24 @@ main{flex:1;display:block}
 .status-badge{font-size:0.85rem;padding:6px 10px;border-radius:999px;background:var(--glass);color:var(--muted);border:1px solid rgba(232,255,249,0.08)}
 .muted.tiny{font-size:0.8rem;margin:0 0 2px}
 .status-badge.subtle{background:rgba(255,255,255,0.04);border-color:rgba(232,255,249,0.12)}
-
-/* ============================================================================
-   9. FORMS & INPUTS
-   ============================================================================ */
-
-/**
- * Swap form containers
- */
-.swap-form{display:flex;flex-direction:column;gap:14px}
-.swap-form-compact{gap:18px;padding:8px 0}
-
-/**
- * Form labels
- */
-.swap-card label{display:block;margin-bottom:12px;font-size:0.9rem}
-
-/**
- * Input row layouts
- */
-.input-row{display:flex;gap:8px;align-items:center}
-.input-row.tight{gap:4px}
-.input-row input{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:transparent;color:inherit}
-.input-row select{-moz-appearance:none;-webkit-appearance:none;appearance:none;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:rgba(0,0,0,0.08);color:inherit}
-.input-row.compact input{padding:8px 10px;font-size:0.95rem;border-radius:10px}
-
-/**
- * Input suffix display
- */
-.suffix{padding:10px;border-radius:8px;border:1px solid rgba(232,255,249,0.08);background:rgba(0,0,0,0.08)}
-
-/**
- * Token row components - Large input areas for token amounts
- */
-.token-row{background:rgba(255,255,255,0.04);padding:16px;border-radius:18px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 18px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:8px}
-.token-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.token-input{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.token-input input{font-size:1.9rem;font-weight:700;border-radius:12px;padding:4px 0;background:transparent;border:0;min-width:160px;color:inherit}
-.token-selector select{-moz-appearance:none;-webkit-appearance:none;appearance:none;padding:12px 16px;border-radius:16px;border:1px solid rgba(119,240,248,0.25);background:rgba(8,26,34,0.82);color:#e8fff9;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.28);min-width:130px}
+.swap-form{display:flex;flex-direction:column;gap:8px}
+.swap-form-compact{gap:10px;padding:4px 0}
+.token-row{background:rgba(255,255,255,0.04);padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 18px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:4px}
+.token-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.token-input{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.token-input input{font-size:1.5rem;font-weight:700;border-radius:12px;padding:0;background:transparent;border:0;min-width:130px;color:inherit}
+.token-selector select{-moz-appearance:none;-webkit-appearance:none;appearance:none;padding:10px 14px;border-radius:14px;border:1px solid rgba(119,240,248,0.25);background:rgba(8,26,34,0.82);color:#e8fff9;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.28);min-width:120px;font-size:0.95rem}
 .token-selector{position:relative}
 .token-selector::after{content:"⌄";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:0.9rem;color:var(--muted);pointer-events:none}
-.balance{color:var(--muted);font-size:0.9rem}
-.arrow-divider{display:flex;align-items:center;justify-content:center;padding:6px 8px;margin:-4px 0;color:var(--muted);font-size:0.92rem;gap:10px}
+.balance{color:var(--muted);font-size:0.85rem}
+.arrow-divider{display:flex;align-items:center;justify-content:center;padding:3px 4px;margin:-1px 0;color:var(--muted);font-size:0.82rem;gap:6px}
 .arrow{display:none}
-.arrow-circle{display:grid;width:42px;height:42px;border-radius:50%;border:1px solid rgba(119,240,248,0.22);align-items:center;justify-content:center;background:rgba(119,240,248,0.08);font-weight:700;box-shadow:0 8px 26px rgba(0,0,0,0.2)}
-.swap-inline-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;color:var(--muted);font-size:0.95rem;flex-wrap:wrap;text-align:left}
-.swap-health{padding:10px 12px;border-radius:12px;background:rgba(0,255,170,0.08);border:1px solid rgba(0,255,170,0.18);color:#17d29a;font-weight:700;font-size:0.95rem;box-shadow:0 6px 18px rgba(0,0,0,0.16)}
+.arrow-circle{display:grid;width:32px;height:32px;border-radius:50%;border:1px solid rgba(119,240,248,0.22);align-items:center;justify-content:center;background:rgba(119,240,248,0.08);font-weight:700;box-shadow:0 8px 26px rgba(0,0,0,0.2);font-size:0.9rem}
+.swap-inline-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:0.82rem;flex-wrap:wrap;text-align:left}
+.swap-health{padding:6px 8px;border-radius:8px;background:rgba(0,255,170,0.08);border:1px solid rgba(0,255,170,0.18);color:#17d29a;font-weight:700;font-size:0.82rem;box-shadow:0 6px 18px rgba(0,0,0,0.16)}
 .swap-health[data-state="warn"]{background:rgba(255,180,0,0.1);border-color:rgba(255,180,0,0.24);color:#ffb400}
 .swap-mini-grid{display:grid;grid-template-columns:repeat(3,minmax(120px,1fr));gap:8px;align-items:center}
-.order-controls{background:rgba(232,255,249,0.02);border:1px solid rgba(232,255,249,0.08);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.order-controls{background:rgba(232,255,249,0.02);border:1px solid rgba(232,255,249,0.08);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:4px}
 .order-controls .input-row label{margin-bottom:4px}
 .order-controls .suffix{background:rgba(232,255,249,0.06);border-left:1px solid rgba(232,255,249,0.12)}
 .quick-amounts{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
@@ -505,20 +357,8 @@ main{flex:1;display:block}
 .slippage-col{display:flex;flex-direction:column;gap:6px;flex:1;min-width:240px}
 .pill-row.tight{gap:6px;flex-wrap:wrap}
 .swap-controls .inline{flex:1}
-
-/**
- * Swap action buttons
- */
-.swap-actions{display:block;margin-top:6px}
-
-/* ============================================================================
-   10. POPOVERS & DROPDOWNS
-   ============================================================================ */
-
-/**
- * Swap popouts container
- * Positioned container for settings/details/network popovers
- */
+.suffix{padding:10px;border-radius:8px;border:1px solid rgba(232,255,249,0.08);background:rgba(0,0,0,0.08)}
+.swap-actions{display:block;margin-top:2px}
 .swap-popouts{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:12px;align-items:flex-end}
 
 /**
@@ -635,7 +475,7 @@ main{flex:1;display:block}
  * Pill row and pill components
  */
 .pill-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
-.pill{padding:8px 12px;border-radius:999px;border:1px solid rgba(232,255,249,0.12);background:rgba(119,240,248,0.06);color:inherit;font-weight:600;font-size:0.9rem}
+.pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(232,255,249,0.12);background:rgba(119,240,248,0.06);color:inherit;font-weight:600;font-size:0.85rem}
 
 /**
  * Launchpad metrics grid
@@ -773,7 +613,7 @@ main{flex:1;display:block}
  * Utility classes
  */
 .muted{color:var(--muted);font-size:0.9rem}
-.muted.small{font-size:0.9rem}
+small.muted{font-size:0.75rem;line-height:1.3}
 
 /* ============================================================================
    16. RESPONSIVE MEDIA QUERIES
@@ -784,9 +624,9 @@ main{flex:1;display:block}
  */
 @media (max-width:980px){
   .hero-grid{grid-template-columns:1fr; }
-  .swap-hero{min-height:auto;padding:12px 0 48px}
-  .swap-layout{gap:16px}
-  .swap-shell{padding:18px}
+  .swap-hero{min-height:auto;padding:12px 0 32px}
+  .swap-layout{gap:12px}
+  .swap-shell{padding:16px}
   .launchpad{grid-template-columns:1fr;}
   .footer-grid{flex-direction:column;align-items:flex-start}
 }
@@ -797,6 +637,7 @@ main{flex:1;display:block}
 @media (max-width:720px){
   .swap-toolbar{flex-direction:column;align-items:flex-start}
   .toolbar-actions{width:100%;justify-content:space-between}
-  .token-input input{min-width:120px;font-size:1.4rem}
-  .swap-shell{margin-top:0}
+  .token-input input{min-width:120px;font-size:1.3rem}
+  .swap-shell{margin-top:0;padding:14px}
+  .container{padding:12px}
 }
