@@ -84,6 +84,26 @@
               </ul>
             </div>
           </div>
+          <div class="menu-metrics" aria-label="Swap status summary">
+            <div class="menu-metrics-title">
+              <span>Optimal routing</span>
+              <span class="status-badge subtle">Live</span>
+            </div>
+            <div class="menu-metrics-grid">
+              <div>
+                <span class="menu-metrics-label">Impact</span>
+                <strong>0.00%</strong>
+              </div>
+              <div>
+                <span class="menu-metrics-label">Fee</span>
+                <strong>0.25%</strong>
+              </div>
+              <div>
+                <span class="menu-metrics-label">Network</span>
+                <strong>Casper</strong>
+              </div>
+            </div>
+          </div>
           <div class="menu-footer">
             <div>
               <div class="menu-heading">Get the app</div>
@@ -186,7 +206,7 @@
             <div class="swap-actions">
               <button type="submit" class="btn primary full" id="swapActionBtn">Connect wallet to swap</button>
             </div>
-            <small class="muted" id="orderSummary">Demo UI: connect wallet to enable live swaps.</small>
+            <small class="muted" id="orderSummary" hidden></small>
           </form>
 
           <div class="swap-popouts" aria-live="polite">

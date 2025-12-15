@@ -468,7 +468,7 @@ function setupSwapDemo(){
     swap: {
       pill: 'Swap',
       title: 'Balanced, fast swaps on Casper.',
-      summary: 'Instant AMM routing with slippage guard and fee clarity.',
+      summary: '',
       action: 'swap',
       showLimit: false,
       tokens: null
@@ -519,7 +519,10 @@ function setupSwapDemo(){
     // Update UI text
     if(orderPill) orderPill.textContent = config.pill;
     if(swapTitle) swapTitle.textContent = config.title;
-    if(orderSummary) orderSummary.textContent = config.summary;
+    if(orderSummary){
+      orderSummary.textContent = config.summary;
+      orderSummary.hidden = !config.summary;
+    }
     if(actionBtn) actionBtn.textContent = `Connect wallet to ${config.action}`;
     
     // Show/hide limit price controls
