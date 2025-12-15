@@ -405,7 +405,6 @@ function setupSwapDemo(){
   const toAmt = document.getElementById('toAmount');
   const priceImpactDetail = document.getElementById('priceImpactDetail');
   const slippage = document.getElementById('slippage');
-  const swapHealth = document.getElementById('swapHealth');
   const orderTabs = Array.from(document.querySelectorAll('[data-order-tab]'));
   const orderPill = document.getElementById('orderPill');
   const swapTitle = document.getElementById('swap-title');
@@ -413,6 +412,7 @@ function setupSwapDemo(){
   const actionBtn = document.getElementById('swapActionBtn');
   const limitControls = document.getElementById('limitControls');
   const limitPrice = document.getElementById('limitPrice');
+  const swapFlip = document.getElementById('swapFlip');
 
   if (!fromAmt || !toAmt) return; // Exit if not on swap page
 
@@ -445,6 +445,32 @@ function setupSwapDemo(){
   if(slippage){
     slippage.addEventListener('input', () => {
       slippage.value = Math.min(Math.max(parseFloat(slippage.value) || 0.1, 0.1), 5).toString();
+    });
+  }
+
+  /**
+   * Reverse selected tokens and entered amounts
+   * Triggered via the mid-card arrow button
+   */
+  if(swapFlip){
+    swapFlip.addEventListener('click', () => {
+      const fromToken = document.getElementById('fromToken');
+      const toToken = document.getElementById('toToken');
+
+      // Swap token selections
+      if(fromToken && toToken){
+        const currentFrom = fromToken.value;
+        fromToken.value = toToken.value;
+        toToken.value = currentFrom;
+      }
+
+      // Swap numeric amounts
+      const previousFrom = fromAmt.value;
+      fromAmt.value = toAmt.value;
+      toAmt.value = previousFrom;
+
+      // Recalculate downstream amounts based on the new from value
+      fromAmt.dispatchEvent(new Event('input'));
     });
   }
 
