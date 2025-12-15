@@ -75,9 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const connectWallet = document.getElementById('connectWallet');
   if (connectWallet) connectWallet.addEventListener('click', connectWalletHandler);
 
-  const syncSwapNav = () => activateSwapNav(window.location.hash === '#swap');
-  syncSwapNav();
-  window.addEventListener('hashchange', syncSwapNav);
+  if(window.location.hash === '#swap') activateSwapNav();
+  window.addEventListener('hashchange', () => {
+    if(window.location.hash === '#swap') activateSwapNav();
+  });
 
   // Initialize page-specific components
   setupLogoMenu();        // Mega menu navigation
@@ -190,17 +191,12 @@ function setTheme(theme){
 /**
  * Ensure the Swap nav item is visibly active
  */
-function activateSwapNav(isActive = true){
+function activateSwapNav(){
   document.querySelectorAll('.nav a').forEach((link) => {
     const href = link.getAttribute('href') || '';
     if(href.includes('#swap')){
-      if(isActive){
-        link.classList.add('active');
-        link.setAttribute('aria-current', 'page');
-      }else{
-        link.classList.remove('active');
-        link.removeAttribute('aria-current');
-      }
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
     }
   });
 }
@@ -462,15 +458,8 @@ function setupSwapDemo(){
    * Demo calculation uses static rates per token pair
    */
   const updateOutputs = () => {
-    const hasValue = fromAmt.value !== '';
     const val = parseFloat(fromAmt.value) || 0;
     const rate = getRate();
-
-    if(!hasValue){
-      toAmt.value = '';
-      if(priceImpactDetail) priceImpactDetail.textContent = '0.00%';
-      return;
-    }
 
     toAmt.value = (val * rate).toFixed(6);
 
