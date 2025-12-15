@@ -17,6 +17,16 @@
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#1ed8a2" />
 
+  <script>
+    // Set theme ASAP to avoid flashes when navigating between pages
+    (function(){
+      const stored = localStorage.getItem('ectoplasm-theme');
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+      const theme = stored || (prefersLight ? 'light' : 'dark');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -195,7 +205,7 @@
             </label>
 
             <div class="swap-actions">
-              <button type="submit" class="btn primary full" id="swapActionBtn">Connect wallet to swap</button>
+              <a class="btn primary full" id="swapActionBtn" href="/#swap" data-activate-swap>Let's Begin</a>
             </div>
             <small class="muted" id="orderSummary" hidden></small>
           </form>

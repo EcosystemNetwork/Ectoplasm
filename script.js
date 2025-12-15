@@ -75,6 +75,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const connectWallet = document.getElementById('connectWallet');
   if (connectWallet) connectWallet.addEventListener('click', connectWalletHandler);
 
+  if(window.location.hash === '#swap') activateSwapNav();
+  window.addEventListener('hashchange', () => {
+    if(window.location.hash === '#swap') activateSwapNav();
+  });
+
   // Initialize page-specific components
   setupLogoMenu();        // Mega menu navigation
   setupSwapDemo();        // Swap calculator with order types
@@ -168,9 +173,10 @@ function toggleTheme(){
 function setTheme(theme){
   const btn = document.getElementById('themeToggle');
   const next = theme === 'light' ? 'dark' : 'light';
-  
+
   // Apply theme to document root
   document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.style.colorScheme = theme;
   
   // Update toggle button if present
   if (btn){
@@ -180,6 +186,19 @@ function setTheme(theme){
   
   // Persist user preference
   localStorage.setItem('ectoplasm-theme', theme);
+}
+
+/**
+ * Ensure the Swap nav item is visibly active
+ */
+function activateSwapNav(){
+  document.querySelectorAll('.nav a').forEach((link) => {
+    const href = link.getAttribute('href') || '';
+    if(href.includes('#swap')){
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    }
+  });
 }
 
 // ============================================================================
@@ -413,30 +432,50 @@ function setupSwapDemo(){
   const limitControls = document.getElementById('limitControls');
   const limitPrice = document.getElementById('limitPrice');
   const swapFlip = document.getElementById('swapFlip');
+  const fromToken = document.getElementById('fromToken');
+  const toToken = document.getElementById('toToken');
+
+  // Demo rate table for token pairs
+  const rateTable = {
+    cspr: {ecto: 0.5, cspr: 1},
+    ecto: {cspr: 2, csprx: 2, ecto: 1},
+    csprx: {ecto: 0.5, cspr: 1, csprx: 1}
+  };
 
   if (!fromAmt || !toAmt) return; // Exit if not on swap page
 
   /**
-   * Calculate output amount when input changes
-   * Demo calculation: 1 CSPR = 0.5 ECTO (fixed rate)
-   * Also calculates and displays price impact based on swap size
+   * Determine the demo rate for the current pair
    */
-  fromAmt.addEventListener('input', () => {
+  const getRate = () => {
+    const from = fromToken?.value || 'cspr';
+    const to = toToken?.value || 'ecto';
+    return rateTable[from]?.[to] || 1;
+  };
+
+  /**
+   * Calculate output amount when inputs or tokens change
+   * Demo calculation uses static rates per token pair
+   */
+  const updateOutputs = () => {
     const val = parseFloat(fromAmt.value) || 0;
-    const rate = 0.5; // Demo exchange rate
-    
-    // Calculate output amount
+    const rate = getRate();
+
     toAmt.value = (val * rate).toFixed(6);
-    
+
     // Calculate price impact (simplified: grows with swap size)
     // In production, this should calculate actual impact based on pool depth
     const impact = Math.min(0.5, (val/1000));
     const impactText = (impact*100).toFixed(2) + '%';
-    
+
     if(priceImpactDetail){
       priceImpactDetail.textContent = impactText;
     }
-  });
+  };
+
+  fromAmt.addEventListener('input', updateOutputs);
+  if(fromToken) fromToken.addEventListener('change', updateOutputs);
+  if(toToken) toToken.addEventListener('change', updateOutputs);
 
   /**
    * Validate slippage tolerance input
@@ -454,9 +493,6 @@ function setupSwapDemo(){
    */
   if(swapFlip){
     swapFlip.addEventListener('click', () => {
-      const fromToken = document.getElementById('fromToken');
-      const toToken = document.getElementById('toToken');
-
       // Swap token selections
       if(fromToken && toToken){
         const currentFrom = fromToken.value;
@@ -470,7 +506,7 @@ function setupSwapDemo(){
       toAmt.value = previousFrom;
 
       // Recalculate downstream amounts based on the new from value
-      fromAmt.dispatchEvent(new Event('input'));
+      updateOutputs();
     });
   }
 
@@ -549,8 +585,7 @@ function setupSwapDemo(){
       orderSummary.textContent = config.summary;
       orderSummary.hidden = !config.summary;
     }
-    if(actionBtn) actionBtn.textContent = `Connect wallet to ${config.action}`;
-    
+
     // Show/hide limit price controls
     if(limitControls){
       limitControls.hidden = !config.showLimit;
@@ -571,6 +606,16 @@ function setupSwapDemo(){
     orderTabs.forEach((btn) => btn.addEventListener('click', () => setMode(btn.dataset.orderTab)));
     setMode('swap'); // Default to swap mode
   }
+
+  // Ensure CTA always routes to the swap tab and highlights nav
+  if(actionBtn){
+    actionBtn.addEventListener('click', () => {
+      activateSwapNav();
+      setMode('swap');
+    });
+  }
+
+  updateOutputs();
 }
 
 // ============================================================================
