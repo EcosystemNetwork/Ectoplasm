@@ -1,77 +1,234 @@
+/**
+ * Ectoplasm DEX - Stylesheet
+ * 
+ * A comprehensive, modern CSS file for the Ectoplasm DEX platform.
+ * Built with accessibility, performance, and visual polish in mind.
+ * 
+ * Features:
+ * - Dark/light theme support via CSS custom properties
+ * - Fully responsive design with mobile-first approach
+ * - Glass-morphism and gradient effects
+ * - Accessible form controls and interactive elements
+ * - Semantic color system
+ * - Component-based architecture
+ * 
+ * Table of Contents:
+ * 1. CSS Custom Properties (Theme Variables)
+ * 2. Base & Reset Styles
+ * 3. Layout & Container Styles
+ * 4. Navigation & Header
+ * 5. Buttons & Interactive Elements
+ * 6. Hero & Landing Sections
+ * 7. Cards & Panels
+ * 8. Swap Interface Components
+ * 9. Forms & Inputs
+ * 10. Popovers & Dropdowns
+ * 11. Content Sections
+ * 12. Launchpad Components
+ * 13. Dashboard & Gamification
+ * 14. Table Components
+ * 15. Footer & Misc
+ * 16. Responsive Media Queries
+ * 
+ * @version 1.0.0
+ * @license MIT
+ */
+
+/* ============================================================================
+   1. CSS CUSTOM PROPERTIES - THEME VARIABLES
+   ============================================================================ */
+
+/**
+ * Root theme variables (Dark mode - default)
+ * These custom properties enable easy theme switching and consistent styling
+ */
 :root{
-  --bg: #04131a;
-  --card: #07242c;
-  --muted: #8ccfc0;
-  --accent: linear-gradient(135deg,#4cf5c7 0%,#77f0f8 100%);
-  --glass: rgba(86,255,211,0.08);
-  --radius: 12px;
-  --max-width: 1150px;
-  color-scheme: dark;
-  color: #e8fff9;
+  /* Color palette */
+  --bg: #04131a;              /* Main background color */
+  --card: #07242c;            /* Card and panel background */
+  --muted: #8ccfc0;           /* Muted/secondary text color */
+  --accent: linear-gradient(135deg,#4cf5c7 0%,#77f0f8 100%); /* Primary accent gradient */
+  --glass: rgba(86,255,211,0.08); /* Glass-morphism overlay */
+  
+  /* Layout & spacing */
+  --radius: 12px;             /* Default border radius */
+  --max-width: 1150px;        /* Maximum content width */
+  
+  /* System preferences */
+  color-scheme: dark;         /* Tells browser to use dark scrollbars, etc. */
+  color: #e8fff9;             /* Default text color */
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  -webkit-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%; /* Prevent iOS text size adjustment */
 }
 
+/**
+ * Light theme overrides
+ * Applied when [data-theme="light"] is set on <html>
+ */
 [data-theme="light"]{
-  --bg: #e8f7f3;
-  --card: #ffffff;
-  --muted: #2f4f47;
-  --glass: rgba(0,134,115,0.08);
-  --accent: linear-gradient(135deg,#1ed8a2 0%,#54e8f3 100%);
+  --bg: #e8f7f3;              /* Light background */
+  --card: #ffffff;            /* White cards */
+  --muted: #2f4f47;           /* Darker muted text for contrast */
+  --glass: rgba(0,134,115,0.08); /* Adjusted glass effect for light mode */
+  --accent: linear-gradient(135deg,#1ed8a2 0%,#54e8f3 100%); /* Adjusted accent gradient */
   color-scheme: light;
-  color: #052026;
+  color: #052026;             /* Dark text on light background */
   background: #e8f7f3;
 }
 
+/* ============================================================================
+   2. BASE & RESET STYLES
+   ============================================================================ */
+
+/**
+ * Universal box-sizing
+ * Makes width/height calculations include padding and border
+ */
 *{box-sizing:border-box}
+
+/**
+ * Form elements inherit font styles
+ * Ensures buttons, inputs, etc. use the same font as body
+ */
 button,input,select,textarea{font:inherit}
+
+/**
+ * Remove spinner controls from number inputs
+ * Provides cleaner UI for numerical inputs
+ */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input[type="number"]{-moz-appearance:textfield}
+
+/**
+ * Full-height layout foundation
+ * Ensures footer stays at bottom even with minimal content
+ */
 html,body{height:100%}
+
+/**
+ * Body styles with gradient background
+ * Creates atmospheric background with multiple radial gradients
+ */
 body{
   margin:0;
+  /* Multi-layer radial gradient background for depth */
   background:
     radial-gradient(120px 120px at 18% 16%, rgba(119,240,248,0.22), transparent 42%),
     radial-gradient(220px 220px at 88% 0%, rgba(76,245,199,0.14), transparent 50%),
     radial-gradient(260px 260px at 82% 84%, rgba(119,240,248,0.08), transparent 52%),
     var(--bg);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  -webkit-font-smoothing:antialiased;   /* Better font rendering on macOS/iOS */
+  -moz-osx-font-smoothing:grayscale;    /* Better font rendering on Firefox */
   line-height:1.45;
+  /* Flexbox layout to push footer to bottom */
   display:flex;
   flex-direction:column;
   min-height:100vh;
 }
+
+/**
+ * Main content area
+ * Flexes to fill available space, pushing footer down
+ */
 main{flex:1;display:block}
 
 .container{max-width:var(--max-width);margin:0 auto;padding:16px}
 .header-grid{display:flex;align-items:center;justify-content:space-between;gap:16px}
+
+/* ============================================================================
+   4. NAVIGATION & HEADER
+   ============================================================================ */
+
+/**
+ * Logo menu wrapper
+ * Contains the logo and positions the dropdown menu
+ */
 .logo-menu{position:relative;display:flex;align-items:center}
+
+/**
+ * Logo component
+ * Displays logo image with text, used in header and footer
+ */
 .logo{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;font-weight:600}
 .logo img{width:38px;height:38px;display:block;object-fit:contain;flex:none;filter:drop-shadow(0 6px 18px rgba(119,240,248,0.25))}
 .logo span{line-height:1}
+
+/**
+ * Logo toggle button
+ * Opens the mega menu when clicked
+ */
 .logo-toggle{border:0;background:transparent;padding:6px 8px;border-radius:12px;cursor:pointer;font:inherit}
 .logo-toggle:hover{background:rgba(232,255,249,0.04);box-shadow:0 0 0 1px rgba(232,255,249,0.08)}
 .logo-toggle:focus-visible{outline:2px solid rgba(119,240,248,0.6);outline-offset:3px}
+
+/**
+ * Chevron indicator for dropdown
+ */
 .chevron{font-size:0.9rem;color:var(--muted)}
+
+/**
+ * Mega menu panel
+ * Large dropdown menu with multiple sections and product links
+ * Uses backdrop-filter for glass-morphism effect
+ */
 .logo-menu-panel{position:absolute;top:calc(100% + 12px);left:0;background:rgba(6,26,34,0.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 50px rgba(0,0,0,0.42),0 0 0 1px rgba(119,240,248,0.12);border-radius:16px;padding:16px;min-width:620px;max-width:min(720px, 96vw);z-index:90}
+
+/**
+ * Mega menu grid layout
+ * Three-column grid for organized menu sections
+ */
 .menu-grid{display:grid;grid-template-columns:1.4fr 0.9fr 0.9fr;gap:14px}
+
+/**
+ * Menu section containers
+ * Each section has subtle background and border
+ */
 .menu-section{background:rgba(232,255,249,0.02);border:1px solid rgba(232,255,249,0.04);border-radius:12px;padding:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+
+/**
+ * Menu section headings
+ * Uppercase labels for menu categories
+ */
 .menu-heading{font-weight:800;letter-spacing:0.02em;text-transform:uppercase;font-size:0.85rem;margin-bottom:8px;color:#b5f5e8}
+
+/**
+ * Menu items
+ * Interactive links with hover effects
+ */
 .menu-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px;border-radius:10px;color:inherit;text-decoration:none;border:1px solid transparent;transition:border-color 0.15s ease, background 0.15s ease}
 .menu-item:hover{border-color:rgba(119,240,248,0.25);background:rgba(119,240,248,0.06)}
 .menu-item strong{display:block;font-size:1rem;margin-bottom:4px}
 .menu-item p{margin:0;color:var(--muted);font-size:0.9rem}
+
+/**
+ * Menu lists
+ * Simpler list-style menu items
+ */
 .menu-list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
 .menu-list a{color:inherit;text-decoration:none;padding:10px;border-radius:10px;border:1px solid transparent;display:block}
 .menu-list a:hover{border-color:rgba(119,240,248,0.25);background:rgba(119,240,248,0.06)}
+
+/**
+ * Menu footer CTA section
+ * Highlighted area at bottom of mega menu
+ */
 .menu-footer{margin-top:12px;padding:12px;border-radius:12px;border:1px solid rgba(232,255,249,0.06);background:linear-gradient(120deg, rgba(119,240,248,0.1), rgba(76,245,199,0.12));display:flex;align-items:center;justify-content:space-between;gap:12px}
 .menu-footer p{margin:6px 0 0;color:var(--muted)}
 .menu-footer .btn{white-space:nowrap}
+
+/**
+ * Primary navigation
+ * Horizontal navigation links
+ */
 .nav{display:flex;gap:12px;align-items:center}
 .nav a{color:var(--muted);text-decoration:none;padding:8px;border-radius:8px;transition:color 0.2s ease, background 0.2s ease}
 .nav a:hover{color:#e8fff9;background:var(--glass)}
+
+/**
+ * Accessibility helper
+ * Hides content visually while keeping it accessible to screen readers
+ */
 .visually-hidden{position:absolute;clip:rect(0 0 0 0);width:1px;height:1px;margin:-1px;overflow:hidden;padding:0;border:0}
 
 .btn{font-weight:600;border:0;padding:8px 12px;border-radius:10px;cursor:pointer}
@@ -80,12 +237,21 @@ main{flex:1;display:block}
 .btn.large{padding:10px 16px}
 .btn.full{width:100%}
 
+/**
+ * Sticky site header
+ * Stays at top of viewport with blur effect
+ */
 .site-header{position:sticky;top:0;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-bottom:1px solid rgba(255,255,255,0.02);z-index:50}
 
 .hero{padding:20px 0 28px}
 .swap-hero{position:relative;overflow:hidden;min-height:auto;display:flex;align-items:flex-start;background:linear-gradient(180deg, #0f1018 0%, #0b0d14 100%);padding-top:0;padding-bottom:12px}
 .swap-hero::before{content:"";position:absolute;inset:-10% 30% auto auto;background:radial-gradient(420px 420px at 30% 40%, rgba(255,86,199,0.18), transparent 60%);filter:blur(18px);opacity:0.9;pointer-events:none}
 .swap-hero::after{content:"";position:absolute;inset:22% -28% -28% 42%;background:radial-gradient(520px 520px at 60% 30%, rgba(78,108,255,0.08), transparent 58%);pointer-events:none;filter:blur(14px);}
+
+/**
+ * Hero grid layouts
+ * Two-column layout for hero content and card
+ */
 .hero-grid{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:start}
 .swap-layout{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;max-width:820px;margin:0 auto}
 .swap-heading{display:flex;flex-direction:column;align-items:center;gap:1px}
@@ -98,6 +264,10 @@ main{flex:1;display:block}
 .swap-copy{max-width:700px;display:none;flex-direction:column;align-items:center;gap:8px}
 .swap-copy .hero-cta{justify-content:center;flex-wrap:wrap}
 .swap-copy .trust-list{justify-content:center;flex-wrap:wrap}
+
+/**
+ * Typography for hero sections
+ */
 .hero-copy h1{font-size:clamp(1.6rem,3.6vw,2.8rem);margin:24px 0 12px}
 .lead{color:var(--muted);max-width:54ch;font-size:0.9rem}
 .brand-badge{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:rgba(119,240,248,0.12);border:1px solid rgba(119,240,248,0.28);color:#7ef0e8;font-weight:700;letter-spacing:0.01em;text-transform:none;font-size:0.95rem;margin-bottom:10px;box-shadow:0 10px 26px rgba(0,0,0,0.24)}
@@ -106,6 +276,14 @@ main{flex:1;display:block}
 .trust-list{display:flex;gap:8px;list-style:none;padding:0;margin:0;color:var(--muted)}
 .trust-list li{background:var(--glass);padding:6px 10px;border-radius:999px;font-size:0.85rem}
 
+/* ============================================================================
+   7. CARDS & PANELS
+   ============================================================================ */
+
+/**
+ * Hero card component
+ * Card with gradient background used in hero sections
+ */
 .hero-card{background:linear-gradient(180deg, rgba(86,255,211,0.06), transparent);padding:18px;border-radius:var(--radius);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 48px rgba(0,0,0,0.26)}
 .swap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
 .swap-toolbar.compact{margin-bottom:4px}
@@ -118,22 +296,25 @@ main{flex:1;display:block}
 .swap-tabs .pill{padding:7px 12px;border-radius:999px;border:1px solid rgba(232,255,249,0.16);background:rgba(232,255,249,0.04);color:inherit;cursor:pointer;font-weight:700;font-size:0.85rem}
 .swap-tabs .pill.active{background:linear-gradient(120deg, rgba(119,240,248,0.2), rgba(76,245,199,0.22));border-color:rgba(119,240,248,0.3);color:#e8fff9;box-shadow:0 0 0 1px rgba(119,240,248,0.14)}
 .swap-tabs .pill.ghost{background:transparent;color:var(--muted)}
+
+/**
+ * Toolbar actions
+ */
 .toolbar-actions{display:flex;align-items:center;gap:10px}
 .icon-btn{border:1px solid rgba(232,255,249,0.12);background:rgba(255,255,255,0.04);color:inherit;padding:8px 10px;border-radius:12px;cursor:pointer;display:grid;place-items:center;min-width:38px;min-height:38px;box-shadow:0 10px 28px rgba(0,0,0,0.25);transition:transform 0.1s ease, border-color 0.15s ease, background 0.15s ease}
 .icon-btn:hover{border-color:rgba(119,240,248,0.25);background:rgba(119,240,248,0.08);transform:translateY(-1px)}
 .icon-btn:focus-visible{outline:2px solid rgba(119,240,248,0.5);outline-offset:2px}
 .icon-btn.ghost{background:transparent;box-shadow:none}
-.network-pill{padding:8px 12px;border-radius:12px;border:1px solid rgba(232,255,249,0.12);background:rgba(232,255,249,0.04);font-weight:600;color:#9be7d4}
-.glass{background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(6,26,34,0.85));border:1px solid rgba(232,255,249,0.08);border-radius:18px;padding:16px;box-shadow:0 18px 48px rgba(0,0,0,0.24)}
-.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
-.feature-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;color:var(--muted)}
-.feature-map ul{padding-left:18px;line-height:1.6;margin:6px 0 0}
-.swap-card label{display:block;margin-bottom:12px;font-size:0.9rem}
-.input-row{display:flex;gap:8px;align-items:center}
-.input-row.tight{gap:4px}
-.input-row input{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:transparent;color:inherit}
-.input-row select{-moz-appearance:none;-webkit-appearance:none;appearance:none;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:rgba(0,0,0,0.08);color:inherit}
 
+/**
+ * Network indicator pill
+ */
+.network-pill{padding:8px 12px;border-radius:12px;border:1px solid rgba(232,255,249,0.12);background:rgba(232,255,249,0.04);font-weight:600;color:#9be7d4}
+
+/**
+ * Status badge component
+ * Small pill-shaped badge for status indicators
+ */
 .status-badge{font-size:0.85rem;padding:6px 10px;border-radius:999px;background:var(--glass);color:var(--muted);border:1px solid rgba(232,255,249,0.08)}
 .muted.tiny{font-size:0.8rem;margin:0 0 2px}
 .status-badge.subtle{background:rgba(255,255,255,0.04);border-color:rgba(232,255,249,0.12)}
@@ -165,112 +346,282 @@ main{flex:1;display:block}
 .swap-breakdown dt{font-weight:700;color:#e8fff9;margin-bottom:4px}
 .swap-breakdown dd{margin:0;color:var(--muted)}
 .swap-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:0.95rem;margin-bottom:2px}
+/**
+ * Swap controls section
+ */
 .swap-controls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:6px 0;flex-wrap:wrap}
+
+/**
+ * Slippage controls
+ */
 .slippage-col{display:flex;flex-direction:column;gap:6px;flex:1;min-width:240px}
 .pill-row.tight{gap:6px;flex-wrap:wrap}
-.input-row.compact input{padding:8px 10px;font-size:0.95rem;border-radius:10px}
 .swap-controls .inline{flex:1}
 .suffix{padding:10px;border-radius:8px;border:1px solid rgba(232,255,249,0.08);background:rgba(0,0,0,0.08)}
 .swap-actions{display:block;margin-top:2px}
 .swap-popouts{position:absolute;top:14px;right:14px;display:flex;flex-direction:column;gap:12px;align-items:flex-end}
+
+/**
+ * Popout panel
+ * Modal-style panel with blur background
+ */
 .popout{pointer-events:auto;background:rgba(6,20,28,0.96);border:1px solid rgba(232,255,249,0.12);border-radius:16px;box-shadow:0 22px 60px rgba(0,0,0,0.38),0 0 0 1px rgba(119,240,248,0.08);padding:14px;min-width:260px;max-width:320px;text-align:left}
+
+/**
+ * Popout header with close button
+ */
 .popout-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+
+/**
+ * Settings group within popover
+ */
 .settings-group{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
 .settings-group:last-child{margin-bottom:0}
-.network-status{display:flex;flex-direction:column;gap:8px}
-.muted.small{font-size:0.9rem}
 
+/**
+ * Network status display
+ */
+.network-status{display:flex;flex-direction:column;gap:8px}
+
+/* ============================================================================
+   11. CONTENT SECTIONS
+   ============================================================================ */
+
+/**
+ * General section container
+ */
 .section{padding:48px 0}
+
+/**
+ * Alternate section with gradient background
+ */
 .section.alt{background:linear-gradient(180deg, rgba(119,240,248,0.06), transparent)}
+
+/**
+ * Section heading with icon
+ */
 .section-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .section-heading h2{margin:0}
+
+/**
+ * Brand mark icon container
+ */
 .brand-mark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(119,240,248,0.08);border:1px solid rgba(119,240,248,0.18)}
 .brand-mark img{width:28px;height:28px;object-fit:contain;opacity:0.98}
+
+/**
+ * Features grid layout
+ */
 .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
 .features-grid article{background:var(--card);padding:18px;border-radius:12px;border:1px solid rgba(232,255,249,0.05)}
 
+/**
+ * Pool and privacy grids
+ */
+
 .pools-grid,.privacy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:16px}
+
+/**
+ * Pool card component
+ */
 .pool-card{background:var(--card);padding:18px;border-radius:12px;border:1px solid rgba(232,255,249,0.08);box-shadow:0 12px 30px rgba(0,0,0,0.15)}
 .pool-card ul{padding-left:18px;color:var(--muted);line-height:1.5;margin:8px 0 0}
 .pool-card h3{margin-top:0;margin-bottom:8px}
 
+/**
+ * Steps list
+ * Horizontal card list for "how it works" sections
+ */
 .steps{display:flex;gap:18px;flex-wrap:wrap;padding:0;list-style:none}
 .steps li{background:var(--card);padding:14px;border-radius:12px;border:1px solid rgba(232,255,249,0.05);flex:1;min-width:220px}
 
+/**
+ * Roadmap list
+ */
 .roadmap{list-style:none;padding:0;margin:0}
 .roadmap li{padding:8px 0;color:var(--muted)}
 
+/* ============================================================================
+   12. LAUNCHPAD COMPONENTS
+   ============================================================================ */
+
+/**
+ * Launchpad layout
+ */
 .launchpad{display:grid;grid-template-columns:1.1fr 0.9fr;gap:28px;align-items:start}
+
+/**
+ * Launchpad card
+ */
 .launchpad-card{background:var(--card);padding:20px;border-radius:12px;border:1px solid rgba(232,255,249,0.08);box-shadow:0 16px 40px rgba(0,0,0,0.22)}
 .launchpad-card h3{margin-top:0;margin-bottom:12px}
+
+/**
+ * Launch list and actions
+ */
 .launch-list{color:var(--muted);padding-left:18px;line-height:1.6}
 .launch-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
 .launch-actions .btn.full{flex:1}
+
+/**
+ * Launch form elements
+ */
 .launch-form label{display:block;margin-bottom:12px;font-size:0.95rem}
 .launch-form input,.launch-form select{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:transparent;color:inherit}
 .launch-form select{-moz-appearance:none;-webkit-appearance:none;appearance:none}
 .launch-form-footer{display:flex;flex-direction:column;gap:8px;margin-top:8px}
 
+/**
+ * Pill row and pill components
+ */
 .pill-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
 .pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(232,255,249,0.12);background:rgba(119,240,248,0.06);color:inherit;font-weight:600;font-size:0.85rem}
 
+/**
+ * Launchpad metrics grid
+ */
 .launchpad-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0}
 .metric{background:var(--card);border:1px solid rgba(232,255,249,0.08);border-radius:12px;padding:12px;box-shadow:0 12px 30px rgba(0,0,0,0.18)}
 .metric small{color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;font-weight:700;font-size:0.75rem}
 .metric strong{display:block;font-size:1.4rem;margin:6px 0}
 
+/**
+ * Token stream display
+ */
 .launchpad-stream{background:var(--card);border:1px solid rgba(232,255,249,0.08);border-radius:12px;padding:12px;margin:8px 0 0;box-shadow:0 12px 30px rgba(0,0,0,0.16)}
 .stream-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
 .token-stream{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .token-stream li{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:10px;background:rgba(119,240,248,0.06);border:1px solid rgba(232,255,249,0.08)}
 .token-stream strong{margin-right:8px}
 
+/**
+ * Pump card variant
+ */
 .pump-card{background:linear-gradient(180deg, rgba(86,255,211,0.08), rgba(4,19,26,0.1));border-color:rgba(119,240,248,0.25)}
+
+/**
+ * Grid helpers
+ */
 .grid-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+
+/**
+ * Launch flags/checkboxes
+ */
 .launch-flags{display:grid;gap:8px;margin:6px 0}
 .flag{display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.08);background:rgba(119,240,248,0.05)}
 .flag input{margin:0}
 
+/**
+ * Launchpad-specific badge styling
+ */
 .launchpad .status-badge{background:rgba(119,240,248,0.08);border-color:rgba(119,240,248,0.25);color:#7ef0e8}
 
-.badges img{height:64px;margin-right:12px;opacity:0.95}
-.safety-list{color:var(--muted);padding-left:18px;line-height:1.6}
+/* ============================================================================
+   13. DASHBOARD & GAMIFICATION
+   ============================================================================ */
 
+/**
+ * Task list for daily tasks
+ */
 .task-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
 .task-list li{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px 14px;border-radius:12px;border:1px solid rgba(232,255,249,0.08)}
 .task-list label{display:flex;align-items:center;gap:10px;cursor:pointer}
 .task-list input{width:18px;height:18px}
 
+/**
+ * Quest and reward grids
+ */
 .quest-grid,.reward-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .quest-card .progress,.reward-card .progress{margin:8px 0}
+
+/**
+ * Streak display grid
+ */
 .streak-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
 .streak-number{font-size:2.4rem}
+
+/**
+ * Progress bar component
+ */
 .progress{background:rgba(232,255,249,0.08);height:10px;border-radius:999px;overflow:hidden}
 .progress-bar{height:100%;background:var(--accent);border-radius:999px}
+
+/**
+ * Reward row
+ */
 .reward-row{margin-top:12px;padding:10px;border-radius:10px;background:var(--glass);border:1px solid rgba(232,255,249,0.08)}
 
+/* ============================================================================
+   14. TABLE COMPONENTS
+   ============================================================================ */
+
+/**
+ * Table container
+ */
 .table{border:1px solid rgba(232,255,249,0.08);border-radius:12px;overflow:hidden;background:var(--card);box-shadow:0 12px 30px rgba(0,0,0,0.15)}
+
+/**
+ * Table header and rows
+ * 5-column grid for launchpad token table
+ */
 .table-head,.table-row{display:grid;grid-template-columns:2fr 1.1fr 0.8fr 1.2fr 1fr;gap:10px;padding:12px 14px;align-items:center}
 .table-head{background:rgba(119,240,248,0.05);font-weight:700;color:#9be7d4;text-transform:uppercase;font-size:0.85rem;letter-spacing:0.05em}
 .table-body{display:flex;flex-direction:column}
 .table-row:nth-child(even){background:rgba(232,255,249,0.03)}
+
+/**
+ * Table controls (search/filter)
+ */
 .table-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:10px 0}
 .table-controls input{padding:10px;border-radius:10px;border:1px solid rgba(232,255,249,0.12);background:transparent;color:inherit}
+
+/**
+ * Positive/negative number coloring
+ */
 .pos{color:#7ef0e8}
 .neg{color:#ffb4a2}
 
-.site-footer{background:rgba(3,26,32,0.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:16px 0;border-top:1px solid rgba(232,255,249,0.06);margin-top:auto}
-.footer-grid{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.footer-grid nav a{color:var(--muted);margin-left:12px;text-decoration:none}
+/* ============================================================================
+   15. FOOTER & MISC
+   ============================================================================ */
 
-.muted{color:var(--muted);font-size:0.9rem}
-small.muted{font-size:0.75rem;line-height:1.3}
+/**
+ * Badges display
+ */
+.badges img{height:64px;margin-right:12px;opacity:0.95}
 
+/**
+ * Safety/security lists
+ */
+.safety-list{color:var(--muted);padding-left:18px;line-height:1.6}
+
+/**
+ * Stats grid
+ */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
 .stat-card{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(232,255,249,0.05);box-shadow:0 12px 30px rgba(0,0,0,0.18)}
 .stat-card strong{font-size:1.6rem}
 
-/* responsive */
+/**
+ * Site footer
+ */
+.site-footer{background:rgba(3,26,32,0.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:16px 0;border-top:1px solid rgba(232,255,249,0.06);margin-top:auto}
+.footer-grid{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.footer-grid nav a{color:var(--muted);margin-left:12px;text-decoration:none}
+
+/**
+ * Utility classes
+ */
+.muted{color:var(--muted);font-size:0.9rem}
+small.muted{font-size:0.75rem;line-height:1.3}
+
+/* ============================================================================
+   16. RESPONSIVE MEDIA QUERIES
+   ============================================================================ */
+
+/**
+ * Tablet and smaller screens (max-width: 980px)
+ */
 @media (max-width:980px){
   .hero-grid{grid-template-columns:1fr; }
   .swap-hero{min-height:auto;padding:12px 0 32px}
@@ -280,6 +631,9 @@ small.muted{font-size:0.75rem;line-height:1.3}
   .footer-grid{flex-direction:column;align-items:flex-start}
 }
 
+/**
+ * Mobile screens (max-width: 720px)
+ */
 @media (max-width:720px){
   .swap-toolbar{flex-direction:column;align-items:flex-start}
   .toolbar-actions{width:100%;justify-content:space-between}
