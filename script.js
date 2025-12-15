@@ -455,6 +455,9 @@ function setupSwapDemo(){
   const swapFlip = document.getElementById('swapFlip');
   const fromToken = document.getElementById('fromToken');
   const toToken = document.getElementById('toToken');
+  const rateDisplay = document.getElementById('rateDisplay');
+  const minReceived = document.getElementById('minReceived');
+  const feeDisplay = document.getElementById('feeDisplay');
 
   // Demo rate table for token pairs
   const rateTable = {
@@ -475,12 +478,32 @@ function setupSwapDemo(){
   };
 
   /**
+   * Build a readable token symbol for UI text
+   */
+  const getTokenLabel = (el, fallback) => {
+    if(!el) return fallback;
+    const selected = el.options[el.selectedIndex];
+    return (selected?.textContent || fallback || '').toUpperCase();
+  };
+
+  /**
+   * Estimate a network fee for the demo UI
+   */
+  const estimateFee = (inputValue) => {
+    const base = Math.max(0.003, inputValue * 0.0002);
+    return base.toFixed(4);
+  };
+
+  /**
    * Calculate output amount when inputs or tokens change
    * Demo calculation uses static rates per token pair
    */
   const updateOutputs = () => {
     const val = parseFloat(fromAmt.value) || 0;
     const rate = getRate();
+    const sellSymbol = getTokenLabel(fromToken, 'CSPR');
+    const buySymbol = getTokenLabel(toToken, 'ECTO');
+    const slippagePct = parseFloat(slippage?.value) || 0.5;
 
     toAmt.value = (val * rate).toFixed(6);
 
@@ -491,6 +514,21 @@ function setupSwapDemo(){
 
     if(priceImpactDetail){
       priceImpactDetail.textContent = impactText;
+    }
+
+    if(rateDisplay){
+      rateDisplay.textContent = `1 ${sellSymbol} ≈ ${(rate).toFixed(4)} ${buySymbol}`;
+    }
+
+    if(orderSummary){
+      const minValue = (val * rate) * (1 - slippagePct/100);
+      orderSummary.hidden = false;
+      orderSummary.textContent = `You send ${val || 0} ${sellSymbol} and will receive at least ${minValue.toFixed(6)} ${buySymbol} with ${slippagePct}% slippage.`;
+      if(minReceived) minReceived.textContent = `${minValue.toFixed(6)} ${buySymbol}`;
+    }
+
+    if(feeDisplay){
+      feeDisplay.textContent = `~${estimateFee(val)} ${sellSymbol}`;
     }
   };
 
