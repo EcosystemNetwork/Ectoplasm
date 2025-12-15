@@ -36,6 +36,29 @@
  */
 const CSPR_WALLET_APP_ID = '019ae32b-4115-7d44-b2c3-a8091354c9a2';
 
+/**
+ * Price ticker configuration
+ * @constant {number}
+ */
+const PRICE_TICKER_BASE_INTERVAL = 60_000; // 60 seconds
+const PRICE_TICKER_MAX_BACKOFF = 300_000;  // 5 minutes maximum backoff
+const PRICE_TICKER_MAX_FAILURES = 3;       // Number of failures before backoff
+const API_TIMEOUT = 10_000;                 // 10 seconds API timeout
+
+/**
+ * Swap configuration
+ * @constant {number}
+ */
+const MAX_REASONABLE_SWAP = 1_000_000; // Maximum reasonable swap amount
+const WALLET_CONNECTION_TIMEOUT = 30_000; // 30 seconds wallet connection timeout
+
+/**
+ * Performance thresholds
+ * @constant {number}
+ */
+const DEBOUNCE_DELAY_SEARCH = 300;  // ms for search input
+const DEBOUNCE_DELAY_CALC = 150;    // ms for calculations
+
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
@@ -278,9 +301,7 @@ async function initPriceTicker(){
   if (!el) return; // Element not on this page
   
   let failureCount = 0;
-  const MAX_FAILURES = 3;
-  const BASE_INTERVAL = 60_000; // 60 seconds
-  let currentInterval = BASE_INTERVAL;
+  let currentInterval = PRICE_TICKER_BASE_INTERVAL;
   let intervalId = null;
   
   /**
@@ -293,7 +314,7 @@ async function initPriceTicker(){
       // CoinGecko API endpoint for Casper Network
       // Free tier, no API key required (rate-limited to 50 calls/min)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+      const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
       
       const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=casper-network&vs_currencies=usd', {
         signal: controller.signal
@@ -304,14 +325,14 @@ async function initPriceTicker(){
       const data = await res.json();
       const price = data['casper-network']?.usd;
       
-      if(price !== undefined && !isNaN(price)) {
+      if(!isNaN(price)) {
         el.textContent = `CSPR $${price.toFixed(2)}`;
         el.setAttribute('data-last-update', new Date().toISOString());
         failureCount = 0; // Reset failure count on success
         
         // Reset to normal interval if we were in backoff mode
-        if(currentInterval !== BASE_INTERVAL) {
-          currentInterval = BASE_INTERVAL;
+        if(currentInterval !== PRICE_TICKER_BASE_INTERVAL) {
+          currentInterval = PRICE_TICKER_BASE_INTERVAL;
           resetInterval();
         }
       } else {
@@ -319,11 +340,14 @@ async function initPriceTicker(){
       }
     }catch(e){
       failureCount++;
-      console.warn(`Price fetch error (attempt ${failureCount}/${MAX_FAILURES}):`, e.message);
+      console.warn(`Price fetch error (attempt ${failureCount}/${PRICE_TICKER_MAX_FAILURES}):`, e.message);
       
       // Implement exponential backoff on repeated failures
-      if(failureCount >= MAX_FAILURES) {
-        currentInterval = Math.min(BASE_INTERVAL * Math.pow(2, failureCount - MAX_FAILURES), 300_000); // Max 5 min
+      if(failureCount >= PRICE_TICKER_MAX_FAILURES) {
+        currentInterval = Math.min(
+          PRICE_TICKER_BASE_INTERVAL * Math.pow(2, failureCount - PRICE_TICKER_MAX_FAILURES),
+          PRICE_TICKER_MAX_BACKOFF
+        );
         resetInterval();
       }
       
@@ -508,7 +532,7 @@ async function connectWalletHandler(){
     
     // Add timeout to prevent hanging
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('CONNECTION_TIMEOUT')), 30000);
+      setTimeout(() => reject(new Error('CONNECTION_TIMEOUT')), WALLET_CONNECTION_TIMEOUT);
     });
     
     connectedAccount = await Promise.race([connectionPromise, timeoutPromise]);
@@ -756,7 +780,6 @@ function setupSwapDemo(){
     }
     
     // Warn on excessively large values (potential input error)
-    const MAX_REASONABLE_SWAP = 1_000_000;
     if(val > MAX_REASONABLE_SWAP) {
       console.warn('Unusually large swap amount detected:', val);
     }
@@ -770,16 +793,20 @@ function setupSwapDemo(){
 
     // Calculate price impact (simplified: grows with swap size)
     // In production, this should calculate actual impact based on pool depth
+    const HIGH_IMPACT_THRESHOLD = 0.1; // 10% price impact warning threshold
     const impact = Math.min(0.5, (val/1000));
     const impactText = (impact*100).toFixed(2) + '%';
 
     if(priceImpactDetail){
       priceImpactDetail.textContent = impactText;
-      // Warn user of high price impact
-      if(impact > 0.1) {
-        priceImpactDetail.parentElement.style.color = '#ffb400';
-      } else {
-        priceImpactDetail.parentElement.style.color = '';
+      // Warn user of high price impact using CSS class
+      const parentEl = priceImpactDetail.parentElement;
+      if(parentEl) {
+        if(impact > HIGH_IMPACT_THRESHOLD) {
+          parentEl.classList.add('warning');
+        } else {
+          parentEl.classList.remove('warning');
+        }
       }
     }
 
@@ -800,7 +827,7 @@ function setupSwapDemo(){
   };
 
   // Debounce updateOutputs for better performance during rapid input
-  const debouncedUpdateOutputs = debounce(updateOutputs, 150);
+  const debouncedUpdateOutputs = debounce(updateOutputs, DEBOUNCE_DELAY_CALC);
 
   fromAmt.addEventListener('input', debouncedUpdateOutputs);
   if(fromToken) fromToken.addEventListener('change', updateOutputs);
@@ -1280,7 +1307,7 @@ function renderLaunchpadTokens(){
   
   // Setup live filtering with debouncing to improve performance
   if (filterInput) {
-    const debouncedRender = debounce(render, 300);
+    const debouncedRender = debounce(render, DEBOUNCE_DELAY_SEARCH);
     filterInput.addEventListener('input', debouncedRender);
   }
 }
