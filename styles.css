@@ -318,8 +318,8 @@ main{flex:1;display:block}
 .status-badge{font-size:0.85rem;padding:6px 10px;border-radius:999px;background:var(--glass);color:var(--muted);border:1px solid rgba(232,255,249,0.08)}
 .muted.tiny{font-size:0.8rem;margin:0 0 2px}
 .status-badge.subtle{background:rgba(255,255,255,0.04);border-color:rgba(232,255,249,0.12)}
-.swap-form{display:flex;flex-direction:column;gap:8px}
-.swap-form-compact{gap:10px;padding:4px 0}
+.swap-form{display:flex;flex-direction:column;gap:8px;position:relative}
+.swap-form-compact{gap:8px;padding:4px 0}
 .token-row{background:rgba(255,255,255,0.04);padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 18px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:4px}
 .token-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
 .token-input{display:flex;align-items:center;gap:8px}
@@ -329,9 +329,9 @@ main{flex:1;display:block}
 .token-selector{position:relative}
 .token-selector::after{content:"⌄";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:0.9rem;color:var(--muted);pointer-events:none}
 .balance{color:var(--muted);font-size:0.85rem}
-.arrow-divider{display:flex;align-items:center;justify-content:center;padding:3px 4px;margin:-1px 0;color:var(--muted);font-size:0.82rem;gap:6px}
+.arrow-divider{display:flex;align-items:center;justify-content:center;padding:3px 4px;margin:-12px 0;color:var(--muted);font-size:0.82rem;gap:6px;pointer-events:none}
 .arrow{display:none}
-.arrow-circle{display:grid;width:32px;height:32px;border-radius:50%;border:1px solid rgba(119,240,248,0.22);align-items:center;justify-content:center;background:rgba(119,240,248,0.08);font-weight:700;box-shadow:0 8px 26px rgba(0,0,0,0.2);font-size:0.9rem}
+.arrow-circle{display:grid;width:36px;height:36px;border-radius:50%;border:1px solid rgba(119,240,248,0.28);align-items:center;justify-content:center;background:rgba(119,240,248,0.12);font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,0.24);font-size:0.95rem;position:relative;top:2px}
 .swap-inline-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:0.82rem;flex-wrap:wrap;text-align:left}
 .swap-health{padding:6px 8px;border-radius:8px;background:rgba(0,255,170,0.08);border:1px solid rgba(0,255,170,0.18);color:#17d29a;font-weight:700;font-size:0.82rem;box-shadow:0 6px 18px rgba(0,0,0,0.16)}
 .swap-health[data-state="warn"]{background:rgba(255,180,0,0.1);border-color:rgba(255,180,0,0.24);color:#ffb400}
