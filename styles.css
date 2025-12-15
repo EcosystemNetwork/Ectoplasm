@@ -84,27 +84,51 @@
  * Universal box-sizing
  * Makes width/height calculations include padding and border
  */
-*{box-sizing:border-box}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
 /**
  * Form elements inherit font styles
  * Ensures buttons, inputs, etc. use the same font as body
  */
-button,input,select,textarea{font:inherit}
+button, input, select, textarea {
+  font: inherit;
+}
 
 /**
  * Remove spinner controls from number inputs
  * Provides cleaner UI for numerical inputs
  */
 input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-input[type="number"]{-moz-appearance:textfield}
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/**
+ * Improve focus visibility for accessibility
+ */
+:focus-visible {
+  outline: 2px solid rgba(119, 240, 248, 0.6);
+  outline-offset: 2px;
+}
 
 /**
  * Full-height layout foundation
  * Ensures footer stays at bottom even with minimal content
  */
-html,body{height:100%}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 /**
  * Body styles with gradient background
