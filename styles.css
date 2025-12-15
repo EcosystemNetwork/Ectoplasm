@@ -322,9 +322,10 @@ main{flex:1;display:block}
 .swap-form-compact{gap:10px;padding:4px 0}
 .token-row{background:rgba(255,255,255,0.04);padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 18px rgba(0,0,0,0.18);display:flex;flex-direction:column;gap:4px}
 .token-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.token-input{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.token-input input{font-size:1.5rem;font-weight:700;border-radius:12px;padding:0;background:transparent;border:0;min-width:130px;color:inherit}
+.token-input{display:flex;align-items:center;gap:8px}
+.token-input input{font-size:1.5rem;font-weight:700;border-radius:12px;padding:0;background:transparent;border:0;min-width:0;flex:1;color:inherit}
 .token-selector select{-moz-appearance:none;-webkit-appearance:none;appearance:none;padding:10px 14px;border-radius:14px;border:1px solid rgba(119,240,248,0.25);background:rgba(8,26,34,0.82);color:#e8fff9;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.28);min-width:120px;font-size:0.95rem}
+.token-selector select{flex-shrink:0}
 .token-selector{position:relative}
 .token-selector::after{content:"⌄";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:0.9rem;color:var(--muted);pointer-events:none}
 .balance{color:var(--muted);font-size:0.85rem}
