@@ -174,8 +174,8 @@
               </div>
             </label>
 
-            <div class="arrow-divider" aria-hidden="true">
-              <span class="arrow-circle">↓</span>
+            <div class="arrow-divider">
+              <button type="button" class="arrow-circle" id="swapFlip" aria-label="Reverse tokens and amounts">⇅</button>
             </div>
 
             <label class="token-row">
@@ -193,15 +193,6 @@
                 </div>
               </div>
             </label>
-
-            <div class="swap-inline-meta">
-              <div class="swap-health" id="swapHealth" aria-live="polite">Optimal routing</div>
-              <div class="swap-mini-grid" aria-label="Execution details">
-                <span class="muted">Impact <strong id="priceImpact">0.00%</strong></span>
-                <span class="muted">Fee 0.25%</span>
-                <span class="muted">Network <strong>Casper</strong></span>
-              </div>
-            </div>
 
             <div class="swap-actions">
               <button type="submit" class="btn primary full" id="swapActionBtn">Connect wallet to swap</button>
