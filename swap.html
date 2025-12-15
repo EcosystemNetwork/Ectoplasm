@@ -4,9 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Ectoplasm — Swap</title>
-  <meta http-equiv="refresh" content="0; url=/#swap" />
+  <meta name="description" content="Swap tokens on the Ectoplasm DEX with clear routing, slippage controls, and wallet status." />
+
   <script>
-    // Apply saved theme early on redirect page to avoid flashes
+    // Set theme ASAP to avoid flashes when navigating between pages
     (function(){
       const stored = localStorage.getItem('ectoplasm-theme');
       const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -14,20 +15,105 @@
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
+
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    window.location.replace('/#swap');
-  </script>
 </head>
 <body>
   <header class="site-header">
     <div class="container header-grid">
-      <a class="logo" href="/">
-        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
-        <span>Ectoplasm</span>
-      </a>
+      <div class="logo-menu">
+        <a class="logo logo-toggle" id="logoMenuToggle" href="/" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </a>
+        <div class="logo-menu-panel" id="logoMenu" hidden>
+          <div class="menu-grid">
+            <div class="menu-section">
+              <div class="menu-heading">Products</div>
+              <a class="menu-item" href="/">
+                <div>
+                  <strong>Wallet</strong>
+                  <p>Swap, secure, protocol</p>
+                </div>
+                <span class="pill">Live</span>
+              </a>
+              <a class="menu-item" href="/swap.html">
+                <div>
+                  <strong>UniswapX</strong>
+                  <p>The meta-aggregator</p>
+                </div>
+                <span class="pill">Beta</span>
+              </a>
+              <a class="menu-item" href="/api">
+                <div>
+                  <strong>API</strong>
+                  <p>High-volume, performant</p>
+                </div>
+                <span class="pill">High volume</span>
+              </a>
+              <a class="menu-item" href="/launchpad.html">
+                <div>
+                  <strong>Unichain</strong>
+                  <p>The Uniswap Chain</p>
+                </div>
+                <span class="pill">Base</span>
+              </a>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Use for</div>
+              <ul class="menu-list">
+                <li><a href="/#swap">Swap crypto</a></li>
+                <li><a href="/liquidity.html">Provide liquidity</a></li>
+                <li><a href="/launchpad.html">Launch tokens</a></li>
+                <li><a href="/dashboard.html">Track positions</a></li>
+              </ul>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Company</div>
+              <ul class="menu-list">
+                <li><a href="/docs/roadmap.html">About</a></li>
+                <li><a href="/docs/careers.html">Careers</a></li>
+                <li><a href="/docs/blog.html">Blog</a></li>
+              </ul>
+              <div class="menu-heading">Legal &amp; Privacy</div>
+              <ul class="menu-list">
+                <li><a href="/privacy.html">Privacy</a></li>
+                <li><a href="/docs/terms.html">Terms</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="menu-metrics" aria-label="Swap status summary">
+            <div class="menu-metrics-title">
+              <span>Optimal routing</span>
+              <span class="status-badge subtle">Live</span>
+            </div>
+            <div class="menu-metrics-grid">
+              <div>
+                <span class="menu-metrics-label">Impact</span>
+                <strong>0.00%</strong>
+              </div>
+              <div>
+                <span class="menu-metrics-label">Fee</span>
+                <strong>0.25%</strong>
+              </div>
+              <div>
+                <span class="menu-metrics-label">Network</span>
+                <strong>Casper</strong>
+              </div>
+            </div>
+          </div>
+          <div class="menu-footer">
+            <div>
+              <div class="menu-heading">Get the app</div>
+              <p>Swap and sell crypto on 16+ networks including Ethereum, Unichain, and Base.</p>
+            </div>
+            <a class="btn primary" href="/swap.html">Get app</a>
+          </div>
+        </div>
+      </div>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/#swap">Swap</a>
+        <a href="#swap" aria-current="page">Swap</a>
         <a href="/#overview">Overview</a>
         <a href="/dashboard.html">Dashboard</a>
         <a href="/launchpad.html">Launchpad</a>
@@ -40,51 +126,181 @@
   </header>
 
   <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <div class="brand-badge">
-            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
-            <span>Redirecting</span>
+    <section class="hero swap-hero" id="swap">
+      <div class="container swap-layout">
+        <div class="swap-heading">
+          <h1 id="swap-heading-title">Swap tokens instantly on Casper.</h1>
+        </div>
+        <div class="hero-card swap-shell" aria-labelledby="swap-heading-title">
+          <div class="swap-toolbar compact">
+            <div class="swap-quick-actions" aria-label="Swap controls">
+              <div class="swap-tabs" role="tablist" aria-label="Order type">
+                <button type="button" class="pill active" data-order-tab="swap" role="tab" aria-selected="true">Swap</button>
+                <button type="button" class="pill ghost" data-order-tab="limit" role="tab" aria-selected="false">Limit</button>
+                <button type="button" class="pill ghost" data-order-tab="buy" role="tab" aria-selected="false">Buy</button>
+                <button type="button" class="pill ghost" data-order-tab="sell" role="tab" aria-selected="false">Sell</button>
+              </div>
+              <div class="quick-icons" aria-label="Inline tools">
+                <button type="button" class="icon-btn" data-popout-target="settingsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="settingsPopout">
+                  <span class="visually-hidden">Open swap settings</span>
+                  <span aria-hidden="true">⚙️</span>
+                </button>
+                <button type="button" class="icon-btn" data-popout-target="detailsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="detailsPopout">
+                  <span class="visually-hidden">Open trade details</span>
+                  <span aria-hidden="true">📊</span>
+                </button>
+                <button type="button" class="icon-btn" data-popout-target="networkPopout" aria-haspopup="true" aria-expanded="false" aria-controls="networkPopout">
+                  <span class="visually-hidden">Open network and wallet status</span>
+                  <span aria-hidden="true">🌐</span>
+                </button>
+              </div>
+            </div>
           </div>
-          <h1>The swapper now lives on the home page.</h1>
-          <p class="lead">We're sending you to the combined swap + overview experience. If you're not redirected automatically, use the button below.</p>
-          <div class="hero-cta">
-            <a href="/#swap" class="btn primary large">Go to swapper</a>
-            <a href="/#overview" class="btn ghost large">See the overview</a>
+          <form class="swap-form swap-form-compact" onsubmit="event.preventDefault(); demoSwap();">
+            <label class="token-row">
+              <div class="token-row-top">
+                <span class="muted">Sell</span>
+                <span class="balance">Balance: 0</span>
+              </div>
+              <div class="token-input">
+                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Sell amount" />
+                <div class="token-selector">
+                  <select id="fromToken" aria-label="Sell token">
+                    <option value="cspr">CSPR</option>
+                    <option value="ecto">ECTO</option>
+                  </select>
+                </div>
+              </div>
+            </label>
+
+            <div class="arrow-divider">
+              <button type="button" class="arrow-circle" id="swapFlip" aria-label="Reverse tokens and amounts">⇅</button>
+            </div>
+
+            <label class="token-row">
+              <div class="token-row-top">
+                <span class="muted">Buy</span>
+                <span class="balance">Estimated</span>
+              </div>
+              <div class="token-input">
+                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" disabled />
+                <div class="token-selector">
+                  <select id="toToken" aria-label="Buy token">
+                    <option value="ecto">ECTO</option>
+                    <option value="cspr">CSPR</option>
+                  </select>
+                </div>
+              </div>
+            </label>
+
+            <div class="swap-actions">
+              <a class="btn primary full" id="swapActionBtn" href="#swap" data-activate-swap>Swap</a>
+            </div>
+            <small class="muted" id="orderSummary" hidden></small>
+          </form>
+
+          <div class="swap-popouts" aria-live="polite">
+            <div class="popout" id="settingsPopout" role="dialog" aria-label="Swap settings" hidden>
+              <div class="popout-header">
+                <strong>Settings</strong>
+                <button type="button" class="icon-btn ghost" data-popout-close>
+                  <span class="visually-hidden">Close settings</span>
+                  <span aria-hidden="true">✕</span>
+                </button>
+              </div>
+              <div class="settings-group">
+                <label class="muted" for="slippage">Slippage tolerance</label>
+                <div class="pill-row tight">
+                  <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.1%</button>
+                  <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.5'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.5%</button>
+                  <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">1%</button>
+                  <div class="input-row tight compact">
+                    <input id="slippage" type="number" inputmode="decimal" step="0.1" min="0" aria-label="Slippage tolerance" value="0.5" />
+                    <span class="suffix">%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-group">
+                <span class="muted">Quick amounts</span>
+                <div class="quick-amounts" aria-label="Quick amount buttons">
+                  <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='10'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">10</button>
+                  <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='100'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">100</button>
+                  <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='250'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">250</button>
+                </div>
+              </div>
+              <div class="settings-group">
+                <span class="muted">Routing snapshot</span>
+                <div class="swap-health">Optimal routing</div>
+                <div class="swap-mini-grid settings-mini-grid" aria-label="Routing details">
+                  <span class="muted">Impact <strong>0.00%</strong></span>
+                  <span class="muted">Fee <strong>0.25%</strong></span>
+                  <span class="muted">Network <strong>Casper</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="popout" id="detailsPopout" role="dialog" aria-label="Trade details" hidden>
+              <div class="popout-header">
+                <strong>Trade details</strong>
+                <button type="button" class="icon-btn ghost" data-popout-close>
+                  <span class="visually-hidden">Close trade details</span>
+                  <span aria-hidden="true">✕</span>
+                </button>
+              </div>
+              <dl class="swap-breakdown">
+                <div>
+                  <dt>Minimum received</dt>
+                  <dd>Respecting slippage controls</dd>
+                </div>
+                <div>
+                  <dt>Route</dt>
+                  <dd>Auto (best path)</dd>
+                </div>
+                <div>
+                  <dt>Network</dt>
+                  <dd>Casper mainnet</dd>
+                </div>
+                <div>
+                  <dt>Price impact</dt>
+                  <dd><strong id="priceImpactDetail">0.00%</strong></dd>
+                </div>
+                <div>
+                  <dt>Fee</dt>
+                  <dd>0.25%</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="popout" id="networkPopout" role="dialog" aria-label="Network and wallet" hidden>
+              <div class="popout-header">
+                <strong>Network</strong>
+                <button type="button" class="icon-btn ghost" data-popout-close>
+                  <span class="visually-hidden">Close network status</span>
+                  <span aria-hidden="true">✕</span>
+                </button>
+              </div>
+              <div class="network-status">
+                <span class="status-badge subtle">Casper mainnet</span>
+                <span id="walletStatus" class="status-badge subtle">Wallet disconnected</span>
+                <p class="muted small">Routing auto-selects the best path and keeps gas low.</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="hero-card">
-          <div class="card-top">
-            <h2>What's changed</h2>
-            <span class="status-badge">Unified entry</span>
+        <div class="hero-copy swap-copy">
+          <p class="lead">A focused swap card sits front and center. Connect your wallet, set slippage, and move between CSPR and ECTO with clear routing and instant feedback.</p>
+          <div class="hero-cta">
+            <a href="#swap" class="btn primary large">Get started</a>
           </div>
-          <ul class="trust-list" aria-label="Navigation options">
-            <li>Swap terminal is now the landing surface</li>
-            <li>Original landing content sits beneath the swap</li>
-            <li>All feature pages remain linked</li>
+          <ul class="trust-list" aria-hidden="false">
+            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
+            <li>Casper mainnet routing</li>
+            <li>Wallet status shown inline</li>
           </ul>
         </div>
       </div>
     </section>
   </main>
-
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div>
-        <a class="logo" href="/">
-          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
-          <span>Ectoplasm</span>
-        </a>
-        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
-      </div>
-      <nav aria-label="Footer navigation">
-        <a href="/docs">Docs</a>
-        <a href="/whitepaper.pdf">Whitepaper</a>
-        <a href="/audit-report.pdf">Audit</a>
-      </nav>
-    </div>
-  </footer>
 
   <script src="script.js" defer></script>
 </body>
