@@ -36,62 +36,249 @@
   </header>
 
   <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <div class="brand-badge">
-            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
-            <span>Liquidity hub</span>
+    <section class="page-hero liquidity-hero">
+      <div class="container">
+        <div class="hero-grid hero-balanced">
+          <div class="hero-copy">
+            <p class="eyebrow">Earn · Liquidity</p>
+            <h1>Provide liquidity to earn fees and boosted rewards</h1>
+            <p class="lead">Pair $ECTO with stablecoins, Casper ecosystem tokens, and blue-chips. LPs earn a share of trading fees
+ and can opt into boosted programs for deeper rewards.</p>
+            <div class="hero-actions">
+              <div class="hero-buttons">
+                <a href="#pools" class="btn primary large">Explore pools</a>
+                <a href="/swap.html" class="btn ghost large">Add liquidity</a>
+              </div>
+              <div class="hero-chips">
+                <span class="chip active">Auto-compound eligible</span>
+                <span class="chip">Boosted APR tags</span>
+                <span class="chip">Stable & volatile pairs</span>
+              </div>
+            </div>
           </div>
-          <h1>Deep liquidity built around $ECTO</h1>
-          <p class="lead">Pair $ECTO with CSPR, stables, and ecosystem tokens to grow depth and reduce volatility. LPs earn swap fees and programmable rewards.</p>
-          <div class="hero-cta">
-            <a href="#pools" class="btn primary large">View pools</a>
-            <a href="/swap.html" class="btn ghost large">Trade now</a>
+          <div class="hero-card panel">
+            <div class="panel-header">
+              <div class="pill success">Live</div>
+              <span class="muted">Updated moments ago</span>
+            </div>
+            <div class="stat-grid tight">
+              <div class="stat-card">
+                <p class="muted">Total liquidity</p>
+                <div class="stat-value">$218.4M</div>
+                <div class="stat-trend positive">+3.4% (24h)</div>
+              </div>
+              <div class="stat-card">
+                <p class="muted">Volume (24h)</p>
+                <div class="stat-value">$42.9M</div>
+                <div class="stat-trend positive">Fees $128k</div>
+              </div>
+              <div class="stat-card">
+                <p class="muted">Active pools</p>
+                <div class="stat-value">128</div>
+                <div class="stat-trend">Across 6 chains</div>
+              </div>
+            </div>
+            <div class="panel-row">
+              <div>
+                <p class="muted tiny">Your LP positions</p>
+                <strong>No wallet connected</strong>
+              </div>
+              <button class="btn ghost">Connect wallet</button>
+            </div>
           </div>
         </div>
-        <div class="hero-card">
-          <div class="card-top">
-            <h2>LP highlights</h2>
-            <span class="status-badge">Protections</span>
+      </div>
+    </section>
+
+    <section class="liquidity-controls section alt">
+      <div class="container control-grid">
+        <div class="pill-row">
+          <button class="pill filled">All chains</button>
+          <button class="pill">Casper</button>
+          <button class="pill">BSC</button>
+          <button class="pill">Arbitrum</button>
+          <button class="pill">Base</button>
+          <button class="pill">zkSync</button>
+        </div>
+        <div class="toolbar">
+          <div class="toolbar-field">
+            <label class="muted" for="poolSearch">Search</label>
+            <div class="input shell">
+              <input id="poolSearch" type="search" placeholder="Search pools or tokens" />
+              <span class="suffix muted">⌘K</span>
+            </div>
           </div>
-          <ul class="launch-list">
-            <li>Adaptive fees for volatile vs. stable pairs</li>
-            <li>Smart order routing through deep books</li>
-            <li>Impermanent loss protection options</li>
-            <li>Auto-compounding vaults for select pools</li>
-          </ul>
+          <div class="toolbar-filters">
+            <label class="toggle">
+              <input type="checkbox" checked />
+              <span>Show boosted</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" />
+              <span>Stable pairs</span>
+            </label>
+            <div class="select">
+              <select aria-label="Sort pools">
+                <option>Sort by APR</option>
+                <option>Sort by TVL</option>
+                <option>Sort by Volume 24h</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="pools" class="section">
-      <div class="container pools-grid">
-        <article class="pool-card">
-          <h3>Prime pairs</h3>
-          <p>Create pools like CSPR/$ECTO and USDC/$ECTO with auto-fee tiers and curated routing that keep spreads tight for traders.</p>
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">Live pools</p>
+            <h2>Auto-fee pools with transparent rewards</h2>
+            <p class="muted">Inspired by PancakeSwap's Liquidity interface, optimized for Casper-native routing.</p>
+          </div>
+          <div class="pill-row tight">
+            <span class="pill subtle">APR includes fees</span>
+            <span class="pill subtle">Boosted pools highlighted</span>
+            <span class="pill subtle">Fees auto-compound</span>
+          </div>
+        </div>
+
+        <div class="pool-table" role="table" aria-label="Liquidity pools">
+          <div class="pool-row pool-head" role="row">
+            <div class="col pair" role="columnheader">Pool</div>
+            <div class="col fee" role="columnheader">Fee tier</div>
+            <div class="col tvl" role="columnheader">TVL</div>
+            <div class="col vol" role="columnheader">Volume (24h)</div>
+            <div class="col apr" role="columnheader">APR</div>
+            <div class="col action" role="columnheader">Action</div>
+          </div>
+
+          <div class="pool-row" role="row">
+            <div class="col pair" role="cell">
+              <div class="pair-label">
+                <div class="avatar">E</div>
+                <div>
+                  <strong>CSPR / ECTO</strong>
+                  <div class="muted tiny">Smart routing · Volatile</div>
+                </div>
+              </div>
+            </div>
+            <div class="col fee" role="cell"><span class="pill subtle">0.25%</span></div>
+            <div class="col tvl" role="cell">$62.4M</div>
+            <div class="col vol" role="cell">$13.8M</div>
+            <div class="col apr" role="cell">
+              <div class="apr">18.4% <span class="pill success subtle">Boosted</span></div>
+              <div class="muted tiny">Fees + ECTO rewards</div>
+            </div>
+            <div class="col action" role="cell"><button class="btn primary small">Add liquidity</button></div>
+          </div>
+
+          <div class="pool-row" role="row">
+            <div class="col pair" role="cell">
+              <div class="pair-label">
+                <div class="avatar alt">$</div>
+                <div>
+                  <strong>USDC / ECTO</strong>
+                  <div class="muted tiny">Stable pair · Low slip</div>
+                </div>
+              </div>
+            </div>
+            <div class="col fee" role="cell"><span class="pill subtle">0.01%</span></div>
+            <div class="col tvl" role="cell">$48.1M</div>
+            <div class="col vol" role="cell">$9.2M</div>
+            <div class="col apr" role="cell">
+              <div class="apr">9.6%</div>
+              <div class="muted tiny">Fees auto-compound</div>
+            </div>
+            <div class="col action" role="cell"><button class="btn ghost small">View pool</button></div>
+          </div>
+
+          <div class="pool-row" role="row">
+            <div class="col pair" role="cell">
+              <div class="pair-label">
+                <div class="avatar blue">Ξ</div>
+                <div>
+                  <strong>ETH / ECTO</strong>
+                  <div class="muted tiny">Cross-chain routing</div>
+                </div>
+              </div>
+            </div>
+            <div class="col fee" role="cell"><span class="pill subtle">0.15%</span></div>
+            <div class="col tvl" role="cell">$32.7M</div>
+            <div class="col vol" role="cell">$6.1M</div>
+            <div class="col apr" role="cell">
+              <div class="apr">12.2%</div>
+              <div class="muted tiny">Arbitrum · zkSync</div>
+            </div>
+            <div class="col action" role="cell"><button class="btn primary small">Add liquidity</button></div>
+          </div>
+
+          <div class="pool-row" role="row">
+            <div class="col pair" role="cell">
+              <div class="pair-label">
+                <div class="avatar gold">B</div>
+                <div>
+                  <strong>BTC.b / ECTO</strong>
+                  <div class="muted tiny">Volatile · Dynamic fee</div>
+                </div>
+              </div>
+            </div>
+            <div class="col fee" role="cell"><span class="pill subtle">0.30%</span></div>
+            <div class="col tvl" role="cell">$21.5M</div>
+            <div class="col vol" role="cell">$5.8M</div>
+            <div class="col apr" role="cell">
+              <div class="apr">15.1%</div>
+              <div class="muted tiny">Boosts available</div>
+            </div>
+            <div class="col action" role="cell"><button class="btn ghost small">View pool</button></div>
+          </div>
+
+          <div class="pool-row" role="row">
+            <div class="col pair" role="cell">
+              <div class="pair-label">
+                <div class="avatar violet">Δ</div>
+                <div>
+                  <strong>DAI / ECTO</strong>
+                  <div class="muted tiny">Stable pair · Protected</div>
+                </div>
+              </div>
+            </div>
+            <div class="col fee" role="cell"><span class="pill subtle">0.05%</span></div>
+            <div class="col tvl" role="cell">$18.3M</div>
+            <div class="col vol" role="cell">$4.9M</div>
+            <div class="col apr" role="cell">
+              <div class="apr">8.4%</div>
+              <div class="muted tiny">Stable routing</div>
+            </div>
+            <div class="col action" role="cell"><button class="btn primary small">Add liquidity</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="container highlight-grid">
+        <article class="highlight-card">
+          <div class="pill subtle">Impermanent loss controls</div>
+          <h3>Fee tiers tuned for volatility</h3>
+          <p>Adaptive 0.01%–0.30% fee tiers capture more volume while cushioning LPs during volatile swings. You choose stable or
+ volatile curves depending on the pair.</p>
           <ul>
-            <li>Adaptive fees for volatile vs. stable pairs</li>
-            <li>Deep routing through our smart order router</li>
-            <li>On-chain analytics to monitor utilization</li>
+            <li>Auto-rebalancing fee bands modeled after PancakeSwap v3</li>
+            <li>Transparent projected APRs with fee + rewards split</li>
+            <li>Boosted multipliers for partner campaigns</li>
           </ul>
         </article>
-        <article class="pool-card">
-          <h3>LP incentives</h3>
-          <p>Stake your LP tokens to earn extra $ECTO emissions and partner rewards with built-in impermanent loss mitigations.</p>
+        <article class="highlight-card">
+          <div class="pill subtle">Vault & staking</div>
+          <h3>Compound and restake in a click</h3>
+          <p>Send LP tokens into auto-compounding vaults or stake them into quests for extra $ECTO. All vaults show live APYs and
+ fee capture so you always know the source of yield.</p>
           <ul>
-            <li>Epoch-based boosts for long-term liquidity</li>
-            <li>Auto-compounding vaults for select pools</li>
-            <li>Transparent, auditable reward schedules</li>
-          </ul>
-        </article>
-        <article class="pool-card">
-          <h3>Risk controls</h3>
-          <p>Time-locked upgrades, curated listings, and progressive disclosure policies keep LPs informed and capital safer.</p>
-          <ul>
-            <li>On-chain guardrails for new assets</li>
-            <li>Multi-sig governance and audits</li>
-            <li>Clear treasury disclosures</li>
+            <li>Transparent reward timelines and unlocks</li>
+            <li>Gas-optimized restaking flows</li>
+            <li>Withdraw any time with no lockups</li>
           </ul>
         </article>
       </div>
