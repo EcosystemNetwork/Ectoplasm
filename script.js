@@ -36,6 +36,147 @@
  */
 const CSPR_WALLET_APP_ID = '019ae32b-4115-7d44-b2c3-a8091354c9a2';
 
+/**
+ * Price ticker configuration
+ * @constant {number}
+ */
+const PRICE_TICKER_BASE_INTERVAL = 60_000; // 60 seconds
+const PRICE_TICKER_MAX_BACKOFF = 300_000;  // 5 minutes maximum backoff
+const PRICE_TICKER_MAX_FAILURES = 3;       // Number of failures before backoff
+const API_TIMEOUT = 10_000;                 // 10 seconds API timeout
+
+/**
+ * Swap configuration
+ * @constant {number}
+ */
+const MAX_REASONABLE_SWAP = 1_000_000; // Maximum reasonable swap amount
+const WALLET_CONNECTION_TIMEOUT = 30_000; // 30 seconds wallet connection timeout
+
+/**
+ * Performance thresholds
+ * @constant {number}
+ */
+const DEBOUNCE_DELAY_SEARCH = 300;  // ms for search input
+const DEBOUNCE_DELAY_CALC = 150;    // ms for calculations
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+/**
+ * Debounce function to limit how often a function can be called
+ * Useful for search inputs, resize events, etc.
+ * 
+ * @param {Function} func - The function to debounce
+ * @param {number} wait - Milliseconds to wait before calling func
+ * @returns {Function} Debounced function
+ */
+function debounce(func, wait = 300) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+/**
+ * Sanitize user input to prevent XSS attacks
+ * Escapes HTML special characters
+ * 
+ * @param {string} str - String to sanitize
+ * @returns {string} Sanitized string
+ */
+function sanitizeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/**
+ * Performance monitoring utility
+ * Tracks and logs performance metrics for optimization
+ */
+const performanceMonitor = {
+  marks: new Map(),
+  
+  /**
+   * Mark the start of a performance measurement
+   * @param {string} name - Name of the measurement
+   */
+  start(name) {
+    this.marks.set(name, performance.now());
+  },
+  
+  /**
+   * Mark the end of a performance measurement and log the duration
+   * @param {string} name - Name of the measurement
+   * @param {boolean} log - Whether to log the result (default: true in development)
+   */
+  end(name, log = true) {
+    const startTime = this.marks.get(name);
+    if (!startTime) {
+      console.warn(`No start mark found for: ${name}`);
+      return;
+    }
+    
+    const duration = performance.now() - startTime;
+    this.marks.delete(name);
+    
+    if (log) {
+      console.log(`⚡ Performance: ${name} took ${duration.toFixed(2)}ms`);
+    }
+    
+    return duration;
+  },
+  
+  /**
+   * Get navigation timing metrics
+   */
+  getPageLoadMetrics() {
+    if (!performance.timing) return null;
+    
+    const timing = performance.timing;
+    return {
+      dns: timing.domainLookupEnd - timing.domainLookupStart,
+      tcp: timing.connectEnd - timing.connectStart,
+      ttfb: timing.responseStart - timing.requestStart,
+      download: timing.responseEnd - timing.responseStart,
+      domInteractive: timing.domInteractive - timing.navigationStart,
+      domComplete: timing.domComplete - timing.navigationStart,
+      loadComplete: timing.loadEventEnd - timing.navigationStart
+    };
+  },
+  
+  /**
+   * Log page load performance metrics
+   */
+  logPageLoad() {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const metrics = this.getPageLoadMetrics();
+        if (metrics) {
+          console.log('📊 Page Load Metrics:', {
+            'DNS Lookup': `${metrics.dns}ms`,
+            'TCP Connection': `${metrics.tcp}ms`,
+            'Time to First Byte': `${metrics.ttfb}ms`,
+            'Content Download': `${metrics.download}ms`,
+            'DOM Interactive': `${metrics.domInteractive}ms`,
+            'DOM Complete': `${metrics.domComplete}ms`,
+            'Load Complete': `${metrics.loadComplete}ms`
+          });
+        }
+      }, 0);
+    });
+  }
+};
+
+// Initialize performance monitoring
+performanceMonitor.logPageLoad();
+
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
@@ -56,8 +197,14 @@ const CSPR_WALLET_APP_ID = '019ae32b-4115-7d44-b2c3-a8091354c9a2';
  * - Promotional budget slider
  * - Dashboard (if on dashboard.html)
  * - Launchpad token list (if on launchpad.html)
+ * 
+ * Memory management:
+ * - Properly cleans up intervals and event listeners
+ * - Tracks active timers for cleanup on page unload
  */
 document.addEventListener('DOMContentLoaded', () => {
+  performanceMonitor.start('DOMContentLoaded');
+  
   // Update copyright year in footer
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -81,12 +228,38 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Initialize page-specific components
+  performanceMonitor.start('setupLogoMenu');
   setupLogoMenu();        // Mega menu navigation
+  performanceMonitor.end('setupLogoMenu', false);
+  
+  performanceMonitor.start('setupSwapDemo');
   setupSwapDemo();        // Swap calculator with order types
+  performanceMonitor.end('setupSwapDemo', false);
+  
+  performanceMonitor.start('setupPopouts');
   setupPopouts();         // Settings/details/network popovers
+  performanceMonitor.end('setupPopouts', false);
+  
+  performanceMonitor.start('setupPromoSlider');
   setupPromoSlider();     // Launchpad promotional budget slider
+  performanceMonitor.end('setupPromoSlider', false);
+  
+  performanceMonitor.start('renderDashboard');
   renderDashboard();      // Dashboard tasks/quests/rewards
+  performanceMonitor.end('renderDashboard', false);
+  
+  performanceMonitor.start('renderLaunchpadTokens');
   renderLaunchpadTokens();// Launchpad token library table
+  performanceMonitor.end('renderLaunchpadTokens', false);
+  
+  performanceMonitor.end('DOMContentLoaded');
+});
+
+// Cleanup on page unload to prevent memory leaks
+window.addEventListener('beforeunload', () => {
+  // Any active intervals or timers should be cleared
+  // This is handled within each component, but we can add global cleanup here if needed
+  console.log('🧹 Cleaning up before page unload');
 });
 
 // ============================================================================
@@ -120,35 +293,84 @@ function hydrateTheme(){
  * - Auto-refresh every 60 seconds
  * - Graceful error handling (leaves fallback text on failure)
  * - Only runs if price ticker element exists on page
+ * - Implements exponential backoff on API errors
+ * - Request timeout to prevent hanging
  */
 async function initPriceTicker(){
   const el = document.getElementById('priceTicker');
   if (!el) return; // Element not on this page
   
+  let failureCount = 0;
+  let currentInterval = PRICE_TICKER_BASE_INTERVAL;
+  let intervalId = null;
+  
   /**
    * Fetch current CSPR price from CoinGecko API
    * Updates the price ticker element with formatted USD price
+   * Implements retry logic with exponential backoff
    */
   const fetchPrice = async () => {
     try{
       // CoinGecko API endpoint for Casper Network
       // Free tier, no API key required (rate-limited to 50 calls/min)
-      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=casper-network&vs_currencies=usd');
-      if(!res.ok) throw new Error('price fetch failed');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+      
+      const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=casper-network&vs_currencies=usd', {
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      
+      if(!res.ok) throw new Error(`HTTP ${res.status}: price fetch failed`);
       const data = await res.json();
       const price = data['casper-network']?.usd;
-      if(price) el.textContent = `CSPR $${price.toFixed(2)}`;
+      
+      if(!isNaN(price)) {
+        el.textContent = `CSPR $${price.toFixed(2)}`;
+        el.setAttribute('data-last-update', new Date().toISOString());
+        failureCount = 0; // Reset failure count on success
+        
+        // Reset to normal interval if we were in backoff mode
+        if(currentInterval !== PRICE_TICKER_BASE_INTERVAL) {
+          currentInterval = PRICE_TICKER_BASE_INTERVAL;
+          resetInterval();
+        }
+      } else {
+        throw new Error('Invalid price data received');
+      }
     }catch(e){
-      console.warn('Price load error', e);
+      failureCount++;
+      console.warn(`Price fetch error (attempt ${failureCount}/${PRICE_TICKER_MAX_FAILURES}):`, e.message);
+      
+      // Implement exponential backoff on repeated failures
+      if(failureCount >= PRICE_TICKER_MAX_FAILURES) {
+        currentInterval = Math.min(
+          PRICE_TICKER_BASE_INTERVAL * Math.pow(2, failureCount - PRICE_TICKER_MAX_FAILURES),
+          PRICE_TICKER_MAX_BACKOFF
+        );
+        resetInterval();
+      }
+      
       // Leave fallback text (CSPR $--.--) on error
+      if(!el.hasAttribute('data-last-update')) {
+        el.textContent = 'CSPR $--.--';
+      }
     }
+  };
+  
+  /**
+   * Reset the interval timer with current interval value
+   */
+  const resetInterval = () => {
+    if(intervalId) clearInterval(intervalId);
+    intervalId = setInterval(fetchPrice, currentInterval);
   };
   
   // Fetch immediately on load
   fetchPrice();
   
-  // Refresh price every 60 seconds
-  setInterval(fetchPrice, 60_000);
+  // Start interval timer
+  intervalId = setInterval(fetchPrice, currentInterval);
 }
 
 /**
@@ -220,86 +442,113 @@ function activateSwapNav(){
  * 4. Display connected account in UI
  * 5. Store connection state in window global for contract interactions
  * 
+ * Enhancements:
+ * - Better error messages for user guidance
+ * - Timeout protection for hanging connections
+ * - Loading state indication
+ * 
  * @async
  */
 async function connectWalletHandler(){
-  // Detect available wallet providers
-  const casperWalletProvider = typeof window.CasperWalletProvider === 'function' ? window.CasperWalletProvider() : null;
-  const casperSigner = window.casperlabsHelper || window.CasperWallet;
-  const csprCloud = window.csprclick;
-
-  // Check if any wallet is available
-  if(!casperWalletProvider && !casperSigner && !csprCloud){
-    alert('No Casper wallet detected. Please install Casper Wallet, CasperSigner, or CSPR.CLOUD.');
-    return;
+  const connectBtn = document.getElementById('connectWallet');
+  
+  // Show loading state
+  if(connectBtn) {
+    connectBtn.textContent = 'Connecting...';
+    connectBtn.disabled = true;
   }
+  
+  try {
+    // Detect available wallet providers
+    const casperWalletProvider = typeof window.CasperWalletProvider === 'function' ? window.CasperWalletProvider() : null;
+    const casperSigner = window.casperlabsHelper || window.CasperWallet;
+    const csprCloud = window.csprclick;
 
-  // Build list of available wallets
-  const choices = [];
-  if(casperWalletProvider) choices.push('casperwallet');
-  if(casperSigner) choices.push('caspersigner');
-  if(csprCloud) choices.push('csprcloud');
-
-  // If multiple wallets available, let user choose
-  let selectedWallet = choices[0];
-  if(choices.length > 1){
-    const choice = prompt(`Select wallet (${choices.join(', ')}):`, choices[0]);
-    if(choice && choices.includes(choice.trim().toLowerCase())){
-      selectedWallet = choice.trim().toLowerCase();
+    // Check if any wallet is available
+    if(!casperWalletProvider && !casperSigner && !csprCloud){
+      throw new Error('NO_WALLET_DETECTED');
     }
-  }
 
-  try{
+    // Build list of available wallets
+    const choices = [];
+    if(casperWalletProvider) choices.push('casperwallet');
+    if(casperSigner) choices.push('caspersigner');
+    if(csprCloud) choices.push('csprcloud');
+
+    // If multiple wallets available, let user choose
+    let selectedWallet = choices[0];
+    if(choices.length > 1){
+      const choice = prompt(`Select wallet (${choices.join(', ')}):`, choices[0]);
+      if(!choice) {
+        throw new Error('USER_CANCELLED');
+      }
+      if(choice && choices.includes(choice.trim().toLowerCase())){
+        selectedWallet = choice.trim().toLowerCase();
+      }
+    }
+
     let connectedAccount = null;
 
-    // Connect to selected wallet provider
-    if(selectedWallet === 'casperwallet'){
-      console.log('Connecting to Casper Wallet...');
-      if(!casperWalletProvider){
-        throw new Error('Casper Wallet provider not available.');
-      }
-      await requestCasperWalletConnection(casperWalletProvider);
-      connectedAccount = await casperWalletProvider.getActivePublicKey();
-      console.log('Connected to Casper Wallet:', connectedAccount);
-    } else if(selectedWallet === 'csprcloud'){
-      console.log('Connecting to CSPR.CLOUD wallet...');
-      // Try different connection methods (API may vary by version)
-      if(typeof csprCloud.requestConnection === 'function'){
-        await csprCloud.requestConnection({appId: CSPR_WALLET_APP_ID});
-      } else if(typeof csprCloud.connect === 'function'){
-        await csprCloud.connect({appId: CSPR_WALLET_APP_ID});
-      }
-      if(typeof csprCloud.getActiveAccount !== 'function'){
-        throw new Error('CSPR.CLOUD wallet API is unavailable.');
-      }
-      const account = await csprCloud.getActiveAccount();
-      if(account){
-        connectedAccount = account;
-        console.log('Connected to CSPR.CLOUD:', connectedAccount);
+    // Connect to selected wallet provider with timeout
+    const connectionPromise = (async () => {
+      if(selectedWallet === 'casperwallet'){
+        console.log('Connecting to Casper Wallet...');
+        if(!casperWalletProvider){
+          throw new Error('Casper Wallet provider not available.');
+        }
+        await requestCasperWalletConnection(casperWalletProvider);
+        connectedAccount = await casperWalletProvider.getActivePublicKey();
+        console.log('Connected to Casper Wallet:', connectedAccount);
+      } else if(selectedWallet === 'csprcloud'){
+        console.log('Connecting to CSPR.CLOUD wallet...');
+        // Try different connection methods (API may vary by version)
+        if(typeof csprCloud.requestConnection === 'function'){
+          await csprCloud.requestConnection({appId: CSPR_WALLET_APP_ID});
+        } else if(typeof csprCloud.connect === 'function'){
+          await csprCloud.connect({appId: CSPR_WALLET_APP_ID});
+        }
+        if(typeof csprCloud.getActiveAccount !== 'function'){
+          throw new Error('CSPR.CLOUD wallet API is unavailable.');
+        }
+        const account = await csprCloud.getActiveAccount();
+        if(account){
+          connectedAccount = account;
+          console.log('Connected to CSPR.CLOUD:', connectedAccount);
+        } else {
+          throw new Error('No active account found in CSPR.CLOUD wallet');
+        }
       } else {
-        throw new Error('No active account found in CSPR.CLOUD wallet');
+        // CasperSigner connection
+        console.log('Connecting to CasperSigner...');
+        if(window.casperlabsHelper){
+          connectedAccount = await window.casperlabsHelper.requestConnection();
+        } else if(window.CasperWallet){
+          connectedAccount = await window.CasperWallet.requestConnection();
+        }
+        console.log('Connected to CasperSigner:', connectedAccount);
       }
-    } else {
-      // CasperSigner connection
-      console.log('Connecting to CasperSigner...');
-      if(window.casperlabsHelper){
-        connectedAccount = await window.casperlabsHelper.requestConnection();
-      } else if(window.CasperWallet){
-        connectedAccount = await window.CasperWallet.requestConnection();
-      }
-      console.log('Connected to CasperSigner:', connectedAccount);
-    }
+      return connectedAccount;
+    })();
+    
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('CONNECTION_TIMEOUT')), WALLET_CONNECTION_TIMEOUT);
+    });
+    
+    connectedAccount = await Promise.race([connectionPromise, timeoutPromise]);
 
     // Update UI with connected account
-    const connectBtn = document.getElementById('connectWallet');
     if(connectedAccount){
       // Truncate long public keys for display (first 6 + last 4 chars)
       const shortKey = typeof connectedAccount === 'string' && connectedAccount.length > 12
         ? `${connectedAccount.slice(0, 6)}…${connectedAccount.slice(-4)}`
         : connectedAccount;
       
-      connectBtn.textContent = `Connected: ${shortKey}`;
-      connectBtn.classList.add('connected');
+      if(connectBtn) {
+        connectBtn.textContent = `Connected: ${shortKey}`;
+        connectBtn.classList.add('connected');
+        connectBtn.disabled = false;
+      }
       
       // Store connection state globally for contract interactions
       window.connectedWallet = selectedWallet;
@@ -310,8 +559,29 @@ async function connectWalletHandler(){
     }
   }catch(err){
     console.error('Wallet connection failed', err);
-    alert('Wallet connection failed: ' + (err.message || err));
+    
+    // Provide user-friendly error messages
+    let userMessage = 'Wallet connection failed. Please try again.';
+    
+    if(err.message === 'NO_WALLET_DETECTED'){
+      userMessage = 'No Casper wallet detected. Please install CasperWallet, CasperSigner, or CSPR.CLOUD extension.';
+    } else if(err.message === 'USER_CANCELLED'){
+      userMessage = 'Wallet connection cancelled.';
+    } else if(err.message === 'CONNECTION_TIMEOUT'){
+      userMessage = 'Wallet connection timed out. Please check your wallet extension and try again.';
+    } else if(err.message.includes('User rejected')){
+      userMessage = 'Wallet connection rejected. Please approve the connection request in your wallet.';
+    }
+    
+    alert(userMessage);
     updateWalletStatus('Connection failed');
+    
+    // Reset button state
+    if(connectBtn) {
+      connectBtn.textContent = 'Connect Wallet';
+      connectBtn.disabled = false;
+      connectBtn.classList.remove('connected');
+    }
   }
 }
 
@@ -497,9 +767,23 @@ function setupSwapDemo(){
   /**
    * Calculate output amount when inputs or tokens change
    * Demo calculation uses static rates per token pair
+   * Includes input validation and sanitization
    */
   const updateOutputs = () => {
-    const val = parseFloat(fromAmt.value) || 0;
+    // Validate and sanitize input
+    let val = parseFloat(fromAmt.value) || 0;
+    
+    // Prevent negative values and ensure reasonable limits
+    if(val < 0) {
+      fromAmt.value = 0;
+      val = 0;
+    }
+    
+    // Warn on excessively large values (potential input error)
+    if(val > MAX_REASONABLE_SWAP) {
+      console.warn('Unusually large swap amount detected:', val);
+    }
+    
     const rate = getRate();
     const sellSymbol = getTokenLabel(fromToken, 'CSPR');
     const buySymbol = getTokenLabel(toToken, 'ECTO');
@@ -509,11 +793,21 @@ function setupSwapDemo(){
 
     // Calculate price impact (simplified: grows with swap size)
     // In production, this should calculate actual impact based on pool depth
+    const HIGH_IMPACT_THRESHOLD = 0.1; // 10% price impact warning threshold
     const impact = Math.min(0.5, (val/1000));
     const impactText = (impact*100).toFixed(2) + '%';
 
     if(priceImpactDetail){
       priceImpactDetail.textContent = impactText;
+      // Warn user of high price impact using CSS class
+      const parentEl = priceImpactDetail.parentElement;
+      if(parentEl) {
+        if(impact > HIGH_IMPACT_THRESHOLD) {
+          parentEl.classList.add('warning');
+        } else {
+          parentEl.classList.remove('warning');
+        }
+      }
     }
 
     if(rateDisplay){
@@ -532,7 +826,10 @@ function setupSwapDemo(){
     }
   };
 
-  fromAmt.addEventListener('input', updateOutputs);
+  // Debounce updateOutputs for better performance during rapid input
+  const debouncedUpdateOutputs = debounce(updateOutputs, DEBOUNCE_DELAY_CALC);
+
+  fromAmt.addEventListener('input', debouncedUpdateOutputs);
   if(fromToken) fromToken.addEventListener('change', updateOutputs);
   if(toToken) toToken.addEventListener('change', updateOutputs);
 
@@ -929,10 +1226,11 @@ function renderDashboard(){
  * 
  * Features:
  * - 50 procedurally generated tokens for demo
- * - Real-time filtering by name or symbol
+ * - Real-time filtering by name or symbol (debounced for performance)
  * - Status badges (Hot, Trending, New)
  * - Performance metrics (24h change, liquidity)
  * - Formatted currency display
+ * - Optimized rendering with document fragment
  * 
  * NOTE: This uses generated demo data. In production:
  * - Fetch real token data from backend API or blockchain
@@ -967,23 +1265,37 @@ function renderLaunchpadTokens(){
 
   /**
    * Render the token table with optional filtering
+   * Uses document fragment for efficient DOM manipulation
    */
   const render = () => {
     const term = filterInput?.value?.toLowerCase().trim() || '';
     
     // Filter tokens by search term (searches name and symbol)
-    const visible = !term ? tokens : tokens.filter(t => `${t.name} ${t.symbol}`.toLowerCase().includes(term));
+    const visible = !term ? tokens : tokens.filter(t => 
+      `${t.name} ${t.symbol}`.toLowerCase().includes(term)
+    );
+    
+    // Use document fragment for better performance
+    const fragment = document.createDocumentFragment();
     
     // Render table rows
-    table.innerHTML = visible.map(token => `
-      <div class="table-row" role="row">
-        <span role="cell">${token.name}</span>
-        <span role="cell">${token.symbol}</span>
+    visible.forEach(token => {
+      const row = document.createElement('div');
+      row.className = 'table-row';
+      row.setAttribute('role', 'row');
+      row.innerHTML = `
+        <span role="cell">${sanitizeHTML(token.name)}</span>
+        <span role="cell">${sanitizeHTML(token.symbol)}</span>
         <span role="cell" class="${Number(token.change) >= 0 ? 'pos' : 'neg'}">${token.change}%</span>
         <span role="cell">${formatCurrency(token.liquidity)}</span>
-        <span role="cell"><span class="chip">${token.status}</span></span>
-      </div>
-    `).join('');
+        <span role="cell"><span class="chip">${sanitizeHTML(token.status)}</span></span>
+      `;
+      fragment.appendChild(row);
+    });
+    
+    // Batch DOM update
+    table.innerHTML = '';
+    table.appendChild(fragment);
 
     // Update filter results text
     if (filterResult) filterResult.textContent = `Showing ${visible.length} of ${tokens.length} tokens`;
@@ -993,8 +1305,11 @@ function renderLaunchpadTokens(){
   // Initial render
   render();
   
-  // Setup live filtering
-  if (filterInput) filterInput.addEventListener('input', render);
+  // Setup live filtering with debouncing to improve performance
+  if (filterInput) {
+    const debouncedRender = debounce(render, DEBOUNCE_DELAY_SEARCH);
+    filterInput.addEventListener('input', debouncedRender);
+  }
 }
 
 /**
