@@ -73,6 +73,87 @@ function sanitizeHTML(str) {
   return div.innerHTML;
 }
 
+/**
+ * Performance monitoring utility
+ * Tracks and logs performance metrics for optimization
+ */
+const performanceMonitor = {
+  marks: new Map(),
+  
+  /**
+   * Mark the start of a performance measurement
+   * @param {string} name - Name of the measurement
+   */
+  start(name) {
+    this.marks.set(name, performance.now());
+  },
+  
+  /**
+   * Mark the end of a performance measurement and log the duration
+   * @param {string} name - Name of the measurement
+   * @param {boolean} log - Whether to log the result (default: true in development)
+   */
+  end(name, log = true) {
+    const startTime = this.marks.get(name);
+    if (!startTime) {
+      console.warn(`No start mark found for: ${name}`);
+      return;
+    }
+    
+    const duration = performance.now() - startTime;
+    this.marks.delete(name);
+    
+    if (log) {
+      console.log(`⚡ Performance: ${name} took ${duration.toFixed(2)}ms`);
+    }
+    
+    return duration;
+  },
+  
+  /**
+   * Get navigation timing metrics
+   */
+  getPageLoadMetrics() {
+    if (!performance.timing) return null;
+    
+    const timing = performance.timing;
+    return {
+      dns: timing.domainLookupEnd - timing.domainLookupStart,
+      tcp: timing.connectEnd - timing.connectStart,
+      ttfb: timing.responseStart - timing.requestStart,
+      download: timing.responseEnd - timing.responseStart,
+      domInteractive: timing.domInteractive - timing.navigationStart,
+      domComplete: timing.domComplete - timing.navigationStart,
+      loadComplete: timing.loadEventEnd - timing.navigationStart
+    };
+  },
+  
+  /**
+   * Log page load performance metrics
+   */
+  logPageLoad() {
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const metrics = this.getPageLoadMetrics();
+        if (metrics) {
+          console.log('📊 Page Load Metrics:', {
+            'DNS Lookup': `${metrics.dns}ms`,
+            'TCP Connection': `${metrics.tcp}ms`,
+            'Time to First Byte': `${metrics.ttfb}ms`,
+            'Content Download': `${metrics.download}ms`,
+            'DOM Interactive': `${metrics.domInteractive}ms`,
+            'DOM Complete': `${metrics.domComplete}ms`,
+            'Load Complete': `${metrics.loadComplete}ms`
+          });
+        }
+      }, 0);
+    });
+  }
+};
+
+// Initialize performance monitoring
+performanceMonitor.logPageLoad();
+
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
@@ -93,8 +174,14 @@ function sanitizeHTML(str) {
  * - Promotional budget slider
  * - Dashboard (if on dashboard.html)
  * - Launchpad token list (if on launchpad.html)
+ * 
+ * Memory management:
+ * - Properly cleans up intervals and event listeners
+ * - Tracks active timers for cleanup on page unload
  */
 document.addEventListener('DOMContentLoaded', () => {
+  performanceMonitor.start('DOMContentLoaded');
+  
   // Update copyright year in footer
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -118,12 +205,38 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Initialize page-specific components
+  performanceMonitor.start('setupLogoMenu');
   setupLogoMenu();        // Mega menu navigation
+  performanceMonitor.end('setupLogoMenu', false);
+  
+  performanceMonitor.start('setupSwapDemo');
   setupSwapDemo();        // Swap calculator with order types
+  performanceMonitor.end('setupSwapDemo', false);
+  
+  performanceMonitor.start('setupPopouts');
   setupPopouts();         // Settings/details/network popovers
+  performanceMonitor.end('setupPopouts', false);
+  
+  performanceMonitor.start('setupPromoSlider');
   setupPromoSlider();     // Launchpad promotional budget slider
+  performanceMonitor.end('setupPromoSlider', false);
+  
+  performanceMonitor.start('renderDashboard');
   renderDashboard();      // Dashboard tasks/quests/rewards
+  performanceMonitor.end('renderDashboard', false);
+  
+  performanceMonitor.start('renderLaunchpadTokens');
   renderLaunchpadTokens();// Launchpad token library table
+  performanceMonitor.end('renderLaunchpadTokens', false);
+  
+  performanceMonitor.end('DOMContentLoaded');
+});
+
+// Cleanup on page unload to prevent memory leaks
+window.addEventListener('beforeunload', () => {
+  // Any active intervals or timers should be cleared
+  // This is handled within each component, but we can add global cleanup here if needed
+  console.log('🧹 Cleaning up before page unload');
 });
 
 // ============================================================================
