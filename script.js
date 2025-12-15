@@ -330,6 +330,8 @@ function setupLogoMenu(){
   const menu = document.getElementById('logoMenu');
   if(!toggle || !menu) return;
 
+  let closeTimer;
+
   /**
    * Close the mega menu
    */
@@ -346,14 +348,33 @@ function setupLogoMenu(){
     toggle.setAttribute('aria-expanded', 'true');
   };
 
-  // Toggle on button click
-  toggle.addEventListener('click', () => {
-    if(menu.hidden){
-      openMenu();
-    } else {
-      closeMenu();
+  const scheduleClose = () => {
+    closeTimer = setTimeout(() => closeMenu(), 120);
+  };
+
+  const cancelScheduledClose = () => {
+    if(closeTimer){
+      clearTimeout(closeTimer);
+      closeTimer = null;
     }
+  };
+
+  // Open on hover or focus
+  ['mouseenter', 'focus'].forEach((eventName) => {
+    toggle.addEventListener(eventName, () => {
+      cancelScheduledClose();
+      openMenu();
+    });
   });
+
+  // Keep menu open while hovering
+  menu.addEventListener('mouseenter', cancelScheduledClose);
+
+  // Close when moving cursor away
+  ['mouseleave', 'blur'].forEach((eventName) => {
+    toggle.addEventListener(eventName, scheduleClose);
+  });
+  menu.addEventListener('mouseleave', scheduleClose);
 
   // Close when clicking outside
   document.addEventListener('click', (e) => {
