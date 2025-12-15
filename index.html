@@ -33,10 +33,12 @@
   <header class="site-header">
     <div class="container header-grid">
       <div class="logo-menu">
+        <button type="button" class="logo logo-toggle" id="logoMenuToggle" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
         <a class="logo logo-toggle" id="logoMenuToggle" href="/" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
           <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
           <span>Ectoplasm</span>
           <span class="chevron" aria-hidden="true">⌄</span>
+        </button>
         </a>
         <div class="logo-menu-panel" id="logoMenu" hidden>
           <div class="menu-grid">
@@ -124,7 +126,7 @@
         </div>
       </div>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/#swap">Swap</a>
+        <a href="/#swap" aria-current="page">Swap</a>
         <a href="/#overview">Overview</a>
         <a href="/dashboard.html">Dashboard</a>
         <a href="/launchpad.html">Launchpad</a>
@@ -140,9 +142,7 @@
     <section class="hero swap-hero" id="swap">
       <div class="container swap-layout">
         <div class="swap-heading">
-          <p class="eyebrow">Casper-native Uniswap flow</p>
-          <h1 id="swap-heading-title">Trade, send, and bridge with a swapper that feels familiar.</h1>
-          <p class="subhead">Live pricing, responsive routing, and instant reversals so you can move value the way you do on Uniswap—without leaving Casper.</p>
+          <h1 id="swap-heading-title">Swapping when & wherever you want to.</h1>
         </div>
         <div class="hero-card swap-shell" aria-labelledby="swap-heading-title">
           <div class="swap-toolbar compact">
@@ -196,7 +196,7 @@
                 <span class="balance">Estimated</span>
               </div>
               <div class="token-input">
-                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" readonly />
+                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" disabled />
                 <div class="token-selector">
                   <select id="toToken" aria-label="Buy token">
                     <option value="ecto">ECTO</option>
@@ -210,24 +210,6 @@
               <a class="btn primary full" id="swapActionBtn" href="/#swap" data-activate-swap>Let's Begin</a>
             </div>
             <small class="muted" id="orderSummary" hidden></small>
-            <div class="swap-meta" aria-live="polite">
-              <div class="meta-row">
-                <span class="muted">Rate</span>
-                <strong id="rateDisplay">--</strong>
-              </div>
-              <div class="meta-row">
-                <span class="muted">Route</span>
-                <strong>Auto · Casper mainnet</strong>
-              </div>
-              <div class="meta-row">
-                <span class="muted">Network fee</span>
-                <strong id="feeDisplay">~0.003 CSPR</strong>
-              </div>
-              <div class="meta-row">
-                <span class="muted">Minimum received</span>
-                <strong id="minReceived">--</strong>
-              </div>
-            </div>
           </form>
 
           <div class="swap-popouts" aria-live="polite">
@@ -318,21 +300,177 @@
             </div>
           </div>
         </div>
-        <div class="hero-copy swap-copy active">
-          <p class="lead">Front-and-center swapping with safety defaults baked in. Flip pairs instantly, preview slippage, and track live Casper pricing without digging through settings.</p>
+        <div class="hero-copy swap-copy">
+          <p class="lead">A focused swap card sits front and center. Connect your wallet, set slippage, and move between CSPR and ECTO with clear routing and instant feedback.</p>
           <div class="hero-cta">
             <a href="#swap" class="btn primary large">Get started</a>
-            <a href="/swap.html" class="btn ghost large">Open full swapper</a>
           </div>
           <ul class="trust-list" aria-hidden="false">
-            <li><strong id="priceTicker">CSPR $--.--</strong> spot oracle feed</li>
-            <li>Auto-routing with price impact guardrails</li>
-            <li>Quick amount presets &amp; slippage controls</li>
+            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
+            <li>Casper mainnet routing</li>
+            <li>Wallet status shown inline</li>
           </ul>
         </div>
       </div>
     </section>
 
+    <section class="section landing-overview" id="overview">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="brand-badge" aria-label="Ectoplasm brand mark">
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <span>Everything below the swap</span>
+          </div>
+          <h2>After the swap card, the full Ectoplasm story continues.</h2>
+          <p class="lead">The original landing content now lives directly under the trading surface. Scroll to learn how liquidity, the launchpad, privacy tools, and the gamified dashboard round out the Casper-native DEX.</p>
+          <div class="hero-cta">
+            <a href="/dashboard.html" class="btn primary large">Open Dashboard</a>
+            <a href="/launchpad.html" class="btn ghost large">Explore Launchpad</a>
+          </div>
+          <ul class="trust-list" aria-hidden="false">
+            <li>Audited smart contracts</li>
+            <li>Dedicated feature pages</li>
+            <li>Built for return visits</li>
+          </ul>
+        </div>
+        <div class="hero-card" aria-labelledby="map-title">
+          <div class="card-top">
+            <h3 id="map-title">Everything in its place</h3>
+            <span class="status-badge">Multi-page layout</span>
+          </div>
+          <div class="feature-map">
+            <div>
+              <h4>Core actions</h4>
+              <ul>
+                <li><a href="/#swap">Swap terminal</a> for fast trades</li>
+                <li><a href="/liquidity.html">Liquidity & farms</a> with rewards</li>
+                <li><a href="/privacy.html">Privacy pools</a> for shielded swaps</li>
+                <li><a href="/launchpad.html">Launchpad</a> with 50 mock tokens</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Retention</h4>
+              <ul>
+                <li><a href="/dashboard.html">User dashboard</a> with daily quests</li>
+                <li>Return streaks & XP rewards</li>
+                <li>Tasks tied to on-chain actions</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+          </div>
+          <h2>Explore the pages that live beneath the swapper</h2>
+        </div>
+        <div class="features-grid">
+          <article>
+            <h3>Swap</h3>
+            <p>Fast Casper-native swapping with slippage control and a clean terminal anchored on the home page.</p>
+            <a class="chip" href="/#swap">Open swap terminal</a>
+          </article>
+          <article>
+            <h3>Liquidity & Farming</h3>
+            <p>Depth-focused pools and rewards live on a dedicated liquidity page for LPs.</p>
+            <a class="chip" href="/liquidity.html">View liquidity tools</a>
+          </article>
+          <article>
+            <h3>Launchpad</h3>
+            <p>Pump.fun style creation with fifty mock tokens visible in the launchpad library.</p>
+            <a class="chip" href="/launchpad.html">See launchpad</a>
+          </article>
+          <article>
+            <h3>Privacy</h3>
+            <p>Shielded swaps and contributor rewards live in a standalone privacy hub.</p>
+            <a class="chip" href="/privacy.html">Explore privacy pools</a>
+          </article>
+          <article>
+            <h3>Gamified Dashboard</h3>
+            <p>Daily quests, streaks, and XP designed to pull users back every day.</p>
+            <a class="chip" href="/dashboard.html">Open dashboard</a>
+          </article>
+          <article>
+            <h3>Docs</h3>
+            <p>Launchpad rules, audits, and governance notes stay discoverable via docs.</p>
+            <a class="chip" href="/docs">Read docs</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="container stats-grid" aria-label="Protocol performance highlights">
+        <div class="stat-card">
+          <p class="muted">24h Volume</p>
+          <strong>$182M</strong>
+          <small>Deep liquidity across majors</small>
+        </div>
+        <div class="stat-card">
+          <p class="muted">Total Value Locked</p>
+          <strong>$612M</strong>
+          <small>Growing Casper-native liquidity</small>
+        </div>
+        <div class="stat-card">
+          <p class="muted">Average Confirmation</p>
+          <strong>1.3s</strong>
+          <small>Fast finality with safety checks</small>
+        </div>
+        <div class="stat-card">
+          <p class="muted">Uptime</p>
+          <strong>99.98%</strong>
+          <small>Monitored infra & failover</small>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section alt">
+      <div class="container">
+        <h2>How it works</h2>
+        <ol class="steps">
+          <li><strong>Land on the swapper</strong> — connect and trade immediately.</li>
+          <li><strong>Scroll for depth</strong> — see dashboards, liquidity tools, privacy pools, and launchpad access.</li>
+          <li><strong>Return daily</strong> — quests, streaks, and on-chain tasks keep users engaged.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="roadmap" class="section">
+      <div class="container">
+        <h2>Roadmap</h2>
+        <ul class="roadmap">
+          <li><strong>Q1:</strong> Mainnet launch, basic swaps, liquidity pools</li>
+          <li><strong>Q2:</strong> Limit orders, LP protections, audits</li>
+          <li><strong>Q3:</strong> Cross-chain bridges, more assets, governance</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="audit" class="section alt">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+          </div>
+          <h2>Security & Audits</h2>
+        </div>
+        <p>We prioritize safety. Contracts will be audited by top firms and results published on-chain and in our docs.</p>
+        <div class="badges">
+          <img src="/assets/audit-placeholder.ico" alt="Audit badge" />
+          <img src="/assets/insurance-placeholder.ico" alt="Insurance" />
+        </div>
+        <ul class="safety-list">
+          <li>Deterministic builds and reproducible deployments</li>
+          <li>Multi-sig controlled upgrades with time-locked changes</li>
+          <li>Continuous monitoring for MEV and sandwich vectors</li>
+        </ul>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
