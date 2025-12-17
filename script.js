@@ -769,27 +769,40 @@ function setupSwapDemo(){
    * Demo calculation uses static rates per token pair
    * Includes input validation and sanitization
    */
-  const updateOutputs = () => {
-    // Validate and sanitize input
-    let val = parseFloat(fromAmt.value) || 0;
-    
-    // Prevent negative values and ensure reasonable limits
-    if(val < 0) {
-      fromAmt.value = 0;
-      val = 0;
-    }
-    
-    // Warn on excessively large values (potential input error)
-    if(val > MAX_REASONABLE_SWAP) {
-      console.warn('Unusually large swap amount detected:', val);
-    }
-    
+  const updateOutputs = (source = 'from') => {
     const rate = getRate();
     const sellSymbol = getTokenLabel(fromToken, 'CSPR');
     const buySymbol = getTokenLabel(toToken, 'ECTO');
     const slippagePct = parseFloat(slippage?.value) || 0.5;
+    const safeRate = rate || 1;
+    let val;
 
-    toAmt.value = (val * rate).toFixed(6);
+    if(source === 'to'){
+      const desired = parseFloat(toAmt.value) || 0;
+
+      if(desired < 0){
+        toAmt.value = 0;
+      }
+
+      val = Math.max(0, desired) / safeRate;
+      fromAmt.value = val ? val.toFixed(6) : '';
+    } else {
+      val = parseFloat(fromAmt.value) || 0;
+
+      // Prevent negative values and ensure reasonable limits
+      if(val < 0) {
+        fromAmt.value = 0;
+        val = 0;
+      }
+
+      // Warn on excessively large values (potential input error)
+      if(val > MAX_REASONABLE_SWAP) {
+        console.warn('Unusually large swap amount detected:', val);
+      }
+
+      const output = val * safeRate;
+      toAmt.value = output ? output.toFixed(6) : '';
+    }
 
     // Calculate price impact (simplified: grows with swap size)
     // In production, this should calculate actual impact based on pool depth
@@ -827,11 +840,12 @@ function setupSwapDemo(){
   };
 
   // Debounce updateOutputs for better performance during rapid input
-  const debouncedUpdateOutputs = debounce(updateOutputs, DEBOUNCE_DELAY_CALC);
+  const debouncedUpdateOutputs = debounce((source = 'from') => updateOutputs(source), DEBOUNCE_DELAY_CALC);
 
-  fromAmt.addEventListener('input', debouncedUpdateOutputs);
-  if(fromToken) fromToken.addEventListener('change', updateOutputs);
-  if(toToken) toToken.addEventListener('change', updateOutputs);
+  fromAmt.addEventListener('input', () => debouncedUpdateOutputs('from'));
+  toAmt.addEventListener('input', () => debouncedUpdateOutputs('to'));
+  if(fromToken) fromToken.addEventListener('change', () => updateOutputs('from'));
+  if(toToken) toToken.addEventListener('change', () => updateOutputs('from'));
 
   /**
    * Validate slippage tolerance input
