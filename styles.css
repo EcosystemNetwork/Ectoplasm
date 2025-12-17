@@ -406,7 +406,7 @@ main{flex:1;display:block}
  * Popout panel
  * Modal-style panel with blur background
  */
-.popout{pointer-events:auto;background:rgba(6,20,28,0.96);border:1px solid rgba(232,255,249,0.12);border-radius:16px;box-shadow:0 22px 60px rgba(0,0,0,0.38),0 0 0 1px rgba(119,240,248,0.08);padding:14px;min-width:260px;max-width:320px;text-align:left}
+.popout{pointer-events:auto;background:rgba(6,20,28,0.96);border:1px solid rgba(232,255,249,0.12);border-radius:16px;box-shadow:0 22px 60px rgba(0,0,0,0.38),0 0 0 1px rgba(119,240,248,0.08);padding:14px;min-width:260px;max-width:320px;text-align:left;max-height:min(70vh,460px);overflow-y:auto;overscroll-behavior:contain}
 
 /**
  * Popout header with close button
