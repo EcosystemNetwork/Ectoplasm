@@ -18,18 +18,110 @@
 <body>
   <header class="site-header">
     <div class="container header-grid">
-      <a class="logo" href="/">
-        <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
-        <span>Ectoplasm</span>
-      </a>
+      <div class="logo-menu">
+        <a class="logo logo-toggle" id="logoMenuToggle" href="/" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </a>
+        <div class="logo-menu-panel" id="logoMenu" hidden>
+          <div class="menu-grid">
+            <div class="menu-section">
+              <div class="menu-heading">Products</div>
+              <a class="menu-item" href="/">
+                <div>
+                  <strong>Wallet</strong>
+                  <p>Swap, secure, protocol</p>
+                </div>
+                <span class="pill">Live</span>
+              </a>
+              <a class="menu-item" href="/swap.html">
+                <div>
+                  <strong>UniswapX</strong>
+                  <p>The meta-aggregator</p>
+                </div>
+                <span class="pill">Beta</span>
+              </a>
+              <a class="menu-item" href="/api">
+                <div>
+                  <strong>API</strong>
+                  <p>High-volume, performant</p>
+                </div>
+                <span class="pill">High volume</span>
+              </a>
+              <a class="menu-item" href="/launchpad.html">
+                <div>
+                  <strong>Unichain</strong>
+                  <p>The Uniswap Chain</p>
+                </div>
+                <span class="pill">Base</span>
+              </a>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Use for</div>
+              <ul class="menu-list">
+                <li><a href="/#swap">Swap crypto</a></li>
+                <li><a href="/liquidity.html">Provide liquidity</a></li>
+                <li><a href="/launchpad.html">Launch tokens</a></li>
+                <li><a href="/dashboard.html">Track positions</a></li>
+              </ul>
+              <div class="menu-heading">Pages</div>
+              <ul class="menu-list">
+                <li><a href="/privacy.html">Privacy Pools</a></li>
+              </ul>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Company</div>
+              <ul class="menu-list">
+                <li><a href="/docs/roadmap.html">About</a></li>
+                <li><a href="/docs/careers.html">Careers</a></li>
+                <li><a href="/docs/blog.html">Blog</a></li>
+              </ul>
+              <div class="menu-heading">Legal &amp; Privacy</div>
+              <ul class="menu-list">
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/docs/terms.html">Terms</a></li>
+              </ul>
+              <div class="menu-heading">Settings</div>
+              <ul class="menu-list">
+                <li><button id="themeToggle" class="btn ghost" aria-pressed="false" style="width: 100%; text-align: left;">Dark mode</button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="menu-metrics" aria-label="Swap status summary">
+            <div class="menu-metrics-title">
+              <span>Optimal routing</span>
+              <span class="status-badge subtle">Live</span>
+            </div>
+            <div class="menu-metrics-grid">
+              <div>
+                <span class="menu-metrics-label">Impact</span>
+                <strong>0.00%</strong>
+              </div>
+              <div>
+                <span class="menu-metrics-label">Fee</span>
+                <strong>0.25%</strong>
+              </div>
+              <div>
+                <span class="menu-metrics-label">Network</span>
+                <strong>Casper</strong>
+              </div>
+            </div>
+          </div>
+          <div class="menu-footer">
+            <div>
+              <div class="menu-heading">Get the app</div>
+              <p>Swap and sell crypto on 16+ networks including Ethereum, Unichain, and Base.</p>
+            </div>
+            <a class="btn primary" href="/swap.html">Get app</a>
+          </div>
+        </div>
+      </div>
       <nav class="nav" aria-label="Primary navigation">
         <a href="/#swap">Swap</a>
-        <a href="/#overview">Overview</a>
         <a href="/dashboard.html">Dashboard</a>
-        <a href="/launchpad.html">Launchpad</a>
-        <a href="/liquidity.html" aria-current="page">Liquidity</a>
-        <a href="/privacy.html">Privacy</a>
-        <button id="themeToggle" class="btn ghost" aria-pressed="false">Dark</button>
+        <a href="/launchpad.html">Launch Pad</a>
+        <a href="/liquidity.html" aria-current="page">Earn</a>
         <button id="connectWallet" class="btn primary">Connect Wallet</button>
       </nav>
     </div>

@@ -194,7 +194,7 @@ main{flex:1;display:block}
  * Large dropdown menu with multiple sections and product links
  * Uses backdrop-filter for glass-morphism effect
  */
-.logo-menu-panel{position:absolute;top:calc(100% + 12px);left:0;background:rgba(6,26,34,0.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 50px rgba(0,0,0,0.42),0 0 0 1px rgba(119,240,248,0.12);border-radius:16px;padding:16px;min-width:620px;max-width:min(720px, 96vw);z-index:90}
+.logo-menu-panel{position:absolute;top:calc(100% + 12px);left:0;background:rgba(6,26,34,0.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 50px rgba(0,0,0,0.42),0 0 0 1px rgba(119,240,248,0.12);border-radius:16px;padding:16px;min-width:620px;max-width:min(720px, 96vw);max-height:80vh;overflow-y:auto;z-index:90}
 
 /**
  * Mega menu grid layout
