@@ -428,6 +428,15 @@ main{flex:1;display:block}
    11. CONTENT SECTIONS
    ============================================================================ */
 
+/* Hide landing storytelling blocks on the dedicated swap page */
+body.swap-page .landing-overview,
+body.swap-page #features,
+body.swap-page .stats-grid,
+body.swap-page #how-it-works,
+body.swap-page #roadmap,
+body.swap-page #audit,
+body.swap-page .site-footer{display:none}
+
 /**
  * General section container
  */
