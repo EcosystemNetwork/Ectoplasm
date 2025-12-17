@@ -927,7 +927,7 @@ function setupSwapDemo(){
       summary: '',
       action: 'sell',
       showLimit: true,
-      tokens: { from: 'ecto', to: 'cspr' }
+      tokens: { from: 'cspr', to: 'ecto' }
     }
   };
 
