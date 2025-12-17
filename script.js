@@ -908,7 +908,7 @@ function setupSwapDemo(){
     limit: {
       pill: 'Limit',
       title: 'Post limit orders with off-chain resting and on-chain execution.',
-      summary: 'Set a trigger price and let the relayer post once your terms are met.',
+      summary: '',
       action: 'place limit',
       showLimit: true,
       tokens: null
@@ -916,7 +916,7 @@ function setupSwapDemo(){
     buy: {
       pill: 'Buy',
       title: 'Buy ECTO with CSPR while respecting your price cap.',
-      summary: 'Define a ceiling price to protect buys in volatile markets.',
+      summary: '',
       action: 'buy',
       showLimit: true,
       tokens: { from: 'cspr', to: 'ecto' }
@@ -924,7 +924,7 @@ function setupSwapDemo(){
     sell: {
       pill: 'Sell',
       title: 'Sell ECTO back to CSPR with tight routing.',
-      summary: 'Lock a minimum receive amount before executing a sale.',
+      summary: '',
       action: 'sell',
       showLimit: true,
       tokens: { from: 'ecto', to: 'cspr' }
