@@ -828,10 +828,17 @@ function setupSwapDemo(){
     }
 
     if(orderSummary){
-      const minValue = (val * rate) * (1 - slippagePct/100);
-      orderSummary.hidden = false;
-      orderSummary.textContent = `You send ${val || 0} ${sellSymbol} and will receive at least ${minValue.toFixed(6)} ${buySymbol} with ${slippagePct}% slippage.`;
-      if(minReceived) minReceived.textContent = `${minValue.toFixed(6)} ${buySymbol}`;
+      const hasValue = val > 0;
+      if(hasValue){
+        const minValue = (val * rate) * (1 - slippagePct/100);
+        orderSummary.hidden = false;
+        orderSummary.textContent = `You send ${val || 0} ${sellSymbol} and will receive at least ${minValue.toFixed(6)} ${buySymbol} with ${slippagePct}% slippage.`;
+        if(minReceived) minReceived.textContent = `${minValue.toFixed(6)} ${buySymbol}`;
+      } else {
+        orderSummary.hidden = true;
+        orderSummary.textContent = '';
+        if(minReceived) minReceived.textContent = '--';
+      }
     }
 
     if(feeDisplay){
