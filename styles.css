@@ -664,9 +664,10 @@ body.swap-page .site-footer{display:none}
    ============================================================================ */
 
 /**
- * Badges display
+ * Audit logo
  */
-.badges img{height:64px;margin-right:12px;opacity:0.95}
+.audit-logo{margin:18px 0}
+.audit-logo img{display:block;max-width:360px;width:100%;height:auto;filter:drop-shadow(0 8px 16px rgba(0,0,0,0.35))}
 
 /**
  * Safety/security lists
