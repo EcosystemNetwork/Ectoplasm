@@ -3,11 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ectoplasm — Fast, Secure DEX on Casper</title>
-  <meta name="description" content="Ectoplasm: the next-generation decentralized exchange on the Casper Network — fast, low-fee swaps, advanced orders, and audited smart contracts." />
-  <meta property="og:title" content="Ectoplasm — Fast, Secure DEX on Casper" />
-  <meta property="og:description" content="Next-generation DEX on Casper Network. Swap, provide liquidity, and earn securely with audited contracts and industry-leading UX." />
-  <meta property="og:image" content="/assets/og-image.png" />
+  <title>Ectoplasm — Casper-native DEX</title>
+  <meta name="description" content="Ectoplasm is the marketing hub for the Casper-native DEX. Discover speed, audited security, and liquidity programs built for serious traders." />
 
   <!-- Performance optimization: Preconnect to external domains -->
   <link rel="preconnect" href="https://api.coingecko.com" crossorigin />
@@ -38,12 +35,10 @@
     <div class="container header-grid">
       <div class="logo-menu">
         <button type="button" class="logo logo-toggle" id="logoMenuToggle" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
-        <a class="logo logo-toggle" id="logoMenuToggle" href="/" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
           <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
           <span>Ectoplasm</span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </button>
-        </a>
         <div class="logo-menu-panel" id="logoMenu" hidden>
           <div class="menu-grid">
             <div class="menu-section">
@@ -130,8 +125,9 @@
         </div>
       </div>
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/#swap" aria-current="page">Swap</a>
-        <a href="/#overview">Overview</a>
+        <a href="#overview" aria-current="page">Overview</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
         <a href="/dashboard.html">Dashboard</a>
         <a href="/launchpad.html">Launchpad</a>
         <a href="/liquidity.html">Liquidity</a>
@@ -143,181 +139,154 @@
   </header>
 
   <main>
-    <section class="hero swap-hero" id="swap">
-      <div class="container swap-layout">
-        <div class="swap-heading">
-          <h1 id="swap-heading-title">Swapping when & wherever you want to.</h1>
-        </div>
-        <div class="hero-card swap-shell" aria-labelledby="swap-heading-title">
-          <div class="swap-toolbar compact">
-            <div class="swap-quick-actions" aria-label="Swap controls">
-              <div class="swap-tabs" role="tablist" aria-label="Order type">
-                <button type="button" class="pill active" data-order-tab="swap" role="tab" aria-selected="true">Swap</button>
-                <button type="button" class="pill ghost" data-order-tab="limit" role="tab" aria-selected="false">Limit</button>
-                <button type="button" class="pill ghost" data-order-tab="buy" role="tab" aria-selected="false">Buy</button>
-                <button type="button" class="pill ghost" data-order-tab="sell" role="tab" aria-selected="false">Sell</button>
-              </div>
-              <div class="quick-icons" aria-label="Inline tools">
-                <button type="button" class="icon-btn" data-popout-target="settingsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="settingsPopout">
-                  <span class="visually-hidden">Open swap settings</span>
-                  <span aria-hidden="true">⚙️</span>
-                </button>
-                <button type="button" class="icon-btn" data-popout-target="detailsPopout" aria-haspopup="true" aria-expanded="false" aria-controls="detailsPopout">
-                  <span class="visually-hidden">Open trade details</span>
-                  <span aria-hidden="true">📊</span>
-                </button>
-                <button type="button" class="icon-btn" data-popout-target="networkPopout" aria-haspopup="true" aria-expanded="false" aria-controls="networkPopout">
-                  <span class="visually-hidden">Open network and wallet status</span>
-                  <span aria-hidden="true">🌐</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <form class="swap-form swap-form-compact" onsubmit="event.preventDefault(); demoSwap();">
-            <label class="token-row">
-              <div class="token-row-top">
-                <span class="muted">Sell</span>
-                <span class="balance">Balance: 0</span>
-              </div>
-              <div class="token-input">
-                <input id="fromAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Sell amount" />
-                <div class="token-selector">
-                  <select id="fromToken" aria-label="Sell token">
-                    <option value="cspr">CSPR</option>
-                    <option value="ecto">ECTO</option>
-                  </select>
-                </div>
-              </div>
-            </label>
-
-            <div class="arrow-divider">
-              <button type="button" class="arrow-circle" id="swapFlip" aria-label="Reverse tokens and amounts">⇅</button>
-            </div>
-
-            <label class="token-row">
-              <div class="token-row-top">
-                <span class="muted">Buy</span>
-                <span class="balance">Estimated</span>
-              </div>
-              <div class="token-input">
-                <input id="toAmount" type="number" inputmode="decimal" placeholder="0" min="0" step="any" aria-label="Buy amount" />
-                <div class="token-selector">
-                  <select id="toToken" aria-label="Buy token">
-                    <option value="ecto">ECTO</option>
-                    <option value="cspr">CSPR</option>
-                  </select>
-                </div>
-              </div>
-            </label>
-
-            <div class="swap-actions">
-              <a class="btn primary full" id="swapActionBtn" href="/#swap" data-activate-swap>Let's Begin</a>
-            </div>
-            <small class="muted" id="orderSummary" hidden></small>
-          </form>
-
-          <div class="swap-popouts" aria-live="polite">
-            <div class="popout" id="settingsPopout" role="dialog" aria-label="Swap settings" hidden>
-              <div class="popout-header">
-                <strong>Settings</strong>
-                <button type="button" class="icon-btn ghost" data-popout-close>
-                  <span class="visually-hidden">Close settings</span>
-                  <span aria-hidden="true">✕</span>
-                </button>
-              </div>
-              <div class="settings-group">
-                <label class="muted" for="slippage">Slippage tolerance</label>
-                <div class="pill-row tight">
-                  <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.1%</button>
-                  <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='0.5'; document.getElementById('slippage').dispatchEvent(new Event('input'));">0.5%</button>
-                  <button type="button" class="pill ghost" onclick="document.getElementById('slippage').value='1'; document.getElementById('slippage').dispatchEvent(new Event('input'));">1%</button>
-                  <div class="input-row tight compact">
-                    <input id="slippage" type="number" inputmode="decimal" step="0.1" min="0" aria-label="Slippage tolerance" value="0.5" />
-                    <span class="suffix">%</span>
-                  </div>
-                </div>
-              </div>
-              <div class="settings-group">
-                <span class="muted">Quick amounts</span>
-                <div class="quick-amounts" aria-label="Quick amount buttons">
-                  <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='10'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">10</button>
-                  <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='100'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">100</button>
-                  <button type="button" class="chip" onclick="document.getElementById('fromAmount').value='250'; document.getElementById('fromAmount').dispatchEvent(new Event('input'));">250</button>
-                </div>
-              </div>
-              <div class="settings-group">
-                <span class="muted">Routing snapshot</span>
-                <div class="swap-health">Optimal routing</div>
-                <div class="swap-mini-grid settings-mini-grid" aria-label="Routing details">
-                  <span class="muted">Impact <strong>0.00%</strong></span>
-                  <span class="muted">Fee <strong>0.25%</strong></span>
-                  <span class="muted">Network <strong>Casper</strong></span>
-                </div>
-              </div>
-            </div>
-
-            <div class="popout" id="detailsPopout" role="dialog" aria-label="Trade details" hidden>
-              <div class="popout-header">
-                <strong>Trade details</strong>
-                <button type="button" class="icon-btn ghost" data-popout-close>
-                  <span class="visually-hidden">Close trade details</span>
-                  <span aria-hidden="true">✕</span>
-                </button>
-              </div>
-              <dl class="swap-breakdown">
-                <div>
-                  <dt>Minimum received</dt>
-                  <dd>Respecting slippage controls</dd>
-                </div>
-                <div>
-                  <dt>Route</dt>
-                  <dd>Auto (best path)</dd>
-                </div>
-                <div>
-                  <dt>Network</dt>
-                  <dd>Casper mainnet</dd>
-                </div>
-                <div>
-                  <dt>Price impact</dt>
-                  <dd><strong id="priceImpactDetail">0.00%</strong></dd>
-                </div>
-                <div>
-                  <dt>Fee</dt>
-                  <dd>0.25%</dd>
-                </div>
-              </dl>
-            </div>
-
-            <div class="popout" id="networkPopout" role="dialog" aria-label="Network and wallet" hidden>
-              <div class="popout-header">
-                <strong>Network</strong>
-                <button type="button" class="icon-btn ghost" data-popout-close>
-                  <span class="visually-hidden">Close network status</span>
-                  <span aria-hidden="true">✕</span>
-                </button>
-              </div>
-              <div class="network-status">
-                <span class="status-badge subtle">Casper mainnet</span>
-                <span id="walletStatus" class="status-badge subtle">Wallet disconnected</span>
-                <p class="muted small">Routing auto-selects the best path and keeps gas low.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-copy swap-copy">
-          <p class="lead">A focused swap card sits front and center. Connect your wallet, set slippage, and move between CSPR and ECTO with clear routing and instant feedback.</p>
+    <section class="hero" id="overview">
+      <div class="container hero-grid landing-overview">
+        <div class="hero-copy">
+          <p class="eyebrow">Casper-native AMM</p>
+          <h1>More than a swapper—an ecosystem for growth.</h1>
+          <p class="lead">Ectoplasm pairs a battle-tested DEX with liquidity programs, pro dashboards, and audited contracts so market makers, builders, and traders can ship faster on Casper.</p>
           <div class="hero-cta">
-            <a href="#swap" class="btn primary large">Get started</a>
+            <a href="/swap.html" class="btn primary large">Launch swapper</a>
+            <a href="#features" class="btn ghost large">See how it works</a>
           </div>
           <ul class="trust-list" aria-hidden="false">
-            <li><strong id="priceTicker">CSPR $--.--</strong> live price</li>
-            <li>Casper mainnet routing</li>
-            <li>Wallet status shown inline</li>
+            <li>Audited Casper smart contracts</li>
+            <li>24/7 routing and oracle feeds</li>
+            <li>Liquidity mining built in</li>
+          </ul>
+        </div>
+        <div class="hero-card feature-card">
+          <div class="feature-meta">
+            <span class="chip">Live</span>
+            <span class="muted">Mainnet ready</span>
+          </div>
+          <h3>Everything you need to ship on Casper</h3>
+          <p>Accelerate token launches and trading with integrated pools, analytics, and governance-ready controls.</p>
+          <ul class="safety-list">
+            <li>Gas-optimized swaps with <strong>0.25%</strong> base fees</li>
+            <li>Fee tiers for stable pairs &amp; volatile assets</li>
+            <li>Liquidity rewards and protocol revenue sharing</li>
+            <li>Enterprise-grade monitoring and alerts</li>
           </ul>
         </div>
       </div>
     </section>
 
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark"><img src="/assets/electoplasmlogo.png" alt="Ectoplasm glyph" /></div>
+          <h2>Built for teams that ship</h2>
+        </div>
+        <p class="muted">From first swap to sustained liquidity, Ectoplasm layers pro tooling onto a Casper-first AMM.</p>
+        <div class="features-grid refined">
+          <article class="feature-card">
+            <div class="feature-meta"><span class="chip">Routing</span><span class="muted">Live</span></div>
+            <h3>Optimal execution</h3>
+            <p>Auto-routing across Casper pools to keep price impact near zero even during volatile windows.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-meta"><span class="chip">Security</span><span class="muted">Audited</span></div>
+            <h3>Audited smart contracts</h3>
+            <p>Independent audits with continuous monitoring, rate limiting, and per-pool controls for safer liquidity.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-meta"><span class="chip">Growth</span><span class="muted">Incentives</span></div>
+            <h3>Liquidity programs</h3>
+            <p>Deploy mining campaigns, fee rebates, and lockups directly from the dashboard—no custom code required.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-meta"><span class="chip">Data</span><span class="muted">Dashboards</span></div>
+            <h3>Operator-grade analytics</h3>
+            <p>Track swaps, LP performance, and protocol health with exportable metrics for your treasury stack.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="metrics">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark"><img src="/assets/electoplasmlogo.png" alt="Ectoplasm glyph" /></div>
+          <h2>Momentum that compounds</h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="muted">Settlement time</span>
+            <strong>~4s</strong>
+            <p class="muted">Casper finality with deterministic fees.</p>
+          </div>
+          <div class="stat-card">
+            <span class="muted">Fee efficiency</span>
+            <strong>0.25%</strong>
+            <p class="muted">Base DEX fee with rebates for liquidity partners.</p>
+          </div>
+          <div class="stat-card">
+            <span class="muted">Coverage</span>
+            <strong>16+ networks</strong>
+            <p class="muted">Bridge-friendly routes to bring capital into Casper.</p>
+          </div>
+          <div class="stat-card">
+            <span class="muted">Reliability</span>
+            <strong>99.9%</strong>
+            <p class="muted">Uptime target backed by monitoring and alerts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how-it-works">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark"><img src="/assets/electoplasmlogo.png" alt="Ectoplasm glyph" /></div>
+          <h2>From idea to mainnet in three steps</h2>
+        </div>
+        <ul class="steps">
+          <li>
+            <strong>1) Configure pools</strong>
+            <p class="muted">Choose fee tiers, enable dual-sided liquidity, and publish guardrails for stable and volatile pairs.</p>
+          </li>
+          <li>
+            <strong>2) Activate campaigns</strong>
+            <p class="muted">Launch liquidity mining or rebates with start/stop dates and transparent reward math.</p>
+          </li>
+          <li>
+            <strong>3) Track &amp; govern</strong>
+            <p class="muted">Monitor swaps, manage treasuries, and plug governance votes into the dashboard when you are ready.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section alt" id="audit">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark"><img src="/assets/electoplasmlogo.png" alt="Ectoplasm glyph" /></div>
+          <h2>Audited, observable, accountable</h2>
+        </div>
+        <p class="muted">Review the latest smart contract audit and check how Ectoplasm handles security-in-depth on Casper.</p>
+        <div class="pools-grid">
+          <div class="pool-card">
+            <h3>Audit &amp; compliance</h3>
+            <ul>
+              <li>Independent audit coverage with on-chain monitoring</li>
+              <li>MEV-aware routing and configurable rate limits</li>
+              <li>Runbooks for incident response and partner support</li>
+            </ul>
+            <a class="btn ghost" href="/audit-report.pdf">Download audit</a>
+          </div>
+          <div class="pool-card">
+            <h3>Privacy &amp; data</h3>
+            <ul>
+              <li>Minimal data retention aligned to Casper infrastructure</li>
+              <li>Optional TLS termination for partner RPC endpoints</li>
+              <li>Exportable metrics for treasury and compliance teams</li>
+            </ul>
+            <a class="btn ghost" href="/privacy.html">View privacy</a>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
