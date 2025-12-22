@@ -119,6 +119,15 @@ input[type="number"] {
 }
 
 /**
+ * Hidden attribute support
+ * Ensures elements with hidden attribute are not displayed
+ * Uses !important to override any display declarations
+ */
+[hidden] {
+  display: none !important;
+}
+
+/**
  * Full-height layout foundation
  * Ensures footer stays at bottom even with minimal content
  */
