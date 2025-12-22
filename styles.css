@@ -1187,6 +1187,7 @@ small.muted{font-size:0.75rem;line-height:1.3}
   .pool-row .col.action{grid-area:action;text-align:left}
   .pool-row.pool-head{display:none}
   .pool-actions{justify-content:flex-start}
+  .pool-popout{right:auto;left:0}
 }
 
 /* ============================================================================
