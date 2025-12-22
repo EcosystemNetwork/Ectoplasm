@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (connectWallet) {
     connectWallet.addEventListener('click', () => {
       // If already connected, disconnect; otherwise, connect
-      if(window.connectedWallet && window.connectedAccount){
+      if (window.connectedWallet && window.connectedAccount){
         disconnectWalletHandler();
       } else {
         connectWalletHandler();
@@ -307,18 +307,18 @@ function hydrateTheme(){
  * 
  * Called on page load to restore the user's wallet connection
  */
-function hydrateWalletConnection(){
+function hydrateWalletConnection() {
   const storedWallet = localStorage.getItem('ectoplasm-connected-wallet');
   const storedAccount = localStorage.getItem('ectoplasm-connected-account');
   
-  if(storedWallet && storedAccount){
+  if (storedWallet && storedAccount) {
     // Restore global state for contract interactions
     window.connectedWallet = storedWallet;
     window.connectedAccount = storedAccount;
     
     // Update UI with restored connection
     const connectBtn = document.getElementById('connectWallet');
-    if(connectBtn){
+    if (connectBtn) {
       const shortKey = typeof storedAccount === 'string' && storedAccount.length > 12
         ? `${storedAccount.slice(0, 6)}…${storedAccount.slice(-4)}`
         : storedAccount;
@@ -648,7 +648,7 @@ async function connectWalletHandler(){
  * This ensures a clean state when the user disconnects and prevents
  * stale connection data from persisting across sessions.
  */
-function disconnectWalletHandler(){
+function disconnectWalletHandler() {
   const connectBtn = document.getElementById('connectWallet');
   
   // Clear global state
@@ -660,7 +660,7 @@ function disconnectWalletHandler(){
   localStorage.removeItem('ectoplasm-connected-account');
   
   // Reset button state
-  if(connectBtn) {
+  if (connectBtn) {
     connectBtn.textContent = 'Connect Wallet';
     connectBtn.disabled = false;
     connectBtn.classList.remove('connected');
