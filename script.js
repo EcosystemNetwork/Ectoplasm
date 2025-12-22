@@ -1141,6 +1141,9 @@ function setupTokenModal(){
   
   if(!modal || !openBtn) return; // Not on launchpad page
   
+  // Delay for focus management after modal opens (allows animation to complete)
+  const FOCUS_DELAY_MS = 100;
+  
   /**
    * Open the modal
    * Locks body scroll and focuses first input
@@ -1149,10 +1152,10 @@ function setupTokenModal(){
     modal.removeAttribute('hidden');
     document.body.style.overflow = 'hidden'; // Prevent background scroll
     
-    // Focus first input for better UX
+    // Focus first input for better UX (delay allows modal animation to complete)
     const firstInput = modal.querySelector('input[type="text"]');
     if(firstInput) {
-      setTimeout(() => firstInput.focus(), 100);
+      setTimeout(() => firstInput.focus(), FOCUS_DELAY_MS);
     }
     
     // Announce to screen readers
@@ -1171,6 +1174,16 @@ function setupTokenModal(){
     
     // Return focus to trigger button
     if(openBtn) openBtn.focus();
+  };
+  
+  /**
+   * Handle Escape key press
+   * Only closes modal if it's currently open
+   */
+  const handleEscape = (e) => {
+    if(e.key === 'Escape' && !modal.hasAttribute('hidden')) {
+      closeModal();
+    }
   };
   
   // Open modal on button click
@@ -1196,11 +1209,7 @@ function setupTokenModal(){
   }
   
   // Close modal on Escape key
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape' && !modal.hasAttribute('hidden')) {
-      closeModal();
-    }
-  });
+  document.addEventListener('keydown', handleEscape);
 }
 
 // ============================================================================
