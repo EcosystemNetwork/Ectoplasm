@@ -1159,11 +1159,6 @@ small.muted{font-size:0.75rem;line-height:1.3}
  * Creates animated blobs that simulate dripping green goo/ectoplasm
  */
 
-/* Container for liquid blobs - positioned behind the swapper */
-.swap-hero {
-  z-index: 1;
-}
-
 /* Create multiple dripping blob elements using pseudo-elements */
 .liquid-container {
   position: absolute;
