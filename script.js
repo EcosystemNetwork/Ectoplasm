@@ -244,6 +244,10 @@ document.addEventListener('DOMContentLoaded', () => {
   setupPromoSlider();     // Launchpad promotional budget slider
   performanceMonitor.end('setupPromoSlider', false);
   
+  performanceMonitor.start('setupTokenModal');
+  setupTokenModal();      // Token creation modal for launchpad
+  performanceMonitor.end('setupTokenModal', false);
+  
   performanceMonitor.start('renderDashboard');
   renderDashboard();      // Dashboard tasks/quests/rewards
   performanceMonitor.end('renderDashboard', false);
@@ -1114,6 +1118,98 @@ function setupPromoSlider(){
 
   slider.addEventListener('input', render);
   render(); // Initial render
+}
+
+/**
+ * Setup token creation modal
+ * Handles opening and closing the modal for creating new tokens
+ * Inspired by pump.fun's modal pattern
+ * 
+ * Features:
+ * - Click "Create Token" button to open modal
+ * - Click close button (X) to close modal
+ * - Click outside modal to close
+ * - Press Escape key to close
+ * - Proper focus management for accessibility
+ * - Body scroll lock when modal is open
+ */
+function setupTokenModal(){
+  const modal = document.getElementById('tokenModal');
+  const openBtn = document.getElementById('createTokenBtn');
+  const closeBtn = modal?.querySelector('.modal-close');
+  const modalContainer = modal?.querySelector('.modal-container');
+  
+  if(!modal || !openBtn) return; // Not on launchpad page
+  
+  // Delay for focus management after modal opens (allows animation to complete)
+  const FOCUS_DELAY_MS = 100;
+  
+  /**
+   * Open the modal
+   * Locks body scroll and focuses first input
+   */
+  const openModal = () => {
+    modal.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+    
+    // Focus first input for better UX (delay allows modal animation to complete)
+    const firstInput = modal.querySelector('input[type="text"]');
+    if(firstInput) {
+      setTimeout(() => firstInput.focus(), FOCUS_DELAY_MS);
+    }
+    
+    // Announce to screen readers
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'modal-title');
+  };
+  
+  /**
+   * Close the modal
+   * Restores body scroll and returns focus to trigger button
+   */
+  const closeModal = () => {
+    modal.setAttribute('hidden', '');
+    document.body.style.overflow = ''; // Restore scroll
+    
+    // Return focus to trigger button
+    if(openBtn) openBtn.focus();
+  };
+  
+  /**
+   * Handle Escape key press
+   * Only closes modal if it's currently open
+   */
+  const handleEscape = (e) => {
+    if(e.key === 'Escape' && !modal.hasAttribute('hidden')) {
+      closeModal();
+    }
+  };
+  
+  // Open modal on button click
+  openBtn.addEventListener('click', openModal);
+  
+  // Close modal on close button click
+  if(closeBtn) {
+    closeBtn.addEventListener('click', closeModal);
+  }
+  
+  // Close modal when clicking on overlay (outside modal content)
+  modal.addEventListener('click', (e) => {
+    if(e.target === modal) {
+      closeModal();
+    }
+  });
+  
+  // Prevent clicks inside modal content from closing
+  if(modalContainer) {
+    modalContainer.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  }
+  
+  // Close modal on Escape key
+  document.addEventListener('keydown', handleEscape);
 }
 
 // ============================================================================
