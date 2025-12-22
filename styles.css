@@ -810,10 +810,6 @@ small.muted{font-size:0.75rem;line-height:1.3}
   animation: fadeIn 0.3s ease-out;
 }
 
-.modal-overlay[hidden] {
-  display: none;
-}
-
 /**
  * Modal container - centers the modal content
  */
