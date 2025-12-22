@@ -212,6 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize theme system (restores user preference or system default)
   hydrateTheme();
   
+  // Restore wallet connection from previous session
+  hydrateWalletConnection();
+  
   // Start CSPR price ticker (fetches and updates every 60 seconds)
   initPriceTicker();
 
@@ -220,7 +223,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
 
   const connectWallet = document.getElementById('connectWallet');
-  if (connectWallet) connectWallet.addEventListener('click', connectWalletHandler);
+  if (connectWallet) {
+    connectWallet.addEventListener('click', () => {
+      // If already connected, disconnect; otherwise, connect
+      if(window.connectedWallet && window.connectedAccount){
+        disconnectWalletHandler();
+      } else {
+        connectWalletHandler();
+      }
+    });
+  }
 
   if(window.location.hash === '#swap') activateSwapNav();
   window.addEventListener('hashchange', () => {
@@ -281,6 +293,44 @@ function hydrateTheme(){
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
   const desired = stored || (prefersLight ? 'light' : 'dark');
   setTheme(desired);
+}
+
+/**
+ * Hydrate wallet connection from localStorage
+ * 
+ * Restores the wallet connection state from a previous session if available.
+ * This ensures users stay logged in when navigating between pages.
+ * 
+ * Priority order:
+ * 1. User's saved wallet connection in localStorage
+ * 2. No connection (user needs to connect)
+ * 
+ * Called on page load to restore the user's wallet connection
+ */
+function hydrateWalletConnection(){
+  const storedWallet = localStorage.getItem('ectoplasm-connected-wallet');
+  const storedAccount = localStorage.getItem('ectoplasm-connected-account');
+  
+  if(storedWallet && storedAccount){
+    // Restore global state for contract interactions
+    window.connectedWallet = storedWallet;
+    window.connectedAccount = storedAccount;
+    
+    // Update UI with restored connection
+    const connectBtn = document.getElementById('connectWallet');
+    if(connectBtn){
+      const shortKey = typeof storedAccount === 'string' && storedAccount.length > 12
+        ? `${storedAccount.slice(0, 6)}…${storedAccount.slice(-4)}`
+        : storedAccount;
+      
+      connectBtn.textContent = `Connected: ${shortKey}`;
+      connectBtn.classList.add('connected');
+      connectBtn.disabled = false;
+    }
+    
+    // Update wallet status badge
+    updateWalletStatus(`Connected via ${storedWallet}`);
+  }
 }
 
 /**
@@ -554,6 +604,10 @@ async function connectWalletHandler(){
       window.connectedWallet = selectedWallet;
       window.connectedAccount = connectedAccount;
       
+      // Persist connection state to localStorage for cross-page sessions
+      localStorage.setItem('ectoplasm-connected-wallet', selectedWallet);
+      localStorage.setItem('ectoplasm-connected-account', connectedAccount);
+      
       // Update wallet status badge
       updateWalletStatus(`Connected via ${selectedWallet}`);
     }
@@ -583,6 +637,39 @@ async function connectWalletHandler(){
       connectBtn.classList.remove('connected');
     }
   }
+}
+
+/**
+ * Handle wallet disconnection
+ * 
+ * Clears the wallet connection state from memory and localStorage,
+ * and updates the UI to reflect the disconnected state.
+ * 
+ * This ensures a clean state when the user disconnects and prevents
+ * stale connection data from persisting across sessions.
+ */
+function disconnectWalletHandler(){
+  const connectBtn = document.getElementById('connectWallet');
+  
+  // Clear global state
+  delete window.connectedWallet;
+  delete window.connectedAccount;
+  
+  // Clear localStorage
+  localStorage.removeItem('ectoplasm-connected-wallet');
+  localStorage.removeItem('ectoplasm-connected-account');
+  
+  // Reset button state
+  if(connectBtn) {
+    connectBtn.textContent = 'Connect Wallet';
+    connectBtn.disabled = false;
+    connectBtn.classList.remove('connected');
+  }
+  
+  // Update wallet status badge
+  updateWalletStatus('Wallet disconnected');
+  
+  console.log('Wallet disconnected');
 }
 
 /**
