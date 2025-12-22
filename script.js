@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (connectWallet) {
     connectWallet.addEventListener('click', () => {
       // If already connected, disconnect; otherwise, connect
-      if (window.connectedWallet && window.connectedAccount){
+      if (window.connectedWallet && window.connectedAccount) {
         disconnectWalletHandler();
       } else {
         connectWalletHandler();
