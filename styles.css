@@ -617,32 +617,65 @@ body.swap-page .site-footer{display:none}
  * Task list for daily tasks
  */
 .task-list{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
-.task-list li{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px 14px;border-radius:12px;border:1px solid rgba(232,255,249,0.08)}
+.task-list li{display:flex;justify-content:space-between;align-items:center;background:var(--card);padding:12px 14px;border-radius:12px;border:1px solid rgba(232,255,249,0.08);transition:all 0.3s ease}
+.task-list li.completed{background:rgba(76,245,199,0.08);border-color:rgba(76,245,199,0.25)}
+.task-list li.completed label{opacity:0.7}
+.task-list li.completed input[type="checkbox"]{accent-color:#4cf5c7}
 .task-list label{display:flex;align-items:center;gap:10px;cursor:pointer}
-.task-list input{width:18px;height:18px}
+.task-list input{width:18px;height:18px;accent-color:#4cf5c7;cursor:pointer}
 
 /**
  * Quest and reward grids
  */
 .quest-grid,.reward-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
 .quest-card .progress,.reward-card .progress{margin:8px 0}
+.quest-card{transition:all 0.3s ease}
+.quest-card:hover{transform:translateY(-2px);border-color:rgba(119,240,248,0.3)}
+.quest-card.completed{border-color:rgba(76,245,199,0.4);background:linear-gradient(180deg, rgba(76,245,199,0.12), rgba(76,245,199,0.04))}
+
+/**
+ * Reward cards with interactive states
+ */
+.reward-card{transition:all 0.3s ease}
+.reward-card.affordable:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(76,245,199,0.25)}
+.reward-card.redeemed{opacity:0.5;pointer-events:none}
+.reward-card .success-message{color:#4cf5c7;font-weight:600;font-size:0.9rem}
 
 /**
  * Streak display grid
  */
 .streak-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:12px 0}
-.streak-number{font-size:2.4rem}
+.streak-number{font-size:2.4rem;background:linear-gradient(135deg,#4cf5c7,#77f0f8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
 /**
- * Progress bar component
+ * Progress bar component with animation
  */
 .progress{background:rgba(232,255,249,0.08);height:10px;border-radius:999px;overflow:hidden}
-.progress-bar{height:100%;background:var(--accent);border-radius:999px}
+.progress-bar{height:100%;background:var(--accent);border-radius:999px;transition:width 0.6s ease}
 
 /**
  * Reward row
  */
 .reward-row{margin-top:12px;padding:10px;border-radius:10px;background:var(--glass);border:1px solid rgba(232,255,249,0.08)}
+.reward-row .success{color:#4cf5c7}
+
+/**
+ * XP gain animation
+ */
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
+.xp-gain-indicator {
+  animation: floatUp 1.5s ease-out forwards;
+}
 
 /* ============================================================================
    14. TABLE COMPONENTS

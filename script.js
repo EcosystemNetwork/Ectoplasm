@@ -1304,20 +1304,159 @@ function setupTokenModal(){
 // ============================================================================
 
 /**
+ * Dashboard state management
+ * Handles user progress, task completion, and XP tracking
+ * Persists to localStorage for cross-session continuity
+ */
+const DashboardState = {
+  /**
+   * Get current dashboard state from localStorage
+   * @returns {Object} Dashboard state object
+   */
+  get() {
+    const defaultState = {
+      streak: 0,
+      xp: 0,
+      lastCheckIn: null,
+      completedTasks: [],
+      completedQuests: [],
+      redeemedRewards: [],
+      questProgress: {
+        'quest-0': 0,
+        'quest-1': 0,
+        'quest-2': 0
+      }
+    };
+    
+    try {
+      const stored = localStorage.getItem('ectoplasm-dashboard-state');
+      if (!stored) return defaultState;
+      
+      const state = JSON.parse(stored);
+      
+      // Check if we need to reset daily tasks
+      const lastCheckIn = state.lastCheckIn ? new Date(state.lastCheckIn) : null;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (!lastCheckIn || lastCheckIn < today) {
+        // Reset daily tasks but keep streak if checked in yesterday
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        
+        if (lastCheckIn && lastCheckIn >= yesterday) {
+          // Checked in yesterday, keep streak
+          state.completedTasks = [];
+        } else if (lastCheckIn) {
+          // Missed a day, reset streak
+          state.streak = 0;
+          state.completedTasks = [];
+        }
+      }
+      
+      return { ...defaultState, ...state };
+    } catch (e) {
+      console.error('Failed to load dashboard state:', e);
+      return defaultState;
+    }
+  },
+  
+  /**
+   * Save dashboard state to localStorage
+   * @param {Object} state - State object to save
+   */
+  save(state) {
+    try {
+      localStorage.setItem('ectoplasm-dashboard-state', JSON.stringify(state));
+    } catch (e) {
+      console.error('Failed to save dashboard state:', e);
+    }
+  },
+  
+  /**
+   * Complete a daily task
+   * @param {number} taskIndex - Index of the task
+   * @param {number} xpReward - XP to award
+   */
+  completeTask(taskIndex, xpReward) {
+    const state = this.get();
+    
+    if (!state.completedTasks.includes(taskIndex)) {
+      state.completedTasks.push(taskIndex);
+      state.xp += xpReward;
+      
+      // If this is the check-in task (index 0), update streak
+      if (taskIndex === 0) {
+        state.streak += 1;
+        state.lastCheckIn = new Date().toISOString();
+      }
+      
+      this.save(state);
+    }
+    
+    return state;
+  },
+  
+  /**
+   * Uncomplete a daily task (for demo purposes)
+   * @param {number} taskIndex - Index of the task
+   * @param {number} xpReward - XP to deduct
+   */
+  uncompleteTask(taskIndex, xpReward) {
+    const state = this.get();
+    
+    const index = state.completedTasks.indexOf(taskIndex);
+    if (index > -1) {
+      state.completedTasks.splice(index, 1);
+      state.xp = Math.max(0, state.xp - xpReward);
+      this.save(state);
+    }
+    
+    return state;
+  },
+  
+  /**
+   * Update quest progress
+   * @param {string} questId - Quest identifier
+   * @param {number} progress - Progress percentage (0-100)
+   */
+  updateQuestProgress(questId, progress) {
+    const state = this.get();
+    state.questProgress[questId] = Math.min(100, Math.max(0, progress));
+    
+    // Award XP if quest is completed
+    if (progress >= 100 && !state.completedQuests.includes(questId)) {
+      state.completedQuests.push(questId);
+      // Quest completion awards are handled separately
+    }
+    
+    this.save(state);
+    return state;
+  },
+  
+  /**
+   * Redeem a reward
+   * @param {string} rewardId - Reward identifier
+   * @param {number} cost - XP cost
+   */
+  redeemReward(rewardId, cost) {
+    const state = this.get();
+    
+    if (state.xp >= cost && !state.redeemedRewards.includes(rewardId)) {
+      state.xp -= cost;
+      state.redeemedRewards.push(rewardId);
+      this.save(state);
+      return { success: true, state };
+    }
+    
+    return { success: false, state, message: 'Insufficient XP' };
+  }
+};
+
+/**
  * Render the dashboard with gamification elements
  * Displays daily tasks, weekly quests, and reward catalog
- * 
- * Features:
- * - Streak counter with XP total
- * - Daily task checklist (4 tasks)
- * - Weekly quest cards with progress bars
- * - Reward catalog with XP costs
- * 
- * NOTE: This uses hardcoded demo data. In production:
- * - Fetch user data from backend API
- * - Track task completion on-chain or in database
- * - Calculate real-time progress and XP
- * - Persist streak data across sessions
+ * Now with full interactivity and persistence
  */
 function renderDashboard(){
   const dailyTarget = document.getElementById('dailyTasks');
@@ -1333,19 +1472,18 @@ function renderDashboard(){
   // Exit if not on dashboard page
   if (!dailyTarget && !questGrid && !rewardGrid) return;
 
-  // Demo data - replace with real user data
-  const streak = 7;
-  const xp = 1260;
+  // Get current state
+  const state = DashboardState.get();
   
   /**
    * Daily tasks that refresh every 24 hours
    * Each task awards XP upon completion
    */
   const dailyTasks = [
-    { title: 'Check-in and claim streak bonus', xp: 40 },
-    { title: 'Complete one swap on Casper', xp: 120 },
-    { title: 'Stake liquidity into any $ECTO pair', xp: 200 },
-    { title: 'Vote on one governance proposal', xp: 90 }
+    { id: 0, title: 'Check-in and claim streak bonus', xp: 40 },
+    { id: 1, title: 'Complete one swap on Casper', xp: 120 },
+    { id: 2, title: 'Stake liquidity into any $ECTO pair', xp: 200 },
+    { id: 3, title: 'Vote on one governance proposal', xp: 90 }
   ];
 
   /**
@@ -1353,9 +1491,9 @@ function renderDashboard(){
    * Longer-term objectives with higher rewards
    */
   const weeklyQuests = [
-    { title: 'Clear 5 swaps with <0.5% slippage', reward: 'Badge + 200 XP', progress: 60 },
-    { title: 'Provide liquidity for 3 consecutive days', reward: 'Boosted APR day', progress: 40 },
-    { title: 'Participate in privacy pool relay', reward: 'Shield bonus + 180 XP', progress: 20 }
+    { id: 'quest-0', title: 'Clear 5 swaps with <0.5% slippage', reward: 'Badge + 200 XP', xp: 200 },
+    { id: 'quest-1', title: 'Provide liquidity for 3 consecutive days', reward: 'Boosted APR day', xp: 150 },
+    { id: 'quest-2', title: 'Participate in privacy pool relay', reward: 'Shield bonus + 180 XP', xp: 180 }
   ];
 
   /**
@@ -1363,24 +1501,162 @@ function renderDashboard(){
    * Provides utility and incentive for completing tasks
    */
   const rewards = [
-    { title: 'Swap fee rebate', cost: '400 XP', detail: '5% off for 24h' },
-    { title: 'Launchpad priority slot', cost: '900 XP', detail: 'Jump queue for next cohort' },
-    { title: 'Privacy multiplier', cost: '700 XP', detail: '1.2x rewards on relays for 48h' }
+    { id: 'reward-0', title: 'Swap fee rebate', cost: 400, detail: '5% off for 24h' },
+    { id: 'reward-1', title: 'Launchpad priority slot', cost: 900, detail: 'Jump queue for next cohort' },
+    { id: 'reward-2', title: 'Privacy multiplier', cost: 700, detail: '1.2x rewards on relays for 48h' }
   ];
 
-  // Update user stats
-  if (streakVal) streakVal.textContent = streak;
-  if (streakDays) streakDays.textContent = streak;
-  if (xpTotal) xpTotal.textContent = xp.toLocaleString();
-  if (weeklyProgress) weeklyProgress.style.width = `${weeklyQuests[0].progress}%`;
-  if (weeklyPercent) weeklyPercent.textContent = weeklyQuests[0].progress;
+  /**
+   * Update all stat displays
+   */
+  const updateStats = () => {
+    const currentState = DashboardState.get();
+    
+    if (streakVal) streakVal.textContent = currentState.streak;
+    if (streakDays) streakDays.textContent = currentState.streak;
+    if (xpTotal) xpTotal.textContent = currentState.xp.toLocaleString();
+    
+    // Calculate overall weekly progress (average of all quests)
+    const avgProgress = Object.values(currentState.questProgress).reduce((a, b) => a + b, 0) / 3;
+    if (weeklyProgress) weeklyProgress.style.width = `${avgProgress}%`;
+    if (weeklyPercent) weeklyPercent.textContent = Math.round(avgProgress);
+    
+    // Update reward row message
+    const completedCount = currentState.completedTasks.length;
+    const remaining = dailyTasks.length - completedCount;
+    if (rewardRow) {
+      if (remaining === 0) {
+        rewardRow.innerHTML = `<p class="muted success">🎉 All tasks complete! Come back tomorrow for more XP!</p>`;
+      } else {
+        rewardRow.innerHTML = `<p class="muted">Next reward unlocks in <strong>${remaining} ${remaining === 1 ? 'task' : 'tasks'}</strong>. Keep the streak alive!</p>`;
+      }
+    }
+  };
+
+  /**
+   * Handle task completion toggle
+   */
+  const handleTaskToggle = (taskIndex, xpReward, checkbox) => {
+    if (checkbox.checked) {
+      // Task completed
+      const newState = DashboardState.completeTask(taskIndex, xpReward);
+      
+      // Visual feedback - animate the XP
+      animateXPGain(xpReward);
+      
+      // Add completed class to parent for styling
+      const listItem = checkbox.closest('li');
+      if (listItem) {
+        listItem.classList.add('completed');
+      }
+    } else {
+      // Task uncompleted (for demo purposes)
+      DashboardState.uncompleteTask(taskIndex, xpReward);
+      
+      // Remove completed class
+      const listItem = checkbox.closest('li');
+      if (listItem) {
+        listItem.classList.remove('completed');
+      }
+    }
+    
+    updateStats();
+  };
+
+  /**
+   * Animate XP gain
+   */
+  const animateXPGain = (amount) => {
+    if (!xpTotal) return;
+    
+    // Create floating XP indicator
+    const indicator = document.createElement('span');
+    indicator.className = 'xp-gain-indicator';
+    indicator.textContent = `+${amount} XP`;
+    indicator.style.cssText = `
+      position: fixed;
+      top: ${xpTotal.getBoundingClientRect().top}px;
+      left: ${xpTotal.getBoundingClientRect().left}px;
+      color: #4cf5c7;
+      font-weight: 800;
+      font-size: 1.2rem;
+      pointer-events: none;
+      z-index: 9999;
+      animation: floatUp 1.5s ease-out forwards;
+    `;
+    
+    document.body.appendChild(indicator);
+    
+    setTimeout(() => {
+      document.body.removeChild(indicator);
+    }, 1500);
+  };
+
+  /**
+   * Handle reward redemption
+   */
+  const handleRewardRedeem = (rewardId, cost, title, card) => {
+    const result = DashboardState.redeemReward(rewardId, cost);
+    
+    if (result.success) {
+      // Visual feedback
+      card.classList.add('redeemed');
+      card.style.opacity = '0.5';
+      card.style.pointerEvents = 'none';
+      
+      // Show success message
+      const msg = document.createElement('div');
+      msg.className = 'success-message';
+      msg.textContent = `✓ Redeemed: ${title}`;
+      msg.style.cssText = 'margin-top: 8px; font-size: 0.9rem;';
+      card.appendChild(msg);
+      
+      updateStats();
+      
+      // Animate XP deduction
+      animateXPGain(-cost);
+    } else {
+      // Show error message
+      alert(result.message || 'Unable to redeem reward');
+    }
+  };
+
+  // Initialize stats
+  updateStats();
 
   // Render daily tasks checklist
   if (dailyTarget){
     dailyTarget.innerHTML = '';
     dailyTasks.forEach(task => {
       const li = document.createElement('li');
-      li.innerHTML = `<label><input type="checkbox" /> <span>${task.title}</span></label><span class="pill">+${task.xp} XP</span>`;
+      const isCompleted = state.completedTasks.includes(task.id);
+      
+      if (isCompleted) {
+        li.classList.add('completed');
+      }
+      
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = isCompleted;
+      checkbox.id = `task-${task.id}`;
+      
+      checkbox.addEventListener('change', () => {
+        handleTaskToggle(task.id, task.xp, checkbox);
+      });
+      
+      const label = document.createElement('label');
+      label.appendChild(checkbox);
+      
+      const span = document.createElement('span');
+      span.textContent = task.title;
+      label.appendChild(span);
+      
+      const pill = document.createElement('span');
+      pill.className = 'pill';
+      pill.textContent = `+${task.xp} XP`;
+      
+      li.appendChild(label);
+      li.appendChild(pill);
       dailyTarget.appendChild(li);
     });
   }
@@ -1391,14 +1667,39 @@ function renderDashboard(){
     weeklyQuests.forEach(quest => {
       const card = document.createElement('article');
       card.className = 'pool-card quest-card';
+      
+      const progress = state.questProgress[quest.id] || 0;
+      const isCompleted = state.completedQuests.includes(quest.id);
+      
+      if (isCompleted) {
+        card.classList.add('completed');
+      }
+      
       card.innerHTML = `
-        <h3>${quest.title}</h3>
-        <p class="muted">Reward: ${quest.reward}</p>
+        <h3>${sanitizeHTML(quest.title)}</h3>
+        <p class="muted">Reward: ${sanitizeHTML(quest.reward)}</p>
         <div class="progress">
-          <div class="progress-bar" style="width:${quest.progress}%"></div>
+          <div class="progress-bar" style="width:${progress}%"></div>
         </div>
-        <small class="muted">${quest.progress}% complete</small>
+        <small class="muted">${progress}% complete</small>
       `;
+      
+      // Make quest card interactive (simulate progress for demo)
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        if (!isCompleted) {
+          const newProgress = Math.min(100, progress + 20);
+          DashboardState.updateQuestProgress(quest.id, newProgress);
+          
+          if (newProgress >= 100) {
+            DashboardState.completeTask(-1, quest.xp); // Special case for quest completion
+            animateXPGain(quest.xp);
+          }
+          
+          renderDashboard(); // Re-render to show updated progress
+        }
+      });
+      
       questGrid.appendChild(card);
     });
   }
@@ -1409,18 +1710,39 @@ function renderDashboard(){
     rewards.forEach(reward => {
       const card = document.createElement('article');
       card.className = 'pool-card reward-card';
+      
+      const isRedeemed = state.redeemedRewards.includes(reward.id);
+      const canAfford = state.xp >= reward.cost;
+      
+      if (isRedeemed) {
+        card.classList.add('redeemed');
+        card.style.opacity = '0.5';
+      } else if (canAfford) {
+        card.classList.add('affordable');
+        card.style.cursor = 'pointer';
+        card.style.borderColor = 'rgba(76, 245, 199, 0.3)';
+      } else {
+        card.style.opacity = '0.6';
+      }
+      
       card.innerHTML = `
-        <h3>${reward.title}</h3>
-        <p class="muted">${reward.detail}</p>
-        <span class="pill">${reward.cost}</span>
+        <h3>${sanitizeHTML(reward.title)}</h3>
+        <p class="muted">${sanitizeHTML(reward.detail)}</p>
+        <span class="pill">${reward.cost} XP</span>
+        ${isRedeemed ? '<div class="success-message" style="margin-top: 8px;">✓ Redeemed</div>' : ''}
       `;
+      
+      // Make reward card clickable if not redeemed and can afford
+      if (!isRedeemed && canAfford) {
+        card.addEventListener('click', () => {
+          if (confirm(`Redeem "${reward.title}" for ${reward.cost} XP?`)) {
+            handleRewardRedeem(reward.id, reward.cost, reward.title, card);
+          }
+        });
+      }
+      
       rewardGrid.appendChild(card);
     });
-  }
-
-  // Render next reward message
-  if (rewardRow){
-    rewardRow.innerHTML = `<p class="muted">Next reward unlocks in <strong>2 tasks</strong>. Keep the streak alive!</p>`;
   }
 }
 
