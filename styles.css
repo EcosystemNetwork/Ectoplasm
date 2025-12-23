@@ -957,6 +957,218 @@ small.muted{font-size:0.75rem;line-height:1.3}
 .hero .hero-copy .trust-list {
   justify-content: center;
 }
+/* ============================================================================
+   PRIVACY POOLS SPECIFIC COMPONENTS
+   ============================================================================ */
+
+/**
+ * Section header styling
+ */
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/**
+ * Pool card icon
+ */
+.pool-card-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+/**
+ * Steps grid for "How It Works" section
+ */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.step-card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  color: #04131a;
+}
+
+.step-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.step-card p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/**
+ * Tech grid for technical overview
+ */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.tech-card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.tech-card h3 {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+}
+
+.tech-card p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/**
+ * FAQ grid
+ */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.faq-item {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.faq-item h3 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.faq-item p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.faq-item a {
+  color: #4cf5c7;
+  text-decoration: underline;
+}
+
+.faq-item a:hover {
+  color: #77f0f8;
+}
+
+/**
+ * CTA card for get started section
+ */
+.cta-card {
+  background: linear-gradient(135deg, var(--card) 0%, rgba(86,255,211,0.12) 100%);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid rgba(232,255,249,0.12);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.cta-content h2 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+}
+
+.cta-content p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/**
+ * Resources grid
+ */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.resource-card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.resource-card:hover {
+  border-color: rgba(232,255,249,0.16);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+}
+
+.resource-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.resource-card p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
 
 /* ============================================================================
    16. RESPONSIVE MEDIA QUERIES
@@ -1115,8 +1327,46 @@ small.muted{font-size:0.75rem;line-height:1.3}
   .privacy-grid,
   .quest-grid,
   .reward-grid,
-  .stats-grid {
+  .stats-grid,
+  .steps-grid,
+  .tech-grid,
+  .faq-grid,
+  .resources-grid {
     grid-template-columns: 1fr;
+  }
+  
+  /* CTA card mobile adjustments */
+  .cta-card {
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .cta-content h2 {
+    font-size: 1.4rem;
+  }
+  
+  .cta-content p {
+    font-size: 1rem;
+  }
+  
+  .cta-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .cta-actions .btn {
+    width: 100%;
+  }
+  
+  /* Section header mobile adjustments */
+  .section-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem;
   }
   
   /* Improve button layouts */
