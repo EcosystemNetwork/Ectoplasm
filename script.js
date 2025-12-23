@@ -1882,3 +1882,77 @@ function renderLaunchpadTokens(){
 function formatCurrency(value){
   return `$${value.toLocaleString()}`;
 }
+
+/**
+ * Populate mock LP positions on the liquidity page
+ * Shows sample liquidity positions for demonstration purposes
+ */
+function populateMockLPPositions() {
+  const container = document.getElementById('lpPositionsContainer');
+  if (!container) return;
+
+  // Mock LP position data
+  const mockPositions = [
+    {
+      pair: 'CSPR / ECTO',
+      liquidity: '$12,450',
+      apr: '18.4%',
+      earnings: '$2,341.20',
+      boosted: true
+    },
+    {
+      pair: 'USDC / ECTO',
+      liquidity: '$8,900',
+      apr: '9.6%',
+      earnings: '$854.40',
+      boosted: false
+    },
+    {
+      pair: 'ETH / ECTO',
+      liquidity: '$5,200',
+      apr: '12.2%',
+      earnings: '$634.40',
+      boosted: false
+    }
+  ];
+
+  // Create HTML for LP positions
+  let positionsHTML = '<div style="margin-top: 12px;">';
+  
+  mockPositions.forEach((position, index) => {
+    positionsHTML += `
+      <div style="padding: 12px; background: var(--surface-1, rgba(0,0,0,0.02)); border-radius: 8px; margin-bottom: ${index < mockPositions.length - 1 ? '8px' : '0'};">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <strong style="font-size: 14px;">${sanitizeHTML(position.pair)}</strong>
+          ${position.boosted ? '<span class="pill success subtle" style="font-size: 11px; padding: 2px 8px;">Boosted</span>' : ''}
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 12px;">
+          <div>
+            <div class="muted tiny">Liquidity</div>
+            <div style="font-weight: 500; margin-top: 2px;">${sanitizeHTML(position.liquidity)}</div>
+          </div>
+          <div>
+            <div class="muted tiny">APR</div>
+            <div style="font-weight: 500; margin-top: 2px; color: var(--success, #22c55e);">${sanitizeHTML(position.apr)}</div>
+          </div>
+          <div>
+            <div class="muted tiny">Earned</div>
+            <div style="font-weight: 500; margin-top: 2px;">${sanitizeHTML(position.earnings)}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  positionsHTML += '</div>';
+  
+  // Insert the positions HTML
+  container.innerHTML = positionsHTML;
+}
+
+// Initialize LP positions when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', populateMockLPPositions);
+} else {
+  populateMockLPPositions();
+}
