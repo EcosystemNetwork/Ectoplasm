@@ -48,6 +48,8 @@
   --card: #07242c;            /* Card and panel background */
   --muted: #8ccfc0;           /* Muted/secondary text color */
   --accent: linear-gradient(135deg,#4cf5c7 0%,#77f0f8 100%); /* Primary accent gradient */
+  --accent-primary: #4cf5c7;  /* Primary accent color */
+  --accent-secondary: #77f0f8; /* Secondary accent color */
   --glass: rgba(86,255,211,0.08); /* Glass-morphism overlay */
   
   /* Layout & spacing */
@@ -71,6 +73,8 @@
   --muted: #2f4f47;           /* Darker muted text for contrast */
   --glass: rgba(0,134,115,0.08); /* Adjusted glass effect for light mode */
   --accent: linear-gradient(135deg,#1ed8a2 0%,#54e8f3 100%); /* Adjusted accent gradient */
+  --accent-primary: #1ed8a2;  /* Primary accent color for light mode */
+  --accent-secondary: #54e8f3; /* Secondary accent color for light mode */
   color-scheme: light;
   color: #052026;             /* Dark text on light background */
   background: #e8f7f3;
@@ -533,6 +537,11 @@ body.swap-page .site-footer{display:none}
 .roadmap{list-style:none;padding:0;margin:0}
 .roadmap li{padding:8px 0;color:var(--muted)}
 
+/**
+ * Reduce spacing between "how-it-works" and "roadmap" sections
+ */
+#roadmap.section{padding-top:24px}
+
 /* ============================================================================
    12. LAUNCHPAD COMPONENTS
    ============================================================================ */
@@ -952,6 +961,218 @@ small.muted{font-size:0.75rem;line-height:1.3}
 .hero .hero-copy .trust-list {
   justify-content: center;
 }
+/* ============================================================================
+   PRIVACY POOLS SPECIFIC COMPONENTS
+   ============================================================================ */
+
+/**
+ * Section header styling
+ */
+.section-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.section-subtitle {
+  color: var(--muted);
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/**
+ * Pool card icon
+ */
+.pool-card-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+/**
+ * Steps grid for "How It Works" section
+ */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.step-card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  position: relative;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  color: var(--bg);
+}
+
+.step-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.step-card p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/**
+ * Tech grid for technical overview
+ */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.tech-card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.tech-card h3 {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+}
+
+.tech-card p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/**
+ * FAQ grid
+ */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.faq-item {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+}
+
+.faq-item h3 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.faq-item p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.faq-item a {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
+
+.faq-item a:hover {
+  color: var(--accent-secondary);
+}
+
+/**
+ * CTA card for get started section
+ */
+.cta-card {
+  background: linear-gradient(135deg, var(--card) 0%, var(--glass) 100%);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid rgba(232,255,249,0.12);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.cta-content h2 {
+  margin: 0 0 8px;
+  font-size: 1.8rem;
+}
+
+.cta-content p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/**
+ * Resources grid
+ */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.resource-card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(232,255,249,0.08);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.resource-card:hover {
+  border-color: rgba(232,255,249,0.16);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
+}
+
+.resource-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.resource-card p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.6;
+}
 
 /* ============================================================================
    16. RESPONSIVE MEDIA QUERIES
@@ -1110,8 +1331,46 @@ small.muted{font-size:0.75rem;line-height:1.3}
   .privacy-grid,
   .quest-grid,
   .reward-grid,
-  .stats-grid {
+  .stats-grid,
+  .steps-grid,
+  .tech-grid,
+  .faq-grid,
+  .resources-grid {
     grid-template-columns: 1fr;
+  }
+  
+  /* CTA card mobile adjustments */
+  .cta-card {
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .cta-content h2 {
+    font-size: 1.4rem;
+  }
+  
+  .cta-content p {
+    font-size: 1rem;
+  }
+  
+  .cta-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .cta-actions .btn {
+    width: 100%;
+  }
+  
+  /* Section header mobile adjustments */
+  .section-header h2 {
+    font-size: 1.6rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem;
   }
   
   /* Improve button layouts */
@@ -1295,6 +1554,8 @@ small.muted{font-size:0.75rem;line-height:1.3}
 .stat-trend.positive{color:#7ef0e8}
 
 /* Controls */
+.liquidity-controls{padding-bottom:16px}
+#pools.section{padding-top:16px}
 .control-grid{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap}
 .toolbar{display:flex;align-items:flex-end;gap:16px;flex:1;flex-wrap:wrap;justify-content:space-between}
 .toolbar-field{flex:1;min-width:260px}

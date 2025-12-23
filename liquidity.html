@@ -120,7 +120,7 @@
           <div class="menu-footer">
             <div>
               <div class="menu-heading">Get the app</div>
-              <p>Swap and sell crypto on 16+ networks including Ethereum, Unichain, and Base.</p>
+              <p>Swap and sell crypto on Casper Network.</p>
             </div>
             <a class="btn primary" href="/swap.html">Get app</a>
           </div>
@@ -128,9 +128,10 @@
       </div>
       <nav class="nav" aria-label="Primary navigation">
         <a href="/#swap">Swap</a>
-        <a href="/dashboard.html">Dashboard</a>
+        <a href="/dashboard.html" hidden style="display: none;">Dashboard</a>
         <a href="/launchpad.html">Launch Pad</a>
         <a href="/liquidity.html" aria-current="page">Earn</a>
+        <a href="/privacy.html">Privacy Pools</a>
         <button id="connectWallet" class="btn primary">Connect Wallet</button>
       </nav>
     </div>
@@ -158,33 +159,11 @@
             </div>
           </div>
           <div class="hero-card panel">
-            <div class="panel-header">
-              <div class="pill success">Live</div>
-              <span class="muted">Updated moments ago</span>
-            </div>
-            <div class="stat-grid tight">
-              <div class="stat-card">
-                <p class="muted">Total liquidity</p>
-                <div class="stat-value">$218.4M</div>
-                <div class="stat-trend positive">+3.4% (24h)</div>
+            <div class="panel-row" style="display: block;">
+              <p class="muted tiny">Your LP positions</p>
+              <div id="lpPositionsContainer">
+                <!-- LP positions will be populated by JavaScript -->
               </div>
-              <div class="stat-card">
-                <p class="muted">Volume (24h)</p>
-                <div class="stat-value">$42.9M</div>
-                <div class="stat-trend positive">Fees $128k</div>
-              </div>
-              <div class="stat-card">
-                <p class="muted">Active pools</p>
-                <div class="stat-value">128</div>
-                <div class="stat-trend">Across 6 chains</div>
-              </div>
-            </div>
-            <div class="panel-row">
-              <div>
-                <p class="muted tiny">Your LP positions</p>
-                <strong>No wallet connected</strong>
-              </div>
-              <button class="btn ghost">Connect wallet</button>
             </div>
           </div>
         </div>
@@ -194,12 +173,7 @@
     <section class="liquidity-controls section alt">
       <div class="container control-grid">
         <div class="pill-row">
-          <button class="pill filled">All chains</button>
-          <button class="pill">Casper</button>
-          <button class="pill">BSC</button>
-          <button class="pill">Arbitrum</button>
-          <button class="pill">Base</button>
-          <button class="pill">zkSync</button>
+          <button class="pill filled">Casper Network</button>
         </div>
         <div class="toolbar">
           <div class="toolbar-field">
@@ -360,7 +334,7 @@
             <div class="col vol" role="cell">$6.1M</div>
             <div class="col apr" role="cell">
               <div class="apr">12.2%</div>
-              <div class="muted tiny">Arbitrum · zkSync</div>
+              <div class="muted tiny">Casper Network</div>
             </div>
             <div class="col action" role="cell">
               <div class="pool-actions">
@@ -483,32 +457,7 @@
       </div>
     </section>
 
-    <section class="section alt">
-      <div class="container highlight-grid">
-        <article class="highlight-card">
-          <div class="pill subtle">Impermanent loss controls</div>
-          <h3>Fee tiers tuned for volatility</h3>
-          <p>Adaptive 0.01%–0.30% fee tiers capture more volume while cushioning LPs during volatile swings. You choose stable or
- volatile curves depending on the pair.</p>
-          <ul>
-            <li>Auto-rebalancing fee bands modeled after PancakeSwap v3</li>
-            <li>Transparent projected APRs with fee + rewards split</li>
-            <li>Boosted multipliers for partner campaigns</li>
-          </ul>
-        </article>
-        <article class="highlight-card">
-          <div class="pill subtle">Vault & staking</div>
-          <h3>Compound and restake in a click</h3>
-          <p>Send LP tokens into auto-compounding vaults or stake them into quests for extra $ECTO. All vaults show live APYs and
- fee capture so you always know the source of yield.</p>
-          <ul>
-            <li>Transparent reward timelines and unlocks</li>
-            <li>Gas-optimized restaking flows</li>
-            <li>Withdraw any time with no lockups</li>
-          </ul>
-        </article>
-      </div>
-    </section>
+
   </main>
 
   <footer class="site-footer">
