@@ -533,6 +533,11 @@ body.swap-page .site-footer{display:none}
 .roadmap{list-style:none;padding:0;margin:0}
 .roadmap li{padding:8px 0;color:var(--muted)}
 
+/**
+ * Reduce spacing between "how-it-works" and "roadmap" sections
+ */
+#roadmap.section{padding-top:24px}
+
 /* ============================================================================
    12. LAUNCHPAD COMPONENTS
    ============================================================================ */
