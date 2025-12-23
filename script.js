@@ -614,6 +614,11 @@ async function connectWalletHandler(){
       
       // Update wallet status badge
       updateWalletStatus(`Connected via ${selectedWallet}`);
+
+      // Refresh token balances after connection
+      if (typeof CasperService !== 'undefined') {
+        updateTokenBalances();
+      }
     }
   }catch(err){
     console.error('Wallet connection failed', err);
@@ -857,25 +862,24 @@ function setupSwapDemo(){
 
   /**
    * Calculate output amount when inputs or tokens change
-   * Demo calculation uses static rates per token pair
+   * Uses CasperService for real quotes when available, falls back to demo rates
    * Includes input validation and sanitization
    */
-  const updateOutputs = (source = 'from') => {
-    const rate = getRate();
+  const updateOutputs = async (source = 'from') => {
     const sellSymbol = getTokenLabel(fromToken, 'CSPR');
     const buySymbol = getTokenLabel(toToken, 'ECTO');
     const slippagePct = parseFloat(slippage?.value) || 0.5;
-    const safeRate = rate || 1;
     let val;
 
+    // Handle "to" input (reverse calculation)
     if(source === 'to'){
       const desired = parseFloat(toAmt.value) || 0;
-
       if(desired < 0){
         toAmt.value = 0;
       }
-
-      val = Math.max(0, desired) / safeRate;
+      // For now, use demo rate for reverse calculation
+      const rate = getRate();
+      val = Math.max(0, desired) / (rate || 1);
       fromAmt.value = val ? val.toFixed(6) : '';
     } else {
       val = parseFloat(fromAmt.value) || 0;
@@ -890,45 +894,81 @@ function setupSwapDemo(){
       if(val > MAX_REASONABLE_SWAP) {
         console.warn('Unusually large swap amount detected:', val);
       }
-
-      const output = val * safeRate;
-      toAmt.value = output ? output.toFixed(6) : '';
     }
 
-    // Calculate price impact (simplified: grows with swap size)
-    // In production, this should calculate actual impact based on pool depth
-    const HIGH_IMPACT_THRESHOLD = 0.1; // 10% price impact warning threshold
-    const impact = Math.min(0.5, (val/1000));
-    const impactText = (impact*100).toFixed(2) + '%';
+    // Try to get a real quote from CasperService
+    let quote = null;
+    if (typeof CasperService !== 'undefined' && val > 0) {
+      quote = await getSwapQuote();
+    }
 
-    if(priceImpactDetail){
-      priceImpactDetail.textContent = impactText;
-      // Warn user of high price impact using CSS class
-      const parentEl = priceImpactDetail.parentElement;
-      if(parentEl) {
-        if(impact > HIGH_IMPACT_THRESHOLD) {
-          parentEl.classList.add('warning');
-        } else {
-          parentEl.classList.remove('warning');
+    // Use quote data if available, otherwise fall back to demo rates
+    if (quote && quote.valid) {
+      // Update output amount from quote
+      if (source !== 'to') {
+        toAmt.value = quote.amountOut || '';
+      }
+
+      // Update price impact from real calculation
+      const HIGH_IMPACT_THRESHOLD = 10; // 10% warning threshold
+      if(priceImpactDetail){
+        priceImpactDetail.textContent = `${quote.priceImpact}%`;
+        const parentEl = priceImpactDetail.parentElement;
+        if(parentEl) {
+          parentEl.classList.toggle('warning', parseFloat(quote.priceImpact) > HIGH_IMPACT_THRESHOLD);
         }
       }
-    }
 
-    if(rateDisplay){
-      rateDisplay.textContent = `1 ${sellSymbol} ≈ ${(rate).toFixed(4)} ${buySymbol}`;
-    }
+      // Update rate display
+      if(rateDisplay){
+        rateDisplay.textContent = `1 ${sellSymbol} ≈ ${quote.rate} ${buySymbol}`;
+      }
 
-    if(orderSummary){
-      const hasValue = val > 0;
-      if(hasValue){
-        const minValue = (val * rate) * (1 - slippagePct/100);
+      // Update order summary
+      if(orderSummary){
         orderSummary.hidden = false;
-        orderSummary.textContent = `You send ${val || 0} ${sellSymbol} and will receive at least ${minValue.toFixed(6)} ${buySymbol} with ${slippagePct}% slippage.`;
-        if(minReceived) minReceived.textContent = `${minValue.toFixed(6)} ${buySymbol}`;
-      } else {
-        orderSummary.hidden = true;
-        orderSummary.textContent = '';
-        if(minReceived) minReceived.textContent = '--';
+        const demoNote = quote.demo ? ' (Demo)' : '';
+        orderSummary.textContent = `You send ${val} ${sellSymbol} and will receive at least ${quote.minReceived} ${buySymbol} with ${slippagePct}% slippage.${demoNote}`;
+        if(minReceived) minReceived.textContent = `${quote.minReceived} ${buySymbol}`;
+      }
+    } else {
+      // Fall back to demo rate calculation
+      const rate = getRate();
+      const output = val * (rate || 1);
+
+      if (source !== 'to') {
+        toAmt.value = output ? output.toFixed(6) : '';
+      }
+
+      // Demo price impact (simplified: grows with swap size)
+      const HIGH_IMPACT_THRESHOLD = 0.1;
+      const impact = Math.min(0.5, (val/1000));
+      const impactText = (impact*100).toFixed(2) + '%';
+
+      if(priceImpactDetail){
+        priceImpactDetail.textContent = impactText;
+        const parentEl = priceImpactDetail.parentElement;
+        if(parentEl) {
+          parentEl.classList.toggle('warning', impact > HIGH_IMPACT_THRESHOLD);
+        }
+      }
+
+      if(rateDisplay){
+        rateDisplay.textContent = `1 ${sellSymbol} ≈ ${(rate).toFixed(4)} ${buySymbol}`;
+      }
+
+      if(orderSummary){
+        const hasValue = val > 0;
+        if(hasValue){
+          const minValue = (val * rate) * (1 - slippagePct/100);
+          orderSummary.hidden = false;
+          orderSummary.textContent = `You send ${val || 0} ${sellSymbol} and will receive at least ${minValue.toFixed(6)} ${buySymbol} with ${slippagePct}% slippage.`;
+          if(minReceived) minReceived.textContent = `${minValue.toFixed(6)} ${buySymbol}`;
+        } else {
+          orderSummary.hidden = true;
+          orderSummary.textContent = '';
+          if(minReceived) minReceived.textContent = '--';
+        }
       }
     }
 
@@ -942,8 +982,30 @@ function setupSwapDemo(){
 
   fromAmt.addEventListener('input', () => debouncedUpdateOutputs('from'));
   toAmt.addEventListener('input', () => debouncedUpdateOutputs('to'));
-  if(fromToken) fromToken.addEventListener('change', () => updateOutputs('from'));
-  if(toToken) toToken.addEventListener('change', () => updateOutputs('from'));
+  if(fromToken) fromToken.addEventListener('change', () => {
+    updateOutputs('from');
+    // Update balance display for new token selection
+    if (window.tokenBalances) {
+      const symbol = fromToken.value?.toUpperCase();
+      const bal = window.tokenBalances[symbol];
+      const balanceEl = document.querySelector('.token-row:first-of-type .balance');
+      if (balanceEl && bal) {
+        balanceEl.textContent = `Balance: ${bal.formatted}`;
+      }
+    }
+  });
+  if(toToken) toToken.addEventListener('change', () => {
+    updateOutputs('from');
+    // Update balance display for new token selection
+    if (window.tokenBalances) {
+      const symbol = toToken.value?.toUpperCase();
+      const bal = window.tokenBalances[symbol];
+      const balanceEl = document.querySelector('.token-row:last-of-type .balance');
+      if (balanceEl && bal) {
+        balanceEl.textContent = `Balance: ${bal.formatted}`;
+      }
+    }
+  });
 
   /**
    * Validate slippage tolerance input
@@ -1173,12 +1235,159 @@ function updateWalletStatus(message){
 }
 
 /**
- * Demo swap execution
- * Placeholder for actual swap transaction
- * In production, this would sign and submit a transaction to the Casper Network
+ * Execute swap transaction
+ * Uses CasperService for real contract interactions when available,
+ * falls back to demo mode when contracts are not deployed
  */
-function demoSwap(){
-  alert('Demo swap executed (UI only). Connect CasperSigner or CSPR.CLOUD wallet to enable real swaps.');
+async function demoSwap(){
+  // Check if wallet is connected
+  if (!window.connectedAccount || !window.connectedWallet) {
+    alert('Please connect your wallet first');
+    return;
+  }
+
+  // Check if CasperService is available
+  if (typeof CasperService === 'undefined') {
+    alert('CasperService not loaded. Please refresh the page.');
+    return;
+  }
+
+  // Check if we have a valid quote
+  if (!window.currentSwapQuote || !window.currentSwapQuote.valid) {
+    alert('Please enter a valid swap amount first');
+    return;
+  }
+
+  // Check if this is a demo quote (contracts not deployed)
+  if (window.currentSwapQuote.demo) {
+    alert('Demo mode: Token contracts not yet deployed on testnet.\n\nOnce contracts are deployed and config.js is updated with token hashes, real swaps will be enabled.');
+    return;
+  }
+
+  const actionBtn = document.getElementById('swapActionBtn');
+  const originalText = actionBtn ? actionBtn.textContent : 'Swap';
+
+  try {
+    if (actionBtn) {
+      actionBtn.textContent = 'Approving...';
+      actionBtn.style.pointerEvents = 'none';
+    }
+
+    const slippage = parseFloat(document.getElementById('slippage')?.value) || 0.5;
+
+    // Execute the swap via CasperService
+    const deployHash = await CasperService.executeSwap(window.currentSwapQuote, slippage);
+
+    if (actionBtn) {
+      actionBtn.textContent = 'Confirming...';
+    }
+
+    // Wait for transaction confirmation
+    const result = await CasperService.waitForDeploy(deployHash);
+
+    if (result.success) {
+      alert(`Swap successful!\n\nTransaction hash:\n${deployHash}`);
+
+      // Refresh balances
+      await updateTokenBalances();
+
+      // Clear form
+      const fromAmt = document.getElementById('fromAmount');
+      const toAmt = document.getElementById('toAmount');
+      if (fromAmt) fromAmt.value = '';
+      if (toAmt) toAmt.value = '';
+      window.currentSwapQuote = null;
+    } else {
+      alert(`Swap failed: ${result.error}`);
+    }
+  } catch (error) {
+    console.error('Swap error:', error);
+    alert(`Swap failed: ${error.message}`);
+  } finally {
+    if (actionBtn) {
+      actionBtn.textContent = originalText;
+      actionBtn.style.pointerEvents = '';
+    }
+  }
+}
+
+/**
+ * Update token balance displays in the swap UI
+ * Fetches balances from CasperService and updates the balance labels
+ */
+async function updateTokenBalances() {
+  if (typeof CasperService === 'undefined' || !window.connectedAccount) {
+    return;
+  }
+
+  try {
+    const balances = await CasperService.getAllBalances();
+
+    // Update "from" token balance display
+    const fromToken = document.getElementById('fromToken');
+    const fromBalance = document.querySelector('.token-row:first-of-type .balance');
+    if (fromToken && fromBalance) {
+      const symbol = fromToken.value?.toUpperCase() || 'CSPR';
+      const bal = balances[symbol];
+      if (bal) {
+        fromBalance.textContent = `Balance: ${bal.formatted}`;
+      }
+    }
+
+    // Update "to" token balance display
+    const toToken = document.getElementById('toToken');
+    const toBalance = document.querySelector('.token-row:last-of-type .balance');
+    if (toToken && toBalance) {
+      const symbol = toToken.value?.toUpperCase() || 'ECTO';
+      const bal = balances[symbol];
+      if (bal) {
+        toBalance.textContent = `Balance: ${bal.formatted}`;
+      }
+    }
+
+    // Store balances globally for easy access
+    window.tokenBalances = balances;
+    console.log('Token balances updated:', balances);
+  } catch (error) {
+    console.error('Failed to update token balances:', error);
+  }
+}
+
+/**
+ * Get swap quote using CasperService
+ * Updates the UI with quote details including price impact and minimum received
+ */
+async function getSwapQuote() {
+  if (typeof CasperService === 'undefined') {
+    return null;
+  }
+
+  const fromToken = document.getElementById('fromToken');
+  const toToken = document.getElementById('toToken');
+  const fromAmt = document.getElementById('fromAmount');
+
+  if (!fromToken || !toToken || !fromAmt) {
+    return null;
+  }
+
+  const fromSymbol = fromToken.value?.toUpperCase() || 'CSPR';
+  const toSymbol = toToken.value?.toUpperCase() || 'ECTO';
+  const amount = fromAmt.value || '0';
+
+  if (parseFloat(amount) <= 0) {
+    window.currentSwapQuote = null;
+    return null;
+  }
+
+  try {
+    const quote = await CasperService.getSwapQuote(fromSymbol, toSymbol, amount);
+    window.currentSwapQuote = quote;
+    return quote;
+  } catch (error) {
+    console.error('Quote error:', error);
+    window.currentSwapQuote = null;
+    return null;
+  }
 }
 
 // ============================================================================
