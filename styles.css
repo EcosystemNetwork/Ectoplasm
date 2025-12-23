@@ -1107,7 +1107,7 @@ small.muted{font-size:0.75rem;line-height:1.3}
  * CTA card for get started section
  */
 .cta-card {
-  background: linear-gradient(135deg, var(--card) 0%, rgba(86,255,211,0.12) 100%);
+  background: linear-gradient(135deg, var(--card) 0%, var(--glass) 100%);
   padding: 40px;
   border-radius: 16px;
   border: 1px solid rgba(232,255,249,0.12);
