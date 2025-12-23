@@ -335,6 +335,35 @@ function hydrateWalletConnection() {
     // Update wallet status badge
     updateWalletStatus(`Connected via ${storedWallet}`);
   }
+  
+  // Update dashboard visibility based on connection state
+  updateDashboardVisibility();
+}
+
+/**
+ * Update dashboard link visibility based on wallet connection state
+ * 
+ * Shows the Dashboard link in navigation when user is logged in,
+ * hides it when user is not logged in.
+ * 
+ * This function looks for all dashboard links in the navigation and
+ * updates their visibility based on the current wallet connection state.
+ */
+function updateDashboardVisibility() {
+  const isConnected = !!(window.connectedWallet && window.connectedAccount);
+  
+  // Find all dashboard links in navigation
+  const dashboardLinks = document.querySelectorAll('.nav a[href="/dashboard.html"], .nav a[href="dashboard.html"]');
+  
+  dashboardLinks.forEach(link => {
+    if (isConnected) {
+      link.style.display = '';
+      link.removeAttribute('hidden');
+    } else {
+      link.style.display = 'none';
+      link.setAttribute('hidden', '');
+    }
+  });
 }
 
 /**
@@ -614,6 +643,9 @@ async function connectWalletHandler(){
       
       // Update wallet status badge
       updateWalletStatus(`Connected via ${selectedWallet}`);
+      
+      // Show dashboard link now that user is logged in
+      updateDashboardVisibility();
     }
   }catch(err){
     console.error('Wallet connection failed', err);
@@ -672,6 +704,9 @@ function disconnectWalletHandler() {
   
   // Update wallet status badge
   updateWalletStatus('Wallet disconnected');
+  
+  // Hide dashboard link now that user is logged out
+  updateDashboardVisibility();
   
   console.log('Wallet disconnected');
 }
