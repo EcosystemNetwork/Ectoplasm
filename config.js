@@ -25,6 +25,10 @@ const EctoplasmConfig = {
     factory: 'hash-b42ef2718fd368fb40564b2c655550de5f5157b9d3788463ce4a7492db100816',
     router: 'hash-344a719930ebca4c37525d5801400b24b7f007a56f3426e9a5777cd6f56faca1',
     lpToken: 'hash-16eacd913f576394fbf114f652504e960367be71b560795fb9d7cf4d5c98ea68',
+    // Trading pair contracts
+    pairs: {
+      'ECTO/USDC': 'hash-7a9d232fb79ae73ad24f2f40f76ec97757df9f40c60913477b67e912a5ac7ddf',
+    },
   },
 
   // Token Configuration
