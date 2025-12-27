@@ -1752,7 +1752,7 @@ function renderDashboard(){
   const weeklyQuests = [
     { id: 'quest-0', title: 'Clear 5 swaps with <0.5% slippage', reward: 'Badge + 200 XP', xp: 200 },
     { id: 'quest-1', title: 'Provide liquidity for 3 consecutive days', reward: 'Boosted APR day', xp: 150 },
-    { id: 'quest-2', title: 'Participate in privacy pool relay', reward: 'Shield bonus + 180 XP', xp: 180 }
+    { id: 'quest-2', title: 'Complete 10 trades across different pairs', reward: 'Trading bonus + 180 XP', xp: 180 }
   ];
 
   /**
@@ -1762,7 +1762,7 @@ function renderDashboard(){
   const rewards = [
     { id: 'reward-0', title: 'Swap fee rebate', cost: 400, detail: '5% off for 24h' },
     { id: 'reward-1', title: 'Launchpad priority slot', cost: 900, detail: 'Jump queue for next cohort' },
-    { id: 'reward-2', title: 'Privacy multiplier', cost: 700, detail: '1.2x rewards on relays for 48h' }
+    { id: 'reward-2', title: 'Trading boost', cost: 700, detail: '1.2x rewards on trades for 48h' }
   ];
 
   /**

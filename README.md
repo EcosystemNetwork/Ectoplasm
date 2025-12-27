@@ -37,7 +37,6 @@ Ectoplasm is a comprehensive DEX platform built on the Casper Network, offering 
 - **Swap Terminal**: Instant token swaps with multiple order types (swap, limit, buy, sell)
 - **Liquidity Pools**: Deep liquidity with LP rewards and impermanent loss protection
 - **Token Launchpad**: Pump.fun-style token creation with bonding curves
-- **Privacy Pools**: Optional privacy-preserving swaps with ZK technology
 - **Gamified Dashboard**: Daily quests, streaks, and XP rewards to drive user engagement
 
 This repository contains the production-ready landing page and web interface for the Ectoplasm DEX. The site is designed to be fast, accessible, and fully responsive, with native support for Casper wallet providers.
@@ -64,12 +63,6 @@ This repository contains the production-ready landing page and web interface for
 - **Auto-liquidity routing** for newly launched tokens
 - **50 mock tokens** for UI demonstration
 - **Pump.fun-inspired** creation flow with promotional budget sliders
-
-### 🔒 Privacy Features
-- **Privacy-preserving swap pools** with selective disclosure
-- **Contributor rewards** for relayers, provers, and LPs
-- **Compliance-friendly** safeguards and time-locked disclosures
-- **Community governance** over privacy parameters
 
 ### 🎮 Gamification
 - **Daily task checklists** with XP rewards
@@ -100,7 +93,6 @@ Ectoplasm/
 ├── dashboard.html      # Gamified user dashboard with quests
 ├── launchpad.html      # Token creation and launchpad library
 ├── liquidity.html      # Liquidity pools and LP rewards
-├── privacy.html        # Privacy pools and shielded swaps
 ├── swap.html           # Redirect page to main swap interface
 ├── script.js           # Core JavaScript functionality
 ├── styles.css          # Complete stylesheet with theming
@@ -153,13 +145,6 @@ LP management page featuring:
 - LP incentive programs
 - Risk control information
 - Impermanent loss protection details
-
-#### `privacy.html`
-Privacy features page featuring:
-- Privacy pool mechanics
-- Contributor reward system
-- Compliance and governance layer
-- ZK technology integration
 
 #### `script.js`
 JavaScript functionality including:
@@ -252,7 +237,6 @@ Then navigate to `http://localhost:8000` in your browser.
 2. **Dashboard** (/dashboard.html): Check daily tasks and quests
 3. **Launchpad** (/launchpad.html): Browse 50 mock tokens and launch form
 4. **Liquidity** (/liquidity.html): Learn about LP opportunities
-5. **Privacy** (/privacy.html): Explore privacy pool features
 
 ### Testing Wallet Connection
 
@@ -509,16 +493,6 @@ For detailed wallet integration, refer to:
 - Impermanent loss protection
 - Auto-compounding vaults
 - Adaptive fee tiers
-
-### Privacy (`/privacy.html`)
-**Purpose**: Privacy pool information
-
-**Content**:
-- Privacy pool mechanics
-- Contributor rewards (relayers, provers, LPs)
-- Compliance layer details
-- ZK technology integration
-- Governance parameters
 
 ---
 
