@@ -2093,52 +2093,55 @@ function formatCurrency(value){
 }
 
 /**
- * Populate mock LP positions on the liquidity page
- * Shows sample liquidity positions for demonstration purposes
+ * Populate mock liquid staking positions on the liquidity page
+ * Shows sample liquid staking positions for demonstration purposes
  */
 function populateMockLPPositions() {
   const container = document.getElementById('lpPositionsContainer');
   if (!container) return;
 
-  // Mock LP position data
+  // Mock liquid staking position data
   const mockPositions = [
     {
-      pair: 'CSPR / ECTO',
-      liquidity: '$12,450',
-      apr: '18.4%',
-      earnings: '$2,341.20',
-      boosted: true
+      asset: 'CSPR',
+      staked: '25,000 CSPR',
+      liquidToken: '25,125 stCSPR',
+      apr: '16.8%',
+      earnings: '$3,920.40',
+      autoCompound: true
     },
     {
-      pair: 'USDC / ECTO',
-      liquidity: '$8,900',
-      apr: '9.6%',
-      earnings: '$854.40',
-      boosted: false
+      asset: 'ECTO',
+      staked: '15,000 ECTO',
+      liquidToken: '15,336 stECTO',
+      apr: '22.4%',
+      earnings: '$2,688.00',
+      autoCompound: true
     },
     {
-      pair: 'ETH / ECTO',
-      liquidity: '$5,200',
-      apr: '12.2%',
-      earnings: '$634.40',
-      boosted: false
+      asset: 'ETH',
+      staked: '8.5 ETH',
+      liquidToken: '8.661 stETH',
+      apr: '18.9%',
+      earnings: '$1,606.50',
+      autoCompound: true
     }
   ];
 
-  // Create HTML for LP positions
+  // Create HTML for liquid staking positions
   let positionsHTML = '<div style="margin-top: 12px;">';
 
   mockPositions.forEach((position, index) => {
     positionsHTML += `
       <div style="padding: 12px; background: var(--surface-1, rgba(0,0,0,0.02)); border-radius: 8px; margin-bottom: ${index < mockPositions.length - 1 ? '8px' : '0'};">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-          <strong style="font-size: 14px;">${sanitizeHTML(position.pair)}</strong>
-          ${position.boosted ? '<span class="pill success subtle" style="font-size: 11px; padding: 2px 8px;">Boosted</span>' : ''}
+          <strong style="font-size: 14px;">${sanitizeHTML(position.asset)} Liquid Staking</strong>
+          ${position.autoCompound ? '<span class="pill success subtle" style="font-size: 11px; padding: 2px 8px;">Auto-compound</span>' : ''}
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 12px;">
           <div>
-            <div class="muted tiny">Liquidity</div>
-            <div style="font-weight: 500; margin-top: 2px;">${sanitizeHTML(position.liquidity)}</div>
+            <div class="muted tiny">Staked</div>
+            <div style="font-weight: 500; margin-top: 2px;">${sanitizeHTML(position.staked)}</div>
           </div>
           <div>
             <div class="muted tiny">APR</div>
@@ -2148,6 +2151,9 @@ function populateMockLPPositions() {
             <div class="muted tiny">Earned</div>
             <div style="font-weight: 500; margin-top: 2px;">${sanitizeHTML(position.earnings)}</div>
           </div>
+        </div>
+        <div style="margin-top: 6px; font-size: 11px; color: var(--muted);">
+          Liquid token: ${sanitizeHTML(position.liquidToken)}
         </div>
       </div>
     `;
