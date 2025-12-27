@@ -1,4 +1,4 @@
-# Ectoplasm 👻
+# Liquidnation 👻
 
 <div align="center">
 
@@ -32,7 +32,7 @@
 
 ## 🌟 Overview
 
-Ectoplasm is a comprehensive DEX platform built on the Casper Network, offering a complete trading ecosystem with innovative features:
+Liquidnation is a comprehensive DEX platform built on the Casper Network, offering a complete trading ecosystem with innovative features:
 
 - **Swap Terminal**: Instant token swaps with multiple order types (swap, limit, buy, sell)
 - **Liquidity Pools**: Deep liquidity with LP rewards and impermanent loss protection
@@ -40,7 +40,7 @@ Ectoplasm is a comprehensive DEX platform built on the Casper Network, offering 
 - **Privacy Pools**: Optional privacy-preserving swaps with ZK technology
 - **Gamified Dashboard**: Daily quests, streaks, and XP rewards to drive user engagement
 
-This repository contains the production-ready landing page and web interface for the Ectoplasm DEX. The site is designed to be fast, accessible, and fully responsive, with native support for Casper wallet providers.
+This repository contains the production-ready landing page and web interface for the Liquidnation DEX. The site is designed to be fast, accessible, and fully responsive, with native support for Casper wallet providers.
 
 ---
 
@@ -95,7 +95,7 @@ This repository contains the production-ready landing page and web interface for
 ## 📁 Project Structure
 
 ```
-Ectoplasm/
+Liquidnation/
 ├── index.html          # Main landing page with swap terminal
 ├── dashboard.html      # Gamified user dashboard with quests
 ├── launchpad.html      # Token creation and launchpad library
@@ -228,19 +228,19 @@ Simply open `index.html` in your web browser. Most features will work, though so
 
 **Using Python:**
 ```bash
-cd /path/to/Ectoplasm
+cd /path/to/Liquidnation
 python3 -m http.server 8000
 ```
 
 **Using Node.js:**
 ```bash
-cd /path/to/Ectoplasm
+cd /path/to/Liquidnation
 npx serve
 ```
 
 **Using PHP:**
 ```bash
-cd /path/to/Ectoplasm
+cd /path/to/Liquidnation
 php -S localhost:8000
 ```
 
@@ -276,7 +276,7 @@ To test wallet integration:
 
 1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
 2. Click **"Add New Project"**
-3. Import the `EcosystemNetwork/Ectoplasm` repository
+3. Import the `EcosystemNetwork/Liquidnation` repository
 4. Vercel auto-detects configuration from `vercel.json`
 5. Click **"Deploy"**
 6. Your site will be live at `https://[project-name].vercel.app`
@@ -358,7 +358,7 @@ Edit CSS custom properties in `styles.css`:
 ### Content Updates
 
 1. **Update Project Name:**
-   - Search and replace "Ectoplasm" in HTML files
+   - Search and replace "Liquidnation" in HTML files
    - Update `<title>` tags in each HTML file
    - Update meta descriptions
 
@@ -392,7 +392,7 @@ const CSPR_WALLET_APP_ID = 'your-app-id-here';
 
 ### Supported Wallets
 
-Ectoplasm supports three Casper wallet providers:
+Liquidnation supports three Casper wallet providers:
 
 1. **CasperWallet** - Browser extension wallet
 2. **CasperSigner** - Official Casper Labs wallet
@@ -570,7 +570,7 @@ PWA configuration for mobile installation:
 
 ## 🤝 Contributing
 
-We welcome contributions to improve Ectoplasm! Here's how you can help:
+We welcome contributions to improve Liquidnation! Here's how you can help:
 
 ### Reporting Issues
 
@@ -628,7 +628,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - [Vercel Docs](https://vercel.com/docs) - Hosting platform docs
 
 ### Community
-- **GitHub Issues**: [Report bugs or request features](https://github.com/EcosystemNetwork/Ectoplasm/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/EcosystemNetwork/Liquidnation/issues)
 - **Casper Discord**: Join the Casper community
 - **Twitter**: Follow for updates
 

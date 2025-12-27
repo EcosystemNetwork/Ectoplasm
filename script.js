@@ -1,7 +1,7 @@
 /**
- * Ectoplasm DEX - Core JavaScript Module
+ * Liquidnation DEX - Core JavaScript Module
  * 
- * This file handles all client-side interactions for the Ectoplasm DEX platform,
+ * This file handles all client-side interactions for the Liquidnation DEX platform,
  * including wallet connections, theme management, swap calculations, and UI interactions.
  * 
  * Features:
