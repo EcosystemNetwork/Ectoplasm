@@ -1212,6 +1212,15 @@ function setupPopouts(){
     .map((btn) => ({btn, popout: document.getElementById(btn.dataset.popoutTarget)}))
     .filter((entry) => entry.popout); // Only include entries with valid popouts
 
+  // Create backdrop overlay for centered pool popouts (only created once on first call)
+  let backdrop = document.getElementById('popout-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.id = 'popout-backdrop';
+    backdrop.className = 'pool-popout-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
   /**
    * Close all open popovers
    */
@@ -1220,6 +1229,7 @@ function setupPopouts(){
       popout.setAttribute('hidden', '');
       btn.setAttribute('aria-expanded', 'false');
     });
+    backdrop.style.display = 'none';
   };
 
   // Setup each popout trigger
@@ -1234,6 +1244,10 @@ function setupPopouts(){
         // Open this popout
         popout.removeAttribute('hidden');
         btn.setAttribute('aria-expanded', 'true');
+        // Show backdrop for pool popouts
+        if (popout.classList.contains('pool-popout')) {
+          backdrop.style.display = 'block';
+        }
         // Focus first interactive element for keyboard users
         const focusable = popout.querySelector('button, [href], input, select, textarea');
         if(focusable) focusable.focus();
@@ -1247,8 +1261,9 @@ function setupPopouts(){
     popout.querySelectorAll('[data-popout-close]').forEach((closeBtn) => closeBtn.addEventListener('click', closeAll));
   });
 
-  // Close all popovers when clicking outside
+  // Close all popovers when clicking outside or on backdrop
   document.addEventListener('click', closeAll);
+  backdrop.addEventListener('click', closeAll);
   
   // Close all popovers on Escape key
   document.addEventListener('keydown', (e) => {
