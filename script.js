@@ -1214,7 +1214,7 @@ function setupPopouts(){
 
   // Create backdrop overlay for centered pool popouts
   let backdrop = document.getElementById('popout-backdrop');
-  if(!backdrop){
+  if (!backdrop) {
     backdrop = document.createElement('div');
     backdrop.id = 'popout-backdrop';
     backdrop.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:999;display:none;';
@@ -1245,7 +1245,7 @@ function setupPopouts(){
         popout.removeAttribute('hidden');
         btn.setAttribute('aria-expanded', 'true');
         // Show backdrop for pool popouts
-        if(popout.classList.contains('pool-popout')){
+        if (popout.classList.contains('pool-popout')) {
           backdrop.style.display = 'block';
         }
         // Focus first interactive element for keyboard users
