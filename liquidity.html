@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ectoplasm — Liquidity</title>
+  <title>Ectoplasm — Earn</title>
 
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
@@ -70,7 +70,7 @@
               <div class="menu-heading">Use for</div>
               <ul class="menu-list">
                 <li><a href="/#swap">Swap crypto</a></li>
-                <li><a href="/liquidity.html">Provide liquidity</a></li>
+                <li><a href="/liquidity.html">Liquid staking</a></li>
                 <li><a href="/launchpad.html">Launch tokens</a></li>
                 <li><a href="/dashboard.html">Track positions</a></li>
               </ul>
@@ -142,27 +142,26 @@
       <div class="container">
         <div class="hero-grid hero-balanced">
           <div class="hero-copy">
-            <p class="eyebrow">Earn · Liquidity</p>
-            <h1>Provide liquidity to earn fees and boosted rewards</h1>
-            <p class="lead">Pair $ECTO with stablecoins, Casper ecosystem tokens, and blue-chips. LPs earn a share of trading fees
- and can opt into boosted programs for deeper rewards.</p>
+            <p class="eyebrow">Earn · Liquid Staking</p>
+            <h1>Earn rewards through liquid staking pools</h1>
+            <p class="lead">Stake your assets to earn rewards while providing liquidity for our swaps. Receive liquid staking tokens (LSTs) that represent your staked position and can be traded or used across DeFi. Your staked assets power our DEX liquidity, enabling seamless swaps while you earn auto-compounding rewards.</p>
             <div class="hero-actions">
               <div class="hero-buttons">
-                <a href="#pools" class="btn primary large">Explore pools</a>
-                <a href="/swap.html" class="btn ghost large">Add liquidity</a>
+                <a href="#pools" class="btn primary large">View Pools</a>
+                <a href="/swap.html" class="btn ghost large">Learn more</a>
               </div>
               <div class="hero-chips">
-                <span class="chip active">Auto-compound eligible</span>
-                <span class="chip">Boosted APR tags</span>
-                <span class="chip">Stable & volatile pairs</span>
+                <span class="chip active">Powers DEX liquidity</span>
+                <span class="chip">Auto-compounding</span>
+                <span class="chip">LST tokens</span>
               </div>
             </div>
           </div>
           <div class="hero-card panel">
             <div class="panel-row" style="display: block;">
-              <p class="muted tiny">Your LP positions</p>
+              <p class="muted tiny">Your Liquid Staking Positions</p>
               <div id="lpPositionsContainer">
-                <!-- LP positions will be populated by JavaScript -->
+                <!-- Liquid staking positions will be populated by JavaScript -->
               </div>
             </div>
           </div>
@@ -173,30 +172,30 @@
     <section class="liquidity-controls section alt">
       <div class="container control-grid">
         <div class="pill-row">
-          <button class="pill filled">Casper Network</button>
+          <button class="pill filled">Liquid Staking Pools</button>
         </div>
         <div class="toolbar">
           <div class="toolbar-field">
             <label class="muted" for="poolSearch">Search</label>
             <div class="input shell">
-              <input id="poolSearch" type="search" placeholder="Search pools or tokens" />
+              <input id="poolSearch" type="search" placeholder="Search staking pools or tokens" />
               <span class="suffix muted">⌘K</span>
             </div>
           </div>
           <div class="toolbar-filters">
             <label class="toggle">
               <input type="checkbox" checked />
-              <span>Show boosted</span>
+              <span>Auto-compound</span>
             </label>
             <label class="toggle">
               <input type="checkbox" />
-              <span>Stable pairs</span>
+              <span>High APR</span>
             </label>
             <div class="select">
               <select aria-label="Sort pools">
                 <option>Sort by APR</option>
                 <option>Sort by TVL</option>
-                <option>Sort by Volume 24h</option>
+                <option>Sort by Min. stake</option>
               </select>
             </div>
           </div>
@@ -208,23 +207,23 @@
       <div class="container">
         <div class="section-header">
           <div>
-            <p class="eyebrow">Live pools</p>
-            <h2>Auto-fee pools with transparent rewards</h2>
-            <p class="muted">Inspired by PancakeSwap's Liquidity interface, optimized for Casper-native routing.</p>
+            <p class="eyebrow">Liquid Staking Pools</p>
+            <h2>Stake assets to power swap liquidity and earn rewards</h2>
+            <p class="muted">These liquid staking pools provide the liquidity backbone for our DEX swaps. When you stake, you receive LST tokens representing your position while your assets enable seamless trading.</p>
           </div>
           <div class="pill-row tight">
-            <span class="pill subtle">APR includes fees</span>
-            <span class="pill subtle">Boosted pools highlighted</span>
-            <span class="pill subtle">Fees auto-compound</span>
+            <span class="pill subtle">Powers swap liquidity</span>
+            <span class="pill subtle">Auto-compounding rewards</span>
+            <span class="pill subtle">Tradeable LST tokens</span>
           </div>
         </div>
 
-        <div class="pool-table" role="table" aria-label="Liquidity pools">
+        <div class="pool-table" role="table" aria-label="Liquid staking pools">
           <div class="pool-row pool-head" role="row">
-            <div class="col pair" role="columnheader">Pool</div>
-            <div class="col fee" role="columnheader">Fee tier</div>
+            <div class="col pair" role="columnheader">Staking Pool</div>
+            <div class="col fee" role="columnheader">Token</div>
             <div class="col tvl" role="columnheader">TVL</div>
-            <div class="col vol" role="columnheader">Volume (24h)</div>
+            <div class="col vol" role="columnheader">Min. Stake</div>
             <div class="col apr" role="columnheader">APR</div>
             <div class="col action" role="columnheader">Action</div>
           </div>
@@ -232,43 +231,60 @@
           <div class="pool-row" role="row">
             <div class="col pair" role="cell">
               <div class="pair-label">
-                <div class="avatar">E</div>
+                <div class="avatar">◈</div>
                 <div>
-                  <strong>CSPR / ECTO</strong>
-                  <div class="muted tiny">Smart routing · Volatile</div>
+                  <strong>CSPR Liquid Staking</strong>
+                  <div class="muted tiny">Auto-compound · No lock</div>
                 </div>
               </div>
             </div>
-            <div class="col fee" role="cell"><span class="pill subtle">0.25%</span></div>
-            <div class="col tvl" role="cell">$62.4M</div>
-            <div class="col vol" role="cell">$13.8M</div>
+            <div class="col fee" role="cell"><span class="pill subtle">stCSPR</span></div>
+            <div class="col tvl" role="cell">$125.8M</div>
+            <div class="col vol" role="cell">100 CSPR</div>
             <div class="col apr" role="cell">
-              <div class="apr">18.4% <span class="pill success subtle">Boosted</span></div>
-              <div class="muted tiny">Fees + ECTO rewards</div>
+              <div class="apr">16.8% <span class="pill success subtle">Live</span></div>
+              <div class="muted tiny">Daily rewards</div>
             </div>
             <div class="col action" role="cell">
-              <div class="pool-actions">
-                <button class="btn primary small">Add liquidity</button>
-                <button class="btn-manage" data-popout-target="poolMenu1" aria-haspopup="menu" aria-expanded="false" aria-label="Manage CSPR/ECTO pool">⋯</button>
-              </div>
+              <button class="btn primary small" data-popout-target="poolMenu1" aria-haspopup="dialog" aria-expanded="false">View Pool</button>
               <div class="pool-popout popout" id="poolMenu1" hidden>
                 <div class="popout-header">
-                  <strong>Manage CSPR/ECTO</strong>
+                  <strong>CSPR Liquid Staking Pool</strong>
                   <button class="btn ghost tiny" data-popout-close aria-label="Close">✕</button>
                 </div>
-                <div class="pool-menu-list">
-                  <button class="pool-menu-item">
-                    <span>➕ Add liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>➖ Remove liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📊 View pool details</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📈 View analytics</span>
-                  </button>
+                <div class="pool-menu-list" style="padding: 16px;">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Total Value Locked</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px;">$125.8M</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">APR</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px; color: var(--success, #22c55e);">16.8%</div>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Min. Stake</div>
+                      <div style="font-weight: 500; margin-top: 4px;">100 CSPR</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">LST Token</div>
+                      <div style="font-weight: 500; margin-top: 4px;">stCSPR</div>
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 12px;">
+                    <div class="muted tiny">Liquidity Provided to DEX</div>
+                    <div style="font-weight: 500; margin-top: 4px;">$98.2M (78% utilized)</div>
+                  </div>
+                  <div style="padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div class="muted tiny" style="margin-bottom: 8px;">Pool Features</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <span class="pill subtle">Auto-compound</span>
+                      <span class="pill subtle">No lock</span>
+                      <span class="pill success subtle">Live</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -277,43 +293,60 @@
           <div class="pool-row" role="row">
             <div class="col pair" role="cell">
               <div class="pair-label">
-                <div class="avatar alt">$</div>
+                <div class="avatar alt">E</div>
                 <div>
-                  <strong>USDC / ECTO</strong>
-                  <div class="muted tiny">Stable pair · Low slip</div>
+                  <strong>ECTO Liquid Staking</strong>
+                  <div class="muted tiny">Boosted rewards · Flexible</div>
                 </div>
               </div>
             </div>
-            <div class="col fee" role="cell"><span class="pill subtle">0.01%</span></div>
-            <div class="col tvl" role="cell">$48.1M</div>
-            <div class="col vol" role="cell">$9.2M</div>
+            <div class="col fee" role="cell"><span class="pill subtle">stECTO</span></div>
+            <div class="col tvl" role="cell">$78.4M</div>
+            <div class="col vol" role="cell">50 ECTO</div>
             <div class="col apr" role="cell">
-              <div class="apr">9.6%</div>
-              <div class="muted tiny">Fees auto-compound</div>
+              <div class="apr">22.4% <span class="pill success subtle">Boosted</span></div>
+              <div class="muted tiny">ECTO rewards + fees</div>
             </div>
             <div class="col action" role="cell">
-              <div class="pool-actions">
-                <button class="btn ghost small">View pool</button>
-                <button class="btn-manage" data-popout-target="poolMenu2" aria-haspopup="menu" aria-expanded="false" aria-label="Manage USDC/ECTO pool">⋯</button>
-              </div>
+              <button class="btn primary small" data-popout-target="poolMenu2" aria-haspopup="dialog" aria-expanded="false">View Pool</button>
               <div class="pool-popout popout" id="poolMenu2" hidden>
                 <div class="popout-header">
-                  <strong>Manage USDC/ECTO</strong>
+                  <strong>ECTO Liquid Staking Pool</strong>
                   <button class="btn ghost tiny" data-popout-close aria-label="Close">✕</button>
                 </div>
-                <div class="pool-menu-list">
-                  <button class="pool-menu-item">
-                    <span>➕ Add liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>➖ Remove liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📊 View pool details</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📈 View analytics</span>
-                  </button>
+                <div class="pool-menu-list" style="padding: 16px;">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Total Value Locked</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px;">$78.4M</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">APR</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px; color: var(--success, #22c55e);">22.4%</div>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Min. Stake</div>
+                      <div style="font-weight: 500; margin-top: 4px;">50 ECTO</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">LST Token</div>
+                      <div style="font-weight: 500; margin-top: 4px;">stECTO</div>
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 12px;">
+                    <div class="muted tiny">Liquidity Provided to DEX</div>
+                    <div style="font-weight: 500; margin-top: 4px;">$65.1M (83% utilized)</div>
+                  </div>
+                  <div style="padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div class="muted tiny" style="margin-bottom: 8px;">Pool Features</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <span class="pill subtle">Boosted rewards</span>
+                      <span class="pill subtle">Flexible</span>
+                      <span class="pill success subtle">Boosted</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -324,41 +357,57 @@
               <div class="pair-label">
                 <div class="avatar blue">Ξ</div>
                 <div>
-                  <strong>ETH / ECTO</strong>
-                  <div class="muted tiny">Cross-chain routing</div>
+                  <strong>ETH Liquid Staking</strong>
+                  <div class="muted tiny">Cross-chain · High yield</div>
                 </div>
               </div>
             </div>
-            <div class="col fee" role="cell"><span class="pill subtle">0.15%</span></div>
-            <div class="col tvl" role="cell">$32.7M</div>
-            <div class="col vol" role="cell">$6.1M</div>
+            <div class="col fee" role="cell"><span class="pill subtle">stETH</span></div>
+            <div class="col tvl" role="cell">$92.1M</div>
+            <div class="col vol" role="cell">0.1 ETH</div>
             <div class="col apr" role="cell">
-              <div class="apr">12.2%</div>
-              <div class="muted tiny">Casper Network</div>
+              <div class="apr">18.9%</div>
+              <div class="muted tiny">Ethereum rewards</div>
             </div>
             <div class="col action" role="cell">
-              <div class="pool-actions">
-                <button class="btn primary small">Add liquidity</button>
-                <button class="btn-manage" data-popout-target="poolMenu3" aria-haspopup="menu" aria-expanded="false" aria-label="Manage ETH/ECTO pool">⋯</button>
-              </div>
+              <button class="btn primary small" data-popout-target="poolMenu3" aria-haspopup="dialog" aria-expanded="false">View Pool</button>
               <div class="pool-popout popout" id="poolMenu3" hidden>
                 <div class="popout-header">
-                  <strong>Manage ETH/ECTO</strong>
+                  <strong>ETH Liquid Staking Pool</strong>
                   <button class="btn ghost tiny" data-popout-close aria-label="Close">✕</button>
                 </div>
-                <div class="pool-menu-list">
-                  <button class="pool-menu-item">
-                    <span>➕ Add liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>➖ Remove liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📊 View pool details</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📈 View analytics</span>
-                  </button>
+                <div class="pool-menu-list" style="padding: 16px;">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Total Value Locked</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px;">$92.1M</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">APR</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px; color: var(--success, #22c55e);">18.9%</div>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Min. Stake</div>
+                      <div style="font-weight: 500; margin-top: 4px;">0.1 ETH</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">LST Token</div>
+                      <div style="font-weight: 500; margin-top: 4px;">stETH</div>
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 12px;">
+                    <div class="muted tiny">Liquidity Provided to DEX</div>
+                    <div style="font-weight: 500; margin-top: 4px;">$74.3M (81% utilized)</div>
+                  </div>
+                  <div style="padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div class="muted tiny" style="margin-bottom: 8px;">Pool Features</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <span class="pill subtle">Cross-chain</span>
+                      <span class="pill subtle">High yield</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -369,41 +418,57 @@
               <div class="pair-label">
                 <div class="avatar gold">B</div>
                 <div>
-                  <strong>BTC.b / ECTO</strong>
-                  <div class="muted tiny">Volatile · Dynamic fee</div>
+                  <strong>BTC Liquid Staking</strong>
+                  <div class="muted tiny">Bitcoin rewards · Secure</div>
                 </div>
               </div>
             </div>
-            <div class="col fee" role="cell"><span class="pill subtle">0.30%</span></div>
-            <div class="col tvl" role="cell">$21.5M</div>
-            <div class="col vol" role="cell">$5.8M</div>
+            <div class="col fee" role="cell"><span class="pill subtle">stBTC</span></div>
+            <div class="col tvl" role="cell">$156.3M</div>
+            <div class="col vol" role="cell">0.01 BTC</div>
             <div class="col apr" role="cell">
-              <div class="apr">15.1%</div>
-              <div class="muted tiny">Boosts available</div>
+              <div class="apr">12.4%</div>
+              <div class="muted tiny">BTC yield</div>
             </div>
             <div class="col action" role="cell">
-              <div class="pool-actions">
-                <button class="btn ghost small">View pool</button>
-                <button class="btn-manage" data-popout-target="poolMenu4" aria-haspopup="menu" aria-expanded="false" aria-label="Manage BTC.b/ECTO pool">⋯</button>
-              </div>
+              <button class="btn primary small" data-popout-target="poolMenu4" aria-haspopup="dialog" aria-expanded="false">View Pool</button>
               <div class="pool-popout popout" id="poolMenu4" hidden>
                 <div class="popout-header">
-                  <strong>Manage BTC.b/ECTO</strong>
+                  <strong>BTC Liquid Staking Pool</strong>
                   <button class="btn ghost tiny" data-popout-close aria-label="Close">✕</button>
                 </div>
-                <div class="pool-menu-list">
-                  <button class="pool-menu-item">
-                    <span>➕ Add liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>➖ Remove liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📊 View pool details</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📈 View analytics</span>
-                  </button>
+                <div class="pool-menu-list" style="padding: 16px;">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Total Value Locked</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px;">$156.3M</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">APR</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px; color: var(--success, #22c55e);">12.4%</div>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Min. Stake</div>
+                      <div style="font-weight: 500; margin-top: 4px;">0.01 BTC</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">LST Token</div>
+                      <div style="font-weight: 500; margin-top: 4px;">stBTC</div>
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 12px;">
+                    <div class="muted tiny">Liquidity Provided to DEX</div>
+                    <div style="font-weight: 500; margin-top: 4px;">$128.7M (82% utilized)</div>
+                  </div>
+                  <div style="padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div class="muted tiny" style="margin-bottom: 8px;">Pool Features</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <span class="pill subtle">Bitcoin rewards</span>
+                      <span class="pill subtle">Secure</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -412,43 +477,59 @@
           <div class="pool-row" role="row">
             <div class="col pair" role="cell">
               <div class="pair-label">
-                <div class="avatar violet">Δ</div>
+                <div class="avatar violet">$</div>
                 <div>
-                  <strong>DAI / ECTO</strong>
-                  <div class="muted tiny">Stable pair · Protected</div>
+                  <strong>Stablecoin Yield Pool</strong>
+                  <div class="muted tiny">Low risk · Stable returns</div>
                 </div>
               </div>
             </div>
-            <div class="col fee" role="cell"><span class="pill subtle">0.05%</span></div>
-            <div class="col tvl" role="cell">$18.3M</div>
-            <div class="col vol" role="cell">$4.9M</div>
+            <div class="col fee" role="cell"><span class="pill subtle">ystUSD</span></div>
+            <div class="col tvl" role="cell">$64.7M</div>
+            <div class="col vol" role="cell">100 USD</div>
             <div class="col apr" role="cell">
-              <div class="apr">8.4%</div>
-              <div class="muted tiny">Stable routing</div>
+              <div class="apr">8.2%</div>
+              <div class="muted tiny">Stable yield</div>
             </div>
             <div class="col action" role="cell">
-              <div class="pool-actions">
-                <button class="btn primary small">Add liquidity</button>
-                <button class="btn-manage" data-popout-target="poolMenu5" aria-haspopup="menu" aria-expanded="false" aria-label="Manage DAI/ECTO pool">⋯</button>
-              </div>
+              <button class="btn primary small" data-popout-target="poolMenu5" aria-haspopup="dialog" aria-expanded="false">View Pool</button>
               <div class="pool-popout popout" id="poolMenu5" hidden>
                 <div class="popout-header">
-                  <strong>Manage DAI/ECTO</strong>
+                  <strong>Stablecoin Yield Pool</strong>
                   <button class="btn ghost tiny" data-popout-close aria-label="Close">✕</button>
                 </div>
-                <div class="pool-menu-list">
-                  <button class="pool-menu-item">
-                    <span>➕ Add liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>➖ Remove liquidity</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📊 View pool details</span>
-                  </button>
-                  <button class="pool-menu-item">
-                    <span>📈 View analytics</span>
-                  </button>
+                <div class="pool-menu-list" style="padding: 16px;">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Total Value Locked</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px;">$64.7M</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">APR</div>
+                      <div style="font-weight: 600; font-size: 18px; margin-top: 4px; color: var(--success, #22c55e);">8.2%</div>
+                    </div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px;">
+                    <div>
+                      <div class="muted tiny">Min. Stake</div>
+                      <div style="font-weight: 500; margin-top: 4px;">100 USD</div>
+                    </div>
+                    <div>
+                      <div class="muted tiny">LST Token</div>
+                      <div style="font-weight: 500; margin-top: 4px;">ystUSD</div>
+                    </div>
+                  </div>
+                  <div style="margin-bottom: 12px;">
+                    <div class="muted tiny">Liquidity Provided to DEX</div>
+                    <div style="font-weight: 500; margin-top: 4px;">$52.9M (82% utilized)</div>
+                  </div>
+                  <div style="padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <div class="muted tiny" style="margin-bottom: 8px;">Pool Features</div>
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <span class="pill subtle">Low risk</span>
+                      <span class="pill subtle">Stable returns</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
