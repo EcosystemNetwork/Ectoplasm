@@ -1217,7 +1217,7 @@ function setupPopouts(){
   if (!backdrop) {
     backdrop = document.createElement('div');
     backdrop.id = 'popout-backdrop';
-    backdrop.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:999;display:none;';
+    backdrop.className = 'pool-popout-backdrop';
     document.body.appendChild(backdrop);
   }
 
