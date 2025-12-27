@@ -1212,7 +1212,7 @@ function setupPopouts(){
     .map((btn) => ({btn, popout: document.getElementById(btn.dataset.popoutTarget)}))
     .filter((entry) => entry.popout); // Only include entries with valid popouts
 
-  // Create backdrop overlay for centered pool popouts
+  // Create backdrop overlay for centered pool popouts (only created once on first call)
   let backdrop = document.getElementById('popout-backdrop');
   if (!backdrop) {
     backdrop = document.createElement('div');
