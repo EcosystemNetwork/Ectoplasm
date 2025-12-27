@@ -1,6 +1,6 @@
 # Deployment Guide
 
-This guide walks you through deploying the Ectoplasm landing page to Vercel.
+This guide walks you through deploying the Liquidnation landing page to Vercel.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ This guide walks you through deploying the Ectoplasm landing page to Vercel.
 
 1. Click the **"Add New Project"** button
 2. Select **"Import Git Repository"**
-3. Find and select the `EcosystemNetwork/Ectoplasm` repository
+3. Find and select the `EcosystemNetwork/Liquidnation` repository
 4. Click **"Import"**
 
 ### Step 3: Configure Project
@@ -41,7 +41,7 @@ Vercel will automatically detect the project settings from `vercel.json`. You sh
 ### Step 5: Custom Domain (Optional)
 
 1. Go to Project Settings → Domains
-2. Add your custom domain (e.g., `ectoplasm.casper.network`)
+2. Add your custom domain (e.g., `liquidnation.casper.network`)
 3. Follow Vercel's instructions to configure DNS
 
 ## Method 2: Deploy via Vercel CLI
@@ -83,7 +83,7 @@ The CLI will ask you:
 - Set up and deploy? **Y**
 - Which scope? Select your account
 - Link to existing project? **N** (first time) or **Y** (if project exists)
-- What's your project's name? `ectoplasm` (or your choice)
+- What's your project's name? `liquidnation` (or your choice)
 - In which directory is your code located? `./` (press Enter)
 
 ## Post-Deployment
@@ -161,7 +161,7 @@ After deployment, you should:
 
 - Vercel Documentation: https://vercel.com/docs
 - Casper Network Docs: https://docs.casper.network
-- GitHub Issues: https://github.com/EcosystemNetwork/Ectoplasm/issues
+- GitHub Issues: https://github.com/EcosystemNetwork/Liquidnation/issues
 
 ## Security
 

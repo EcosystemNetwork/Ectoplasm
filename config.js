@@ -1,8 +1,8 @@
 /**
- * Ectoplasm DEX Configuration
+ * Liquidnation DEX Configuration
  * Contract addresses and network settings for Casper Network integration
  */
-const EctoplasmConfig = {
+const LiquidnationConfig = {
   // Network Configuration
   networks: {
     testnet: {
@@ -45,9 +45,9 @@ const EctoplasmConfig = {
     },
     ECTO: {
       hash: 'hash-fb7c662bca66d1a32018ac6529b4ee588cf13178370ae5b59f979ae6e5e96029',
-      symbol: 'ECTO',
+      symbol: 'LIQN',
       decimals: 18,
-      name: 'Ectoplasm Token',
+      name: 'Liquidnation Token',
       icon: null
     },
     USDC: {
@@ -111,15 +111,15 @@ const EctoplasmConfig = {
 };
 
 // Freeze config objects to prevent accidental modification
-Object.freeze(EctoplasmConfig.networks);
-Object.freeze(EctoplasmConfig.networks.testnet);
-Object.freeze(EctoplasmConfig.networks.mainnet);
-Object.freeze(EctoplasmConfig.contracts);
-Object.freeze(EctoplasmConfig.swap);
-Object.freeze(EctoplasmConfig.gasLimits);
+Object.freeze(LiquidnationConfig.networks);
+Object.freeze(LiquidnationConfig.networks.testnet);
+Object.freeze(LiquidnationConfig.networks.mainnet);
+Object.freeze(LiquidnationConfig.contracts);
+Object.freeze(LiquidnationConfig.swap);
+Object.freeze(LiquidnationConfig.gasLimits);
 // Note: tokens not frozen so hashes can be updated after deployment
 
 // Export for module systems if available
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = EctoplasmConfig;
+  module.exports = LiquidnationConfig;
 }

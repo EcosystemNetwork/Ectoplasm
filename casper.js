@@ -1,5 +1,5 @@
 /**
- * CasperService - Blockchain interaction module for Ectoplasm DEX
+ * CasperService - Blockchain interaction module for Liquidnation DEX
  * Handles all Casper Network interactions including:
  * - Token balance queries (CEP-18)
  * - Pair reserves queries
@@ -16,7 +16,7 @@ const CasperService = {
   init() {
     if (this.initialized) return;
 
-    const network = EctoplasmConfig.getNetwork();
+    const network = LiquidnationConfig.getNetwork();
 
     // Check if casper-js-sdk is loaded
     if (typeof CasperClient === 'undefined') {
@@ -83,7 +83,7 @@ const CasperService = {
 
       // Parse U256 from CLValue
       const balance = BigInt(result.CLValue?.data?.toString() || '0');
-      const tokenConfig = EctoplasmConfig.getTokenByHash(tokenHash);
+      const tokenConfig = LiquidnationConfig.getTokenByHash(tokenHash);
       const decimals = tokenConfig?.decimals || 18;
 
       return {
@@ -136,7 +136,7 @@ const CasperService = {
     }
 
     const balances = {};
-    const tokens = EctoplasmConfig.tokens;
+    const tokens = LiquidnationConfig.tokens;
 
     // Fetch all CEP-18 token balances in parallel
     const tokenPromises = Object.entries(tokens)
@@ -176,7 +176,7 @@ const CasperService = {
     this.ensureInit();
 
     try {
-      const factoryHash = EctoplasmConfig.contracts.factory;
+      const factoryHash = LiquidnationConfig.contracts.factory;
       const stateRootHash = await this.client.nodeClient.getStateRootHash();
 
       // Factory stores pairs in a mapping: (token0, token1) -> pair_address
@@ -321,8 +321,8 @@ const CasperService = {
    * @returns {Promise<SwapQuote>}
    */
   async getSwapQuote(tokenInSymbol, tokenOutSymbol, amountIn) {
-    const tokenIn = EctoplasmConfig.getToken(tokenInSymbol);
-    const tokenOut = EctoplasmConfig.getToken(tokenOutSymbol);
+    const tokenIn = LiquidnationConfig.getToken(tokenInSymbol);
+    const tokenOut = LiquidnationConfig.getToken(tokenOutSymbol);
 
     if (!tokenIn || !tokenOut) {
       return {
@@ -373,7 +373,7 @@ const CasperService = {
       const rate = Number(amountOutRaw) / Number(amountInRaw) * decimalAdjust;
 
       // Calculate minimum received with slippage
-      const slippage = EctoplasmConfig.swap.defaultSlippage / 100;
+      const slippage = LiquidnationConfig.swap.defaultSlippage / 100;
       const minReceivedRaw = amountOutRaw * BigInt(Math.floor((1 - slippage) * 10000)) / BigInt(10000);
 
       return {
@@ -425,10 +425,10 @@ const CasperService = {
     const amountInNum = parseFloat(amountIn) || 0;
     const amountOutNum = amountInNum * rate;
 
-    const tokenIn = EctoplasmConfig.getToken(tokenInSymbol);
-    const tokenOut = EctoplasmConfig.getToken(tokenOutSymbol);
+    const tokenIn = LiquidnationConfig.getToken(tokenInSymbol);
+    const tokenOut = LiquidnationConfig.getToken(tokenOutSymbol);
 
-    const slippage = EctoplasmConfig.swap.defaultSlippage / 100;
+    const slippage = LiquidnationConfig.swap.defaultSlippage / 100;
     const minReceivedNum = amountOutNum * (1 - slippage);
 
     return {
@@ -463,7 +463,7 @@ const CasperService = {
 
     try {
       const accountHash = CLPublicKey.fromHex(ownerPublicKey).toAccountHashStr();
-      const routerHash = EctoplasmConfig.contracts.router;
+      const routerHash = LiquidnationConfig.contracts.router;
 
       const stateRootHash = await this.client.nodeClient.getStateRootHash();
       const ownerKey = accountHash.replace('account-hash-', '');
@@ -500,9 +500,9 @@ const CasperService = {
     }
 
     const publicKey = CLPublicKey.fromHex(window.connectedAccount);
-    const routerHash = EctoplasmConfig.contracts.router;
-    const gasLimit = EctoplasmConfig.gasLimits.approve;
-    const network = EctoplasmConfig.getNetwork();
+    const routerHash = LiquidnationConfig.contracts.router;
+    const gasLimit = LiquidnationConfig.gasLimits.approve;
+    const network = LiquidnationConfig.getNetwork();
 
     // Build deploy arguments for CEP-18 approve
     const args = RuntimeArgs.fromMap({
@@ -545,7 +545,7 @@ const CasperService = {
    * @param {number} slippagePercent - Slippage tolerance
    * @returns {Promise<string>} Deploy hash
    */
-  async executeSwap(quote, slippagePercent = EctoplasmConfig.swap.defaultSlippage) {
+  async executeSwap(quote, slippagePercent = LiquidnationConfig.swap.defaultSlippage) {
     this.ensureInit();
 
     if (!window.connectedAccount || !window.connectedWallet) {
@@ -581,12 +581,12 @@ const CasperService = {
 
     // Step 2: Build swap transaction
     const publicKey = CLPublicKey.fromHex(window.connectedAccount);
-    const routerHash = EctoplasmConfig.contracts.router;
-    const gasLimit = EctoplasmConfig.gasLimits.swap;
-    const network = EctoplasmConfig.getNetwork();
+    const routerHash = LiquidnationConfig.contracts.router;
+    const gasLimit = LiquidnationConfig.gasLimits.swap;
+    const network = LiquidnationConfig.getNetwork();
 
     // Calculate deadline (current time + configured minutes)
-    const deadline = Date.now() + (EctoplasmConfig.swap.deadlineMinutes * 60 * 1000);
+    const deadline = Date.now() + (LiquidnationConfig.swap.deadlineMinutes * 60 * 1000);
 
     // Calculate minimum output with slippage
     const slippageMultiplier = BigInt(Math.floor((1 - slippagePercent / 100) * 10000));

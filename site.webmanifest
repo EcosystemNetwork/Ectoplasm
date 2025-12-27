@@ -1,6 +1,6 @@
 {
-  "name": "Ectoplasm DEX",
-  "short_name": "Ectoplasm",
+  "name": "Liquidnation DEX",
+  "short_name": "Liquidnation",
   "description": "Fast, secure decentralized exchange on Casper Network",
   "start_url": "/",
   "display": "standalone",

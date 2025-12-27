@@ -109,7 +109,7 @@ Ectoplasm/
 ├── DEPLOYMENT.md       # Detailed deployment guide
 ├── README.md           # This file
 ├── assets/             # Static assets (images, icons)
-│   ├── electoplasmlogo.png
+│   ├── elliquidnationlogo.png
 │   ├── favicon.ico
 │   ├── og-image.png
 │   └── ...
@@ -323,7 +323,7 @@ For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 1. **Replace Logo and Favicon:**
    ```
-   assets/electoplasmlogo.png  → Your logo (38×38px recommended)
+   assets/elliquidnationlogo.png  → Your logo (38×38px recommended)
    assets/favicon.ico          → Your favicon (32×32px)
    assets/apple-touch-icon.ico → iOS icon (180×180px)
    ```
@@ -634,7 +634,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### Contact
 - **Email**: support@ecosystemnetwork.io (example)
-- **Website**: https://ectoplasm.casper.network (example)
+- **Website**: https://liquidnation.casper.network (example)
 
 ---
 
@@ -652,7 +652,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **Built with ♥️ for the Casper Network ecosystem**
 
-[Website](https://ectoplasm.casper.network) • [Twitter](https://twitter.com/ectoplasm) • [Discord](https://discord.gg/casper)
+[Website](https://liquidnation.casper.network) • [Twitter](https://twitter.com/liquidnation) • [Discord](https://discord.gg/casper)
 
 © 2025 EcosystemNetwork • Open Source • MIT License
 

@@ -293,7 +293,7 @@ window.addEventListener('beforeunload', () => {
  * Called on page load to restore the user's theme choice
  */
 function hydrateTheme(){
-  const stored = localStorage.getItem('ectoplasm-theme');
+  const stored = localStorage.getItem('liquidnation-theme');
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
   const desired = stored || (prefersLight ? 'light' : 'dark');
   setTheme(desired);
@@ -312,8 +312,8 @@ function hydrateTheme(){
  * Called on page load to restore the user's wallet connection
  */
 function hydrateWalletConnection() {
-  const storedWallet = localStorage.getItem('ectoplasm-connected-wallet');
-  const storedAccount = localStorage.getItem('ectoplasm-connected-account');
+  const storedWallet = localStorage.getItem('liquidnation-connected-wallet');
+  const storedAccount = localStorage.getItem('liquidnation-connected-account');
   
   if (storedWallet && storedAccount) {
     // Restore global state for contract interactions
@@ -490,7 +490,7 @@ function setTheme(theme){
   }
   
   // Persist user preference
-  localStorage.setItem('ectoplasm-theme', theme);
+  localStorage.setItem('liquidnation-theme', theme);
 }
 
 /**
@@ -638,8 +638,8 @@ async function connectWalletHandler(){
       window.connectedAccount = connectedAccount;
       
       // Persist connection state to localStorage for cross-page sessions
-      localStorage.setItem('ectoplasm-connected-wallet', selectedWallet);
-      localStorage.setItem('ectoplasm-connected-account', connectedAccount);
+      localStorage.setItem('liquidnation-connected-wallet', selectedWallet);
+      localStorage.setItem('liquidnation-connected-account', connectedAccount);
       
       // Update wallet status badge
       updateWalletStatus(`Connected via ${selectedWallet}`);
@@ -697,8 +697,8 @@ function disconnectWalletHandler() {
   delete window.connectedAccount;
   
   // Clear localStorage
-  localStorage.removeItem('ectoplasm-connected-wallet');
-  localStorage.removeItem('ectoplasm-connected-account');
+  localStorage.removeItem('liquidnation-connected-wallet');
+  localStorage.removeItem('liquidnation-connected-account');
   
   // Reset button state
   if (connectBtn) {
@@ -1573,7 +1573,7 @@ const DashboardState = {
     };
     
     try {
-      const stored = localStorage.getItem('ectoplasm-dashboard-state');
+      const stored = localStorage.getItem('liquidnation-dashboard-state');
       if (!stored) return defaultState;
       
       const state = JSON.parse(stored);
@@ -1611,7 +1611,7 @@ const DashboardState = {
    */
   save(state) {
     try {
-      localStorage.setItem('ectoplasm-dashboard-state', JSON.stringify(state));
+      localStorage.setItem('liquidnation-dashboard-state', JSON.stringify(state));
     } catch (e) {
       console.error('Failed to save dashboard state:', e);
     }

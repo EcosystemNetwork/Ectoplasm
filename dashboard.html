@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ectoplasm — User Dashboard</title>
+  <title>Liquidnation — User Dashboard</title>
 
   <!-- Favicons -->
   <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
@@ -16,7 +16,7 @@
   <script>
     // Hydrate theme early to keep light/dark consistent across pages
     (function(){
-      const stored = localStorage.getItem('ectoplasm-theme');
+      const stored = localStorage.getItem('liquidnation-theme');
       const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
       const theme = stored || (prefersLight ? 'light' : 'dark');
       document.documentElement.setAttribute('data-theme', theme);
@@ -29,8 +29,8 @@
     <div class="container header-grid">
       <div class="logo-menu">
         <a class="logo logo-toggle" id="logoMenuToggle" href="/" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
-          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
-          <span>Ectoplasm</span>
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Liquidnation logo" />
+          <span>Liquidnation</span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </a>
         <div class="logo-menu-panel" id="logoMenu" hidden>
@@ -142,10 +142,10 @@
       <div class="container hero-grid">
         <div class="hero-copy">
           <div class="brand-badge">
-            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
+            <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Liquidnation logo badge" />
             <span>Daily return loop</span>
           </div>
-          <h1>Your Ectoplasm dashboard</h1>
+          <h1>Your Liquidnation dashboard</h1>
           <p class="lead">Track your streak, finish daily tasks, and clear weekly quests to keep users returning. Rewards and XP ladder up to unlock new launchpad perks.</p>
           <div class="hero-cta">
             <a href="#daily" class="btn primary large">Finish tasks</a>
@@ -225,8 +225,8 @@
     <div class="container footer-grid">
       <div>
         <a class="logo" href="/">
-          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
-          <span>Ectoplasm</span>
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Liquidnation logo" />
+          <span>Liquidnation</span>
         </a>
         <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
       </div>

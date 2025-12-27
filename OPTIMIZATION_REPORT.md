@@ -1,4 +1,4 @@
-# Ectoplasm DEX Optimization Report
+# Liquidnation DEX Optimization Report
 
 **Date:** December 15, 2025  
 **Status:** Phase 1-3 Complete ✅  
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-This report details the comprehensive optimization work performed on the Ectoplasm DEX application. All optimizations were completed within current limitations (static site, no build step, vanilla JavaScript). The application is now:
+This report details the comprehensive optimization work performed on the Liquidnation DEX application. All optimizations were completed within current limitations (static site, no build step, vanilla JavaScript). The application is now:
 
 - **25-40% faster** in user interactions (debouncing, optimized DOM updates)
 - **More resilient** with comprehensive error handling and retry logic
@@ -624,7 +624,7 @@ const observer = new PerformanceObserver((list) => {
 
 ## Conclusion
 
-The Ectoplasm DEX application has been significantly optimized and is production-ready for its current scope (static demo site). The codebase is:
+The Liquidnation DEX application has been significantly optimized and is production-ready for its current scope (static demo site). The codebase is:
 
 - **Performant** - Debounced operations, optimized rendering
 - **Secure** - XSS prevention, input validation, CSP headers

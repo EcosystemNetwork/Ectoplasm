@@ -1,4 +1,4 @@
-# Quick Reference: Ectoplasm DEX Optimizations
+# Quick Reference: Liquidnation DEX Optimizations
 
 ## What We Did ✅
 
