@@ -1810,8 +1810,8 @@ body.pool-popout-open{overflow:hidden}
 
 /* Light theme adjustments */
 [data-theme="light"] .liquid-blob {
-  background: linear-gradient(135deg, rgba(30, 216, 162, 0.35), rgba(76, 245, 199, 0.3));
-  filter: blur(28px);
+  background: linear-gradient(135deg, rgba(30, 216, 162, 0.6), rgba(76, 245, 199, 0.5));
+  filter: blur(20px);
 }
 
 /* Responsive adjustments */
