@@ -1798,15 +1798,11 @@ body.pool-popout-open{overflow:hidden}
  * Panel and card backgrounds for light mode
  * Ensures panels have proper light backgrounds instead of dark ones
  */
-[data-theme="light"] .panel {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(26, 56, 51, 0.12);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-}
-
+[data-theme="light"] .panel,
 [data-theme="light"] .hero-card.panel {
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(26, 56, 51, 0.12);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
 }
 
 [data-theme="light"] .panel-row {
@@ -1873,8 +1869,10 @@ body.pool-popout-open{overflow:hidden}
 
 /**
  * Fix border colors in pool popovers for light mode
+ * Targets divs with inline border-top styling within pool popovers
  */
-[data-theme="light"] .pool-popout [style*="border-top"] {
+[data-theme="light"] .pool-popout div[style*="border-top"],
+[data-theme="light"] .popout div[style*="border-top"] {
   border-top-color: rgba(26, 56, 51, 0.12) !important;
 }
 
