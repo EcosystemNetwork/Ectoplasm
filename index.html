@@ -25,8 +25,7 @@
     // Set theme ASAP to avoid flashes when navigating between pages
     (function(){
       const stored = localStorage.getItem('ectoplasm-theme');
-      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-      const theme = stored || (prefersLight ? 'light' : 'dark');
+      const theme = stored || 'dark'; // Default to dark mode
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>

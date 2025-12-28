@@ -298,8 +298,7 @@ window.addEventListener('beforeunload', () => {
  */
 function hydrateTheme(){
   const stored = localStorage.getItem('ectoplasm-theme');
-  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-  const desired = stored || (prefersLight ? 'light' : 'dark');
+  const desired = stored || 'dark'; // Default to dark mode
   setTheme(desired);
 }
 
