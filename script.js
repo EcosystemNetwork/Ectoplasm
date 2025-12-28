@@ -1587,11 +1587,20 @@ const DashboardState = {
       lastCheckIn: null,
       completedTasks: [],
       completedQuests: [],
+      completedMissions: [],
       redeemedRewards: [],
       questProgress: {
         'quest-0': 0,
         'quest-1': 0,
         'quest-2': 0
+      },
+      missionProgress: {
+        'mission-0': 0,
+        'mission-1': 0,
+        'mission-2': 0,
+        'mission-3': 0,
+        'mission-4': 0,
+        'mission-5': 0
       }
     };
     
@@ -1638,6 +1647,17 @@ const DashboardState = {
     } catch (e) {
       console.error('Failed to save dashboard state:', e);
     }
+  },
+
+  /**
+   * Award or deduct XP directly
+   * @param {number} amount - Positive or negative XP delta
+   */
+  addXP(amount = 0) {
+    const state = this.get();
+    state.xp = Math.max(0, state.xp + amount);
+    this.save(state);
+    return state;
   },
   
   /**
@@ -1700,6 +1720,23 @@ const DashboardState = {
     this.save(state);
     return state;
   },
+
+  /**
+   * Update mission progress
+   * @param {string} missionId - Mission identifier
+   * @param {number} progress - Progress percentage (0-100)
+   */
+  updateMissionProgress(missionId, progress) {
+    const state = this.get();
+    state.missionProgress[missionId] = Math.min(100, Math.max(0, progress));
+
+    if (progress >= 100 && !state.completedMissions.includes(missionId)) {
+      state.completedMissions.push(missionId);
+    }
+
+    this.save(state);
+    return state;
+  },
   
   /**
    * Redeem a reward
@@ -1729,6 +1766,7 @@ function renderDashboard(){
   const dailyTarget = document.getElementById('dailyTasks');
   const questGrid = document.getElementById('questGrid');
   const rewardGrid = document.getElementById('rewardCatalog');
+  const missionBoard = document.getElementById('missionBoardGrid');
   const streakVal = document.getElementById('streakValue');
   const streakDays = document.getElementById('streakDays');
   const xpTotal = document.getElementById('xpTotal');
@@ -1737,7 +1775,7 @@ function renderDashboard(){
   const rewardRow = document.getElementById('rewardRow');
 
   // Exit if not on dashboard page
-  if (!dailyTarget && !questGrid && !rewardGrid) return;
+  if (!dailyTarget && !questGrid && !rewardGrid && !missionBoard) return;
 
   // Get current state
   const state = DashboardState.get();
@@ -1750,7 +1788,9 @@ function renderDashboard(){
     { id: 0, title: 'Check-in and claim streak bonus', xp: 40 },
     { id: 1, title: 'Complete one swap on Casper', xp: 120 },
     { id: 2, title: 'Stake liquidity into any $ECTO pair', xp: 200 },
-    { id: 3, title: 'Vote on one governance proposal', xp: 90 }
+    { id: 3, title: 'Vote on one governance proposal', xp: 90 },
+    { id: 4, title: 'Claim today’s login reward chest', xp: 60 },
+    { id: 5, title: 'Finish a 3-trade combo route', xp: 140 }
   ];
 
   /**
@@ -1761,6 +1801,18 @@ function renderDashboard(){
     { id: 'quest-0', title: 'Clear 5 swaps with <0.5% slippage', reward: 'Badge + 200 XP', xp: 200 },
     { id: 'quest-1', title: 'Provide liquidity for 3 consecutive days', reward: 'Boosted APR day', xp: 150 },
     { id: 'quest-2', title: 'Complete 10 trades across different pairs', reward: 'Trading bonus + 180 XP', xp: 180 }
+  ];
+
+  /**
+   * Season-long missions inspired by video game battle passes
+   */
+  const missions = [
+    { id: 'mission-0', title: 'Create your first trade', detail: 'Swap any token pair once', reward: 'Starter chest + 120 XP', xp: 120, type: 'Starter' },
+    { id: 'mission-1', title: 'Hit 10,000 CSPR volume', detail: 'Accumulate trading volume over the week', reward: 'Volume badge + 350 XP', xp: 350, type: 'Volume' },
+    { id: 'mission-2', title: '7-day login streak', detail: 'Check in every day for a week', reward: 'Streak loot box + 280 XP', xp: 280, type: 'Streak' },
+    { id: 'mission-3', title: 'Complete 3 liquidity quests', detail: 'Finish any three liquidity missions', reward: 'Liquidity booster + 320 XP', xp: 320, type: 'Liquidity' },
+    { id: 'mission-4', title: 'Combo trader', detail: 'Execute trades on three different pairs in one session', reward: 'Combo flair + 260 XP', xp: 260, type: 'Combo' },
+    { id: 'mission-5', title: 'Prize redemption run', detail: 'Redeem any reward from the catalog', reward: 'Mystery drop + 220 XP', xp: 220, type: 'Redemption' }
   ];
 
   /**
@@ -1784,12 +1836,12 @@ function renderDashboard(){
     if (xpTotal) xpTotal.textContent = currentState.xp.toLocaleString();
     
     // Calculate overall weekly progress (average of all quests)
-    const avgProgress = Object.values(currentState.questProgress).reduce((a, b) => a + b, 0) / 3;
+    const avgProgress = Object.values(currentState.questProgress).reduce((a, b) => a + b, 0) / weeklyQuests.length;
     if (weeklyProgress) weeklyProgress.style.width = `${avgProgress}%`;
     if (weeklyPercent) weeklyPercent.textContent = Math.round(avgProgress);
     
     // Update reward row message
-    const completedCount = currentState.completedTasks.length;
+    const completedCount = currentState.completedTasks.filter(id => id >= 0).length;
     const remaining = dailyTasks.length - completedCount;
     if (rewardRow) {
       if (remaining === 0) {
@@ -1959,7 +2011,7 @@ function renderDashboard(){
           DashboardState.updateQuestProgress(quest.id, newProgress);
           
           if (newProgress >= 100) {
-            DashboardState.completeTask(-1, quest.xp); // Special case for quest completion
+            DashboardState.addXP(quest.xp);
             animateXPGain(quest.xp);
           }
           
@@ -1968,6 +2020,53 @@ function renderDashboard(){
       });
       
       questGrid.appendChild(card);
+    });
+  }
+
+  // Render mission board
+  if (missionBoard){
+    missionBoard.innerHTML = '';
+    missions.forEach(mission => {
+      const card = document.createElement('article');
+      card.className = 'pool-card mission-card';
+
+      const progress = state.missionProgress[mission.id] || 0;
+      const isCompleted = state.completedMissions.includes(mission.id);
+      const canAdvance = !isCompleted;
+
+      card.innerHTML = `
+        <div class="mission-top">
+          <span class="pill subtle">${sanitizeHTML(mission.type)}</span>
+          <span class="pill filled">${sanitizeHTML(mission.reward)}</span>
+        </div>
+        <h3>${sanitizeHTML(mission.title)}</h3>
+        <p class="muted">${sanitizeHTML(mission.detail)}</p>
+        <div class="progress">
+          <div class="progress-bar" style="width:${progress}%"></div>
+        </div>
+        <small class="muted">${progress}% complete</small>
+        ${isCompleted ? '<div class="success-message" style="margin-top: 8px;">Loot ready to redeem</div>' : '<div class="muted tiny" style="margin-top:6px;">Tap to simulate progress</div>'}
+      `;
+
+      if (canAdvance) {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', () => {
+          const newProgress = Math.min(100, progress + 25);
+          DashboardState.updateMissionProgress(mission.id, newProgress);
+
+          if (newProgress >= 100) {
+            DashboardState.addXP(mission.xp);
+            animateXPGain(mission.xp);
+          }
+
+          renderDashboard();
+        });
+      } else {
+        card.classList.add('completed');
+        card.style.borderColor = 'rgba(76,245,199,0.35)';
+      }
+
+      missionBoard.appendChild(card);
     });
   }
 

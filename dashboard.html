@@ -139,18 +139,18 @@
         <div class="hero-copy">
           <div class="brand-badge">
             <img src="/assets/electoplasmlogo.png" width="26" height="26" alt="Ectoplasm logo badge" />
-            <span>Daily return loop</span>
+            <span>Arcade bounty loop</span>
           </div>
-          <h1>Your Ectoplasm dashboard</h1>
-          <p class="lead">Track your streak, finish daily tasks, and clear weekly quests to keep users returning. Rewards and XP ladder up to unlock new launchpad perks.</p>
+          <h1>Your mission control dashboard</h1>
+          <p class="lead">Run it like a game: stack login rewards, clear trading missions, and climb a season pass that pays out real prizes. Missions award XP, loot, and perks you can redeem across the app.</p>
           <div class="hero-cta">
-            <a href="#daily" class="btn primary large">Finish tasks</a>
-            <a href="/launchpad.html" class="btn ghost large">Spend rewards</a>
+            <a href="#daily" class="btn primary large">Open bounty board</a>
+            <a href="#mission-board" class="btn ghost large">View season missions</a>
           </div>
           <ul class="trust-list">
             <li>Return streak: <strong id="streakDays">--</strong> days</li>
-            <li>XP: <strong id="xpTotal">--</strong></li>
-            <li>Quests refresh daily</li>
+            <li>XP banked: <strong id="xpTotal">--</strong></li>
+            <li>Quests refresh daily · Missions refresh weekly</li>
           </ul>
         </div>
         <div class="hero-card" aria-labelledby="streak-title">
@@ -185,21 +185,34 @@
           </div>
           <h2>Daily tasks</h2>
         </div>
-        <p class="lead">A simple checklist for the day. Come back tomorrow to refresh the list and maintain your streak.</p>
+        <p class="lead">Login rewards, warm-up trades, and quick-hit quests you can clear every day to keep the streak alive and earn XP.</p>
         <ul class="task-list" id="dailyTasks" aria-live="polite"></ul>
       </div>
     </section>
 
-    <section class="section alt">
+    <section class="section alt" id="mission-board">
       <div class="container">
         <div class="section-heading">
           <div class="brand-mark" aria-hidden="true">
             <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
           </div>
-          <h2>Weekly quests</h2>
+          <h2>Weekly questlines</h2>
         </div>
-        <p class="lead">Extended objectives that encourage deeper engagement across the product surface.</p>
+        <p class="lead">Bigger missions with better loot: climb volume tiers, complete combo trades, and rack up login streaks to unlock redeemable prizes.</p>
         <div class="quest-grid" id="questGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+          </div>
+          <h2>Arcade mission board</h2>
+        </div>
+        <p class="lead">Track specialty runs that feel like a video game season pass. Each card shows objectives, progress, and the reward bundle waiting to be claimed.</p>
+        <div class="mission-grid" id="missionBoardGrid" aria-live="polite"></div>
       </div>
     </section>
 
@@ -211,7 +224,7 @@
           </div>
           <h2>Redeem rewards</h2>
         </div>
-        <p class="lead">Swap XP for perks: fee rebates, launchpad boosts, and trading bonuses.</p>
+        <p class="lead">Cash in your XP and loot tokens for in-app perks, merch drops, and special access prizes.</p>
         <div class="reward-grid" id="rewardCatalog"></div>
       </div>
     </section>
