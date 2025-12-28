@@ -782,6 +782,14 @@ body.swap-page .site-footer{display:none}
 .audit-logo{margin:18px 0}
 .audit-logo img{display:block;max-width:360px;width:100%;height:auto;filter:drop-shadow(0 8px 16px rgba(0,0,0,0.35))}
 
+/* Default: show green logo for dark mode, hide black logo */
+.halborn-logo-light{display:none}
+.halborn-logo-dark{display:block}
+
+/* Show black logo in light mode, hide green logo */
+[data-theme="light"] .halborn-logo-light{display:block}
+[data-theme="light"] .halborn-logo-dark{display:none}
+
 /**
  * Safety/security lists
  */
