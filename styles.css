@@ -783,12 +783,12 @@ body.swap-page .site-footer{display:none}
 .audit-logo img{max-width:360px;width:100%;height:auto;filter:drop-shadow(0 8px 16px rgba(0,0,0,0.35))}
 
 /* Default: show green logo for dark mode, hide black logo */
-.halborn-logo-light{display:none !important}
-.halborn-logo-dark{display:block !important}
+.audit-logo .halborn-logo-light{display:none}
+.audit-logo .halborn-logo-dark{display:block}
 
 /* Show black logo in light mode, hide green logo */
-[data-theme="light"] .halborn-logo-light{display:block !important}
-[data-theme="light"] .halborn-logo-dark{display:none !important}
+[data-theme="light"] .audit-logo .halborn-logo-light{display:block}
+[data-theme="light"] .audit-logo .halborn-logo-dark{display:none}
 
 /**
  * Safety/security lists
