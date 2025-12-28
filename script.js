@@ -221,6 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Setup event listeners for interactive elements
   const themeToggle = document.getElementById('themeToggle');
   if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+  
+  // Also setup nav theme toggle button
+  const navThemeToggle = document.getElementById('navThemeToggle');
+  if (navThemeToggle) navThemeToggle.addEventListener('click', toggleTheme);
 
   const connectWallet = document.getElementById('connectWallet');
   if (connectWallet) {
@@ -477,16 +481,24 @@ function toggleTheme(){
  */
 function setTheme(theme){
   const btn = document.getElementById('themeToggle');
+  const navBtn = document.getElementById('navThemeToggle');
   const next = theme === 'light' ? 'dark' : 'light';
 
   // Apply theme to document root
   document.documentElement.setAttribute('data-theme', theme);
   document.documentElement.style.colorScheme = theme;
   
-  // Update toggle button if present
+  // Update toggle button if present (in menu)
   if (btn){
     btn.textContent = `${next} mode`;
     btn.setAttribute('aria-pressed', theme === 'light');
+  }
+  
+  // Update nav toggle button if present
+  if (navBtn){
+    navBtn.textContent = theme === 'light' ? '☀️' : '🌙';
+    navBtn.setAttribute('aria-pressed', theme === 'light');
+    navBtn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
   }
   
   // Persist user preference
