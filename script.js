@@ -346,26 +346,17 @@ function hydrateWalletConnection() {
 /**
  * Update dashboard link visibility based on wallet connection state
  *
- * Shows the Dashboard link in navigation when user is logged in,
- * hides it when user is not logged in.
- *
- * This function looks for all dashboard links in the navigation and
- * updates their visibility based on the current wallet connection state.
+ * Dashboard link is now always visible in the navigation.
+ * Previously, it was only shown when a wallet was connected, but now
+ * it's accessible to all users regardless of connection state.
  */
 function updateDashboardVisibility() {
-  const isConnected = !!(window.connectedWallet && window.connectedAccount);
-
-  // Find all dashboard links in navigation
+  // Dashboard is now always visible - find all dashboard links and ensure they're shown
   const dashboardLinks = document.querySelectorAll('.nav a[href="/dashboard.html"], .nav a[href="dashboard.html"]');
 
   dashboardLinks.forEach(link => {
-    if (isConnected) {
-      link.style.display = '';
-      link.removeAttribute('hidden');
-    } else {
-      link.style.display = 'none';
-      link.setAttribute('hidden', '');
-    }
+    link.style.display = '';
+    link.removeAttribute('hidden');
   });
 }
 
