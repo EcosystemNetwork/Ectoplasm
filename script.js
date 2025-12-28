@@ -1227,9 +1227,12 @@ function setupPopouts(){
   const closeAll = () => {
     entries.forEach(({btn, popout}) => {
       popout.setAttribute('hidden', '');
+      popout.classList.remove('is-open');
       btn.setAttribute('aria-expanded', 'false');
     });
     backdrop.style.display = 'none';
+    backdrop.classList.remove('is-visible');
+    document.body.classList.remove('pool-popout-open');
   };
 
   // Setup each popout trigger
@@ -1243,10 +1246,13 @@ function setupPopouts(){
       if(!isOpen){
         // Open this popout
         popout.removeAttribute('hidden');
+        popout.classList.add('is-open');
         btn.setAttribute('aria-expanded', 'true');
         // Show backdrop for pool popouts
         if (popout.classList.contains('pool-popout')) {
           backdrop.style.display = 'block';
+          backdrop.classList.add('is-visible');
+          document.body.classList.add('pool-popout-open');
         }
         // Focus first interactive element for keyboard users
         const focusable = popout.querySelector('button, [href], input, select, textarea');
