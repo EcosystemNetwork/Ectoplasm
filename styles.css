@@ -693,10 +693,17 @@ body.swap-page .site-footer{display:none}
  * Quest and reward grids
  */
 .quest-grid,.reward-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px}
 .quest-card .progress,.reward-card .progress{margin:8px 0}
+.mission-card .progress{margin:10px 0}
 .quest-card{transition:all 0.3s ease}
 .quest-card:hover{transform:translateY(-2px);border-color:rgba(119,240,248,0.3)}
 .quest-card.completed{border-color:rgba(76,245,199,0.4);background:linear-gradient(180deg, rgba(76,245,199,0.12), rgba(76,245,199,0.04))}
+.mission-card{transition:all 0.3s ease;position:relative;overflow:hidden}
+.mission-card::after{content:\"\";position:absolute;inset:0;border-radius:14px;border:1px solid rgba(119,240,248,0.15);pointer-events:none}
+.mission-card:hover{transform:translateY(-2px);border-color:rgba(119,240,248,0.28);box-shadow:0 14px 32px rgba(119,240,248,0.18)}
+.mission-card.completed{border-color:rgba(76,245,199,0.35);background:linear-gradient(180deg, rgba(76,245,199,0.12), rgba(76,245,199,0.04))}
+.mission-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
 
 /**
  * Reward cards with interactive states
