@@ -1570,18 +1570,82 @@ function setupTokenModal(){
 // DASHBOARD GAMIFICATION
 // ============================================================================
 
+// Dashboard content configuration
+const DASHBOARD_DATA = {
+  dailyTasks: [
+    { id: 0, title: 'Check-in and claim streak bonus', xp: 40 },
+    { id: 1, title: 'Complete one swap on Casper', xp: 120 },
+    { id: 2, title: 'Stake liquidity into any $ECTO pair', xp: 200 },
+    { id: 3, title: 'Vote on one governance proposal', xp: 90 },
+    { id: 4, title: 'Claim today’s login reward chest', xp: 60 },
+    { id: 5, title: 'Finish a 3-trade combo route', xp: 140 }
+  ],
+  weeklyQuests: [
+    { id: 'quest-0', title: 'Clear 5 swaps with <0.5% slippage', reward: 'Badge + 200 XP', xp: 200, actionType: 'swap', actionLabel: 'Log a swap' },
+    { id: 'quest-1', title: 'Provide liquidity for 3 consecutive days', reward: 'Boosted APR day', xp: 150, actionType: 'liquidity', actionLabel: 'Log today’s liquidity' },
+    { id: 'quest-2', title: 'Complete 10 trades across different pairs', reward: 'Trading bonus + 180 XP', xp: 180, actionType: 'pair', actionLabel: 'Log traded pair' }
+  ],
+  missions: [
+    { id: 'mission-0', title: 'Create your first trade', detail: 'Swap any token pair once', reward: 'Starter chest + 120 XP', xp: 120, type: 'Starter' },
+    { id: 'mission-1', title: 'Hit 10,000 CSPR volume', detail: 'Accumulate trading volume over the week', reward: 'Volume badge + 350 XP', xp: 350, type: 'Volume' },
+    { id: 'mission-2', title: '7-day login streak', detail: 'Check in every day for a week', reward: 'Streak loot box + 280 XP', xp: 280, type: 'Streak' },
+    { id: 'mission-3', title: 'Complete 3 liquidity quests', detail: 'Finish any three liquidity missions', reward: 'Liquidity booster + 320 XP', xp: 320, type: 'Liquidity' },
+    { id: 'mission-4', title: 'Combo trader', detail: 'Execute trades on three different pairs in one session', reward: 'Combo flair + 260 XP', xp: 260, type: 'Combo' },
+    { id: 'mission-5', title: 'Prize redemption run', detail: 'Redeem any reward from the catalog', reward: 'Mystery drop + 220 XP', xp: 220, type: 'Redemption' }
+  ],
+  rewards: [
+    { id: 'reward-0', title: 'Swap fee rebate', cost: 400, detail: '5% off for 24h' },
+    { id: 'reward-1', title: 'Launchpad priority slot', cost: 900, detail: 'Jump queue for next cohort' },
+    { id: 'reward-2', title: 'Trading boost', cost: 700, detail: '1.2x rewards on trades for 48h' }
+  ]
+};
+
+const DASHBOARD_CONSTANTS = {
+  defaultSwapVolume: 2500
+};
+
+// Helpers
+const getTodayKey = () => {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+};
+
+const ensureArray = (value) => Array.isArray(value) ? value : [];
+
+const uniqueList = (list = []) => Array.from(new Set(list));
+
+const getConsecutiveDays = (days = []) => {
+  const uniqueDays = uniqueList(days)
+    .map(str => new Date(str))
+    .filter(d => !isNaN(d))
+    .sort((a, b) => b.getTime() - a.getTime());
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  let streak = 0;
+  let cursor = new Date(today);
+
+  uniqueDays.forEach(day => {
+    day.setHours(0, 0, 0, 0);
+    if (day.getTime() === cursor.getTime()) {
+      streak += 1;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+  });
+
+  return streak;
+};
+
 /**
  * Dashboard state management
  * Handles user progress, task completion, and XP tracking
  * Persists to localStorage for cross-session continuity
  */
 const DashboardState = {
-  /**
-   * Get current dashboard state from localStorage
-   * @returns {Object} Dashboard state object
-   */
-  get() {
-    const defaultState = {
+  getDefaultState() {
+    return {
       streak: 0,
       xp: 0,
       lastCheckIn: null,
@@ -1589,6 +1653,18 @@ const DashboardState = {
       completedQuests: [],
       completedMissions: [],
       redeemedRewards: [],
+      metrics: {
+        swaps: 0,
+        swapVolume: 0,
+        liquidityDays: [],
+        liquidityActions: 0,
+        governanceVotes: 0,
+        comboRuns: 0,
+        rewardClaims: 0,
+        rewardsRedeemed: 0,
+        uniquePairs: [],
+        checkIns: 0
+      },
       questProgress: {
         'quest-0': 0,
         'quest-1': 0,
@@ -1603,12 +1679,175 @@ const DashboardState = {
         'mission-5': 0
       }
     };
+  },
+
+  normalizeState(rawState) {
+    const defaultState = this.getDefaultState();
+    const safeState = rawState || {};
+    return {
+      ...defaultState,
+      ...safeState,
+      completedTasks: ensureArray(safeState.completedTasks),
+      completedQuests: ensureArray(safeState.completedQuests),
+      completedMissions: ensureArray(safeState.completedMissions),
+      redeemedRewards: ensureArray(safeState.redeemedRewards),
+      metrics: {
+        ...defaultState.metrics,
+        ...(safeState.metrics || {}),
+        liquidityDays: uniqueList(ensureArray(safeState.metrics?.liquidityDays)),
+        uniquePairs: uniqueList(ensureArray(safeState.metrics?.uniquePairs))
+      },
+      questProgress: {
+        ...defaultState.questProgress,
+        ...(safeState.questProgress || {})
+      },
+      missionProgress: {
+        ...defaultState.missionProgress,
+        ...(safeState.missionProgress || {})
+      }
+    };
+  },
+
+  recalculateProgress(state, { awardXP = false } = {}) {
+    const prevCompletedQuests = new Set(state.completedQuests);
+    const prevCompletedMissions = new Set(state.completedMissions);
+    const metrics = state.metrics;
+    const liquidityStreak = getConsecutiveDays(metrics.liquidityDays);
+    const questProgress = {
+      'quest-0': Math.min(100, (metrics.swaps / 5) * 100),
+      'quest-1': Math.min(100, (liquidityStreak / 3) * 100),
+      'quest-2': Math.min(100, (uniqueList(metrics.uniquePairs).length / 10) * 100)
+    };
+
+    const missionProgress = {
+      'mission-0': Math.min(100, (metrics.swaps > 0 ? 100 : 0)),
+      'mission-1': Math.min(100, (metrics.swapVolume / 10_000) * 100),
+      'mission-2': Math.min(100, (state.streak / 7) * 100),
+      'mission-3': Math.min(100, (liquidityStreak / 3) * 100),
+      'mission-4': Math.min(100, (metrics.comboRuns / 3) * 100),
+      'mission-5': Math.min(100, (metrics.rewardsRedeemed > 0 ? 100 : 0))
+    };
+
+    state.questProgress = questProgress;
+    state.missionProgress = missionProgress;
+    state.completedQuests = Object.keys(questProgress).filter(id => questProgress[id] >= 100);
+    state.completedMissions = Object.keys(missionProgress).filter(id => missionProgress[id] >= 100);
+
+    if (awardXP) {
+      state.completedQuests.forEach(id => {
+        if (!prevCompletedQuests.has(id)) {
+          const quest = DASHBOARD_DATA.weeklyQuests.find(q => q.id === id);
+          if (quest?.xp) state.xp += quest.xp;
+        }
+      });
+
+      state.completedMissions.forEach(id => {
+        if (!prevCompletedMissions.has(id)) {
+          const mission = DASHBOARD_DATA.missions.find(m => m.id === id);
+          if (mission?.xp) state.xp += mission.xp;
+        }
+      });
+    }
+
+    return state;
+  },
+
+  applyTaskEffects(state, taskIndex, direction = 1) {
+    const metrics = state.metrics;
+    const todayKey = getTodayKey();
+    switch (taskIndex) {
+      case 0:
+        if (direction > 0) {
+          state.streak += 1;
+          state.lastCheckIn = new Date().toISOString();
+          metrics.checkIns = Math.max(0, metrics.checkIns + 1);
+        } else {
+          state.streak = Math.max(0, state.streak - 1);
+          metrics.checkIns = Math.max(0, metrics.checkIns - 1);
+          if (state.streak === 0) state.lastCheckIn = null;
+        }
+        break;
+      case 1:
+        metrics.swaps = Math.max(0, metrics.swaps + direction);
+        metrics.swapVolume = Math.max(0, metrics.swapVolume + direction * DASHBOARD_CONSTANTS.defaultSwapVolume);
+        if (direction > 0) {
+          const nextPair = `Pair #${uniqueList(metrics.uniquePairs).length + 1}`;
+          metrics.uniquePairs = uniqueList([...metrics.uniquePairs, nextPair]);
+        } else if (metrics.uniquePairs.length > 0) {
+          metrics.uniquePairs = metrics.uniquePairs.slice(0, Math.max(0, metrics.uniquePairs.length - 1));
+        }
+        break;
+      case 2:
+        if (direction > 0 && !metrics.liquidityDays.includes(todayKey)) {
+          metrics.liquidityDays = uniqueList([...metrics.liquidityDays, todayKey]);
+        } else if (direction < 0) {
+          metrics.liquidityDays = metrics.liquidityDays.filter(day => day !== todayKey);
+        }
+        metrics.liquidityActions = Math.max(0, metrics.liquidityActions + direction);
+        break;
+      case 3:
+        metrics.governanceVotes = Math.max(0, metrics.governanceVotes + direction);
+        break;
+      case 4:
+        metrics.rewardClaims = Math.max(0, metrics.rewardClaims + direction);
+        break;
+      case 5:
+        metrics.comboRuns = Math.max(0, metrics.comboRuns + direction);
+        break;
+      default:
+        break;
+    }
+  },
+
+  recordAction(actionType, payload = {}) {
+    const state = this.get();
+    const metrics = state.metrics;
+    const todayKey = getTodayKey();
+    switch (actionType) {
+      case 'swap':
+        metrics.swaps += payload.count || 1;
+        metrics.swapVolume = Math.max(0, metrics.swapVolume + (payload.volume || DASHBOARD_CONSTANTS.defaultSwapVolume));
+        metrics.uniquePairs = uniqueList([...(metrics.uniquePairs || []), payload.pair || `Pair #${metrics.swaps}`]);
+        break;
+      case 'liquidity':
+        metrics.liquidityActions += payload.count || 1;
+        if (!metrics.liquidityDays.includes(todayKey)) {
+          metrics.liquidityDays = uniqueList([...(metrics.liquidityDays || []), todayKey]);
+        }
+        break;
+      case 'pair':
+        metrics.uniquePairs = uniqueList([...(metrics.uniquePairs || []), payload.pair || `Pair #${metrics.uniquePairs.length + 1}`]);
+        metrics.swaps += 1;
+        metrics.swapVolume += payload.volume || DASHBOARD_CONSTANTS.defaultSwapVolume;
+        break;
+      case 'combo':
+        metrics.comboRuns += payload.count || 1;
+        break;
+      case 'redeem':
+        metrics.rewardsRedeemed += payload.count || 1;
+        break;
+      default:
+        break;
+    }
+
+    this.recalculateProgress(state, { awardXP: true });
+    this.save(state);
+    return state;
+  },
+
+  /**
+   * Get current dashboard state from localStorage
+   * @returns {Object} Dashboard state object
+   */
+  get() {
+    const defaultState = this.getDefaultState();
     
     try {
       const stored = localStorage.getItem('ectoplasm-dashboard-state');
       if (!stored) return defaultState;
       
-      const state = JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      const state = this.normalizeState(parsed);
       
       // Check if we need to reset daily tasks
       const lastCheckIn = state.lastCheckIn ? new Date(state.lastCheckIn) : null;
@@ -1629,6 +1868,8 @@ const DashboardState = {
           state.completedTasks = [];
         }
       }
+
+      this.recalculateProgress(state);
       
       return { ...defaultState, ...state };
     } catch (e) {
@@ -1656,6 +1897,7 @@ const DashboardState = {
   addXP(amount = 0) {
     const state = this.get();
     state.xp = Math.max(0, state.xp + amount);
+    this.recalculateProgress(state);
     this.save(state);
     return state;
   },
@@ -1671,12 +1913,8 @@ const DashboardState = {
     if (!state.completedTasks.includes(taskIndex)) {
       state.completedTasks.push(taskIndex);
       state.xp += xpReward;
-      
-      // If this is the check-in task (index 0), update streak
-      if (taskIndex === 0) {
-        state.streak += 1;
-        state.lastCheckIn = new Date().toISOString();
-      }
+      this.applyTaskEffects(state, taskIndex, 1);
+      this.recalculateProgress(state, { awardXP: true });
       
       this.save(state);
     }
@@ -1696,6 +1934,8 @@ const DashboardState = {
     if (index > -1) {
       state.completedTasks.splice(index, 1);
       state.xp = Math.max(0, state.xp - xpReward);
+      this.applyTaskEffects(state, taskIndex, -1);
+      this.recalculateProgress(state);
       this.save(state);
     }
     
@@ -1714,7 +1954,8 @@ const DashboardState = {
     // Award XP if quest is completed
     if (progress >= 100 && !state.completedQuests.includes(questId)) {
       state.completedQuests.push(questId);
-      // Quest completion awards are handled separately
+      const quest = DASHBOARD_DATA.weeklyQuests.find(q => q.id === questId);
+      if (quest?.xp) state.xp += quest.xp;
     }
     
     this.save(state);
@@ -1732,6 +1973,8 @@ const DashboardState = {
 
     if (progress >= 100 && !state.completedMissions.includes(missionId)) {
       state.completedMissions.push(missionId);
+      const mission = DASHBOARD_DATA.missions.find(m => m.id === missionId);
+      if (mission?.xp) state.xp += mission.xp;
     }
 
     this.save(state);
@@ -1749,6 +1992,8 @@ const DashboardState = {
     if (state.xp >= cost && !state.redeemedRewards.includes(rewardId)) {
       state.xp -= cost;
       state.redeemedRewards.push(rewardId);
+      state.metrics.rewardsRedeemed = Math.max(0, state.metrics.rewardsRedeemed + 1);
+      this.recalculateProgress(state, { awardXP: true });
       this.save(state);
       return { success: true, state };
     }
@@ -1779,52 +2024,8 @@ function renderDashboard(){
 
   // Get current state
   const state = DashboardState.get();
+  const { dailyTasks, weeklyQuests, missions, rewards } = DASHBOARD_DATA;
   
-  /**
-   * Daily tasks that refresh every 24 hours
-   * Each task awards XP upon completion
-   */
-  const dailyTasks = [
-    { id: 0, title: 'Check-in and claim streak bonus', xp: 40 },
-    { id: 1, title: 'Complete one swap on Casper', xp: 120 },
-    { id: 2, title: 'Stake liquidity into any $ECTO pair', xp: 200 },
-    { id: 3, title: 'Vote on one governance proposal', xp: 90 },
-    { id: 4, title: 'Claim today’s login reward chest', xp: 60 },
-    { id: 5, title: 'Finish a 3-trade combo route', xp: 140 }
-  ];
-
-  /**
-   * Weekly quests for deeper engagement
-   * Longer-term objectives with higher rewards
-   */
-  const weeklyQuests = [
-    { id: 'quest-0', title: 'Clear 5 swaps with <0.5% slippage', reward: 'Badge + 200 XP', xp: 200 },
-    { id: 'quest-1', title: 'Provide liquidity for 3 consecutive days', reward: 'Boosted APR day', xp: 150 },
-    { id: 'quest-2', title: 'Complete 10 trades across different pairs', reward: 'Trading bonus + 180 XP', xp: 180 }
-  ];
-
-  /**
-   * Season-long missions inspired by video game battle passes
-   */
-  const missions = [
-    { id: 'mission-0', title: 'Create your first trade', detail: 'Swap any token pair once', reward: 'Starter chest + 120 XP', xp: 120, type: 'Starter' },
-    { id: 'mission-1', title: 'Hit 10,000 CSPR volume', detail: 'Accumulate trading volume over the week', reward: 'Volume badge + 350 XP', xp: 350, type: 'Volume' },
-    { id: 'mission-2', title: '7-day login streak', detail: 'Check in every day for a week', reward: 'Streak loot box + 280 XP', xp: 280, type: 'Streak' },
-    { id: 'mission-3', title: 'Complete 3 liquidity quests', detail: 'Finish any three liquidity missions', reward: 'Liquidity booster + 320 XP', xp: 320, type: 'Liquidity' },
-    { id: 'mission-4', title: 'Combo trader', detail: 'Execute trades on three different pairs in one session', reward: 'Combo flair + 260 XP', xp: 260, type: 'Combo' },
-    { id: 'mission-5', title: 'Prize redemption run', detail: 'Redeem any reward from the catalog', reward: 'Mystery drop + 220 XP', xp: 220, type: 'Redemption' }
-  ];
-
-  /**
-   * Reward catalog items that can be purchased with XP
-   * Provides utility and incentive for completing tasks
-   */
-  const rewards = [
-    { id: 'reward-0', title: 'Swap fee rebate', cost: 400, detail: '5% off for 24h' },
-    { id: 'reward-1', title: 'Launchpad priority slot', cost: 900, detail: 'Jump queue for next cohort' },
-    { id: 'reward-2', title: 'Trading boost', cost: 700, detail: '1.2x rewards on trades for 48h' }
-  ];
-
   /**
    * Update all stat displays
    */
@@ -1858,10 +2059,12 @@ function renderDashboard(){
   const handleTaskToggle = (taskIndex, xpReward, checkbox) => {
     if (checkbox.checked) {
       // Task completed
+      const beforeXP = DashboardState.get().xp;
       const newState = DashboardState.completeTask(taskIndex, xpReward);
       
-      // Visual feedback - animate the XP
-      animateXPGain(xpReward);
+      // Visual feedback - animate the XP (includes bonuses)
+      const delta = newState.xp - beforeXP;
+      if (delta > 0) animateXPGain(delta);
       
       // Add completed class to parent for styling
       const listItem = checkbox.closest('li');
@@ -1880,6 +2083,18 @@ function renderDashboard(){
     }
     
     updateStats();
+  };
+
+  /**
+   * Quick progress logging from quest cards
+   */
+  const handleQuestAction = (quest) => {
+    if (!quest?.actionType) return;
+    const beforeXP = DashboardState.get().xp;
+    const newState = DashboardState.recordAction(quest.actionType, {});
+    const xpDelta = newState.xp - beforeXP;
+    if (xpDelta > 0) animateXPGain(xpDelta);
+    renderDashboard();
   };
 
   /**
@@ -2001,23 +2216,15 @@ function renderDashboard(){
           <div class="progress-bar" style="width:${progress}%"></div>
         </div>
         <small class="muted">${progress}% complete</small>
+        <div class="quest-actions">
+          <button class="btn ghost small" type="button" ${isCompleted ? 'disabled' : ''}>${sanitizeHTML(quest.actionLabel || 'Log progress')}</button>
+        </div>
       `;
-      
-      // Make quest card interactive (simulate progress for demo)
-      card.style.cursor = 'pointer';
-      card.addEventListener('click', () => {
-        if (!isCompleted) {
-          const newProgress = Math.min(100, progress + 20);
-          DashboardState.updateQuestProgress(quest.id, newProgress);
-          
-          if (newProgress >= 100) {
-            DashboardState.addXP(quest.xp);
-            animateXPGain(quest.xp);
-          }
-          
-          renderDashboard(); // Re-render to show updated progress
-        }
-      });
+
+      const actionBtn = card.querySelector('button');
+      if (actionBtn && !isCompleted) {
+        actionBtn.addEventListener('click', () => handleQuestAction(quest));
+      }
       
       questGrid.appendChild(card);
     });
@@ -2032,7 +2239,6 @@ function renderDashboard(){
 
       const progress = state.missionProgress[mission.id] || 0;
       const isCompleted = state.completedMissions.includes(mission.id);
-      const canAdvance = !isCompleted;
 
       card.innerHTML = `
         <div class="mission-top">
@@ -2045,23 +2251,10 @@ function renderDashboard(){
           <div class="progress-bar" style="width:${progress}%"></div>
         </div>
         <small class="muted">${progress}% complete</small>
-        ${isCompleted ? '<div class="success-message" style="margin-top: 8px;">Loot ready to redeem</div>' : '<div class="muted tiny" style="margin-top:6px;">Tap to simulate progress</div>'}
+        ${isCompleted ? '<div class="success-message" style="margin-top: 8px;">Loot ready to redeem</div>' : '<div class="muted tiny" style="margin-top:6px;">Progress updates from your activity</div>'}
       `;
 
-      if (canAdvance) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', () => {
-          const newProgress = Math.min(100, progress + 25);
-          DashboardState.updateMissionProgress(mission.id, newProgress);
-
-          if (newProgress >= 100) {
-            DashboardState.addXP(mission.xp);
-            animateXPGain(mission.xp);
-          }
-
-          renderDashboard();
-        });
-      } else {
+      if (isCompleted) {
         card.classList.add('completed');
         card.style.borderColor = 'rgba(76,245,199,0.35)';
       }
