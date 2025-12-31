@@ -417,7 +417,8 @@ main{flex:1;display:block}
  * Hero card component
  * Card with gradient background used in hero sections
  */
-.hero-card{background:linear-gradient(180deg, rgba(86,255,211,0.06), transparent);padding:18px;border-radius:var(--radius);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 48px rgba(0,0,0,0.26)}
+.hero-card{background:linear-gradient(180deg, rgba(86,255,211,0.06), transparent);padding:18px;border-radius:var(--radius);border:1px solid rgba(232,255,249,0.08);box-shadow:0 18px 48px rgba(0,0,0,0.26);transition:transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease}
+.hero-card:hover{transform:translateY(-4px);box-shadow:0 24px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(119,240,248,0.15);border-color:rgba(119,240,248,0.2)}
 .swap-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
 .swap-toolbar.compact{margin-bottom:4px}
 .swap-title-stack{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left}
@@ -1748,11 +1749,12 @@ body.pool-popout-open{overflow:hidden}
   position: absolute;
   top: 0;
   border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-  background: linear-gradient(135deg, rgba(30, 216, 162, 0.4), rgba(76, 245, 199, 0.3));
+  background: linear-gradient(135deg, rgba(30, 216, 162, 0.65), rgba(76, 245, 199, 0.5));
   filter: blur(25px);
   opacity: 0;
   animation: drip 8s ease-in-out infinite;
   will-change: transform, opacity;
+  transition: animation-play-state 0.3s ease;
 }
 
 /* Multiple blob variations with different sizes and delays */
@@ -1804,16 +1806,19 @@ body.pool-popout-open{overflow:hidden}
     border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
   }
   10% {
-    opacity: 0.6;
+    opacity: 0.85;
     transform: translateY(0) scale(1) rotate(15deg);
   }
   25% {
+    opacity: 0.9;
     transform: translateY(25vh) scale(1.1) rotate(30deg);
   }
   50% {
+    opacity: 0.8;
     transform: translateY(50vh) scale(0.95) rotate(45deg);
   }
   75% {
+    opacity: 0.75;
     transform: translateY(75vh) scale(1.05) rotate(60deg);
   }
   100% {
@@ -1825,8 +1830,13 @@ body.pool-popout-open{overflow:hidden}
 
 /* Light theme adjustments */
 [data-theme="light"] .liquid-blob {
-  background: linear-gradient(135deg, rgba(30, 216, 162, 0.6), rgba(76, 245, 199, 0.5));
+  background: linear-gradient(135deg, rgba(30, 216, 162, 0.75), rgba(76, 245, 199, 0.65));
   filter: blur(20px);
+}
+
+/* Slow down animations on hero hover for better interaction */
+.swap-hero:hover .liquid-blob {
+  animation-play-state: paused;
 }
 
 /* Responsive adjustments */
@@ -2023,6 +2033,11 @@ body.pool-popout-open{overflow:hidden}
   background: linear-gradient(180deg, rgba(30, 216, 162, 0.08), transparent);
   border: 1px solid rgba(26, 56, 51, 0.12);
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .hero-card:hover {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(30, 216, 162, 0.25);
+  border-color: rgba(30, 216, 162, 0.3);
 }
 
 [data-theme="light"] .overview-panel {
