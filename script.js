@@ -2762,3 +2762,107 @@ window.EctoplasmAnimations = {
     }
   }
 };
+
+// ============================================================================
+// LIQUID BLOB MOUSE AVOIDANCE
+// ============================================================================
+
+/**
+ * Make liquid blobs avoid the mouse cursor
+ * Creates a repulsion effect where blobs move away from the cursor
+ */
+function initLiquidBlobAvoidance() {
+  const liquidContainer = document.querySelector('.liquid-container');
+  if (!liquidContainer) return;
+  
+  const blobs = document.querySelectorAll('.liquid-blob');
+  if (!blobs.length) return;
+  
+  let mouseX = 0;
+  let mouseY = 0;
+  let rafId = null;
+  
+  // Configuration
+  const avoidanceRadius = 200; // Distance at which blobs start avoiding
+  const avoidanceStrength = 80; // How far blobs move away
+  const MIN_DISTANCE = 0.1; // Minimum distance to avoid division by zero
+  
+  // Cache blob positions for performance
+  let blobRects = [];
+  let needsRecalc = true;
+  
+  function cacheBlobPositions() {
+    blobRects = Array.from(blobs).map(blob => blob.getBoundingClientRect());
+    needsRecalc = false;
+  }
+  
+  function handleMouseMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateBlobPositions);
+    }
+  }
+  
+  function updateBlobPositions() {
+    // Recalculate blob positions if needed (on first run or after resize)
+    if (needsRecalc) {
+      cacheBlobPositions();
+    }
+    
+    blobs.forEach((blob, index) => {
+      const rect = blobRects[index];
+      const blobCenterX = rect.left + rect.width / 2;
+      const blobCenterY = rect.top + rect.height / 2;
+      
+      // Calculate distance from mouse to blob center
+      const dx = blobCenterX - mouseX;
+      const dy = blobCenterY - mouseY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // If mouse is within avoidance radius and not directly on blob center, push blob away
+      // Check distance > MIN_DISTANCE to avoid division by zero when mouse is exactly on blob center
+      if (distance < avoidanceRadius && distance > MIN_DISTANCE) {
+        const force = (avoidanceRadius - distance) / avoidanceRadius;
+        const pushX = (dx / distance) * avoidanceStrength * force;
+        const pushY = (dy / distance) * avoidanceStrength * force;
+        
+        blob.classList.add('avoiding-mouse');
+        blob.style.transform = `translate(${pushX}px, ${pushY}px)`;
+      } else {
+        blob.classList.remove('avoiding-mouse');
+        blob.style.transform = '';
+      }
+    });
+    
+    rafId = null;
+  }
+  
+  // Recalculate blob positions on window resize
+  function handleResize() {
+    needsRecalc = true;
+  }
+  
+  // Add event listeners
+  liquidContainer.addEventListener('mousemove', handleMouseMove, { passive: true });
+  window.addEventListener('resize', handleResize, { passive: true });
+  
+  // Clean up on page unload
+  const cleanup = () => {
+    liquidContainer.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('resize', handleResize);
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+  };
+  
+  window.addEventListener('beforeunload', cleanup);
+}
+
+// Initialize liquid blob avoidance when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLiquidBlobAvoidance);
+} else {
+  initLiquidBlobAvoidance();
+}
