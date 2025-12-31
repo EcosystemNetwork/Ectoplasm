@@ -31,6 +31,7 @@
   </script>
 
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="animations.css" />
 </head>
 <body>
   <header class="site-header">
@@ -330,7 +331,7 @@
 
     <section id="features" class="section">
       <div class="container">
-        <div class="section-heading">
+        <div class="section-heading" data-animate="fade-in">
           <div class="brand-mark" aria-hidden="true">
             <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
           </div>
@@ -378,23 +379,23 @@
     </section>
 
     <section class="section alt">
-      <div class="container stats-grid" aria-label="Protocol performance highlights">
-        <div class="stat-card">
+      <div class="container stats-grid" aria-label="Protocol performance highlights" data-animate="stagger">
+        <div class="stat-card stats-item">
           <p class="muted">24h Volume</p>
           <strong>$182M</strong>
           <small>Deep liquidity across majors</small>
         </div>
-        <div class="stat-card">
+        <div class="stat-card stats-item">
           <p class="muted">Total Value Locked</p>
           <strong>$612M</strong>
           <small>Growing Casper-native liquidity</small>
         </div>
-        <div class="stat-card">
+        <div class="stat-card stats-item">
           <p class="muted">Average Confirmation</p>
           <strong>1.3s</strong>
           <small>Fast finality with safety checks</small>
         </div>
-        <div class="stat-card">
+        <div class="stat-card stats-item">
           <p class="muted">Uptime</p>
           <strong>99.98%</strong>
           <small>Monitored infra & failover</small>
@@ -404,8 +405,8 @@
 
     <section id="how-it-works" class="section alt">
       <div class="container">
-        <h2>How it works</h2>
-        <ol class="steps">
+        <h2 data-animate="fade-in">How it works</h2>
+        <ol class="steps" data-animate="stagger">
           <li><strong>Land on the swapper</strong> — connect and trade immediately.</li>
           <li><strong>Scroll for depth</strong> — see dashboards, liquidity tools, and launchpad access.</li>
           <li><strong>Return daily</strong> — quests, streaks, and on-chain tasks keep users engaged.</li>
@@ -415,11 +416,11 @@
 
     <section id="roadmap" class="section">
       <div class="container">
-        <h2>Roadmap</h2>
-        <ul class="roadmap">
-          <li><strong>Q1:</strong> Mainnet launch, basic swaps, liquidity pools</li>
-          <li><strong>Q2:</strong> Limit orders, LP protections, audits</li>
-          <li><strong>Q3:</strong> Cross-chain bridges, more assets, governance</li>
+        <h2 data-animate="fade-in">Roadmap</h2>
+        <ul class="roadmap" data-animate="stagger">
+          <li class="roadmap-item"><strong>Q1:</strong> Mainnet launch, basic swaps, liquidity pools</li>
+          <li class="roadmap-item"><strong>Q2:</strong> Limit orders, LP protections, audits</li>
+          <li class="roadmap-item"><strong>Q3:</strong> Cross-chain bridges, more assets, governance</li>
         </ul>
       </div>
     </section>
@@ -466,8 +467,10 @@
   <!-- Casper SDK and DEX Integration -->
   <link rel="preconnect" href="https://rpc.testnet.casperlabs.io" crossorigin />
   <script src="https://cdn.jsdelivr.net/npm/casper-js-sdk@2.15.4/dist/casper-js-sdk.min.js"></script>
+  
   <script src="config.js"></script>
   <script src="casper.js"></script>
+  <script src="animations.js"></script>
   <script src="script.js" defer></script>
 </body>
 </html>
