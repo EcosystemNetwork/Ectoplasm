@@ -2785,6 +2785,16 @@ function initLiquidBlobAvoidance() {
   // Configuration
   const avoidanceRadius = 200; // Distance at which blobs start avoiding
   const avoidanceStrength = 80; // How far blobs move away
+  const MIN_DISTANCE = 0.1; // Minimum distance to avoid division by zero
+  
+  // Cache blob positions for performance
+  let blobRects = [];
+  let needsRecalc = true;
+  
+  function cacheBlobPositions() {
+    blobRects = Array.from(blobs).map(blob => blob.getBoundingClientRect());
+    needsRecalc = false;
+  }
   
   function handleMouseMove(e) {
     mouseX = e.clientX;
@@ -2796,8 +2806,13 @@ function initLiquidBlobAvoidance() {
   }
   
   function updateBlobPositions() {
-    blobs.forEach(blob => {
-      const rect = blob.getBoundingClientRect();
+    // Recalculate blob positions if needed (on first run or after resize)
+    if (needsRecalc) {
+      cacheBlobPositions();
+    }
+    
+    blobs.forEach((blob, index) => {
+      const rect = blobRects[index];
       const blobCenterX = rect.left + rect.width / 2;
       const blobCenterY = rect.top + rect.height / 2;
       
@@ -2806,8 +2821,9 @@ function initLiquidBlobAvoidance() {
       const dy = blobCenterY - mouseY;
       const distance = Math.sqrt(dx * dx + dy * dy);
       
-      // If mouse is within avoidance radius, push blob away
-      if (distance < avoidanceRadius && distance > 0) {
+      // If mouse is within avoidance radius and not directly on blob center, push blob away
+      // Check distance > MIN_DISTANCE to avoid division by zero when mouse is exactly on blob center
+      if (distance < avoidanceRadius && distance > MIN_DISTANCE) {
         const force = (avoidanceRadius - distance) / avoidanceRadius;
         const pushX = (dx / distance) * avoidanceStrength * force;
         const pushY = (dy / distance) * avoidanceStrength * force;
@@ -2823,16 +2839,25 @@ function initLiquidBlobAvoidance() {
     rafId = null;
   }
   
-  // Add event listener
+  // Recalculate blob positions on window resize
+  function handleResize() {
+    needsRecalc = true;
+  }
+  
+  // Add event listeners
   liquidContainer.addEventListener('mousemove', handleMouseMove, { passive: true });
+  window.addEventListener('resize', handleResize, { passive: true });
   
   // Clean up on page unload
-  window.addEventListener('beforeunload', () => {
+  const cleanup = () => {
     liquidContainer.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('resize', handleResize);
     if (rafId) {
       cancelAnimationFrame(rafId);
     }
-  });
+  };
+  
+  window.addEventListener('beforeunload', cleanup);
 }
 
 // Initialize liquid blob avoidance when DOM is ready
