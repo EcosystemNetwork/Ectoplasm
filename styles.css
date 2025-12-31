@@ -2139,3 +2139,209 @@ body.pool-popout-open{overflow:hidden}
   color: #1a3833;
   opacity: 0.85;
 }
+
+/* ============================================================================
+   MODERN HOVER-TRIGGERED ANIMATIONS (Native Web APIs)
+   ============================================================================ */
+
+/**
+ * GlareHover Effect
+ * Creates a glare/shine effect that moves across elements on hover
+ * Inspired by react-bits library, adapted to vanilla CSS
+ */
+.glare-hover {
+  overflow: hidden;
+  position: relative;
+}
+
+.glare-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    -45deg,
+    hsla(0, 0%, 0%, 0) 60%,
+    rgba(255, 255, 255, 0.5) 70%,
+    hsla(0, 0%, 0%, 0),
+    hsla(0, 0%, 0%, 0) 100%
+  );
+  transition: 650ms ease;
+  background-size: 250% 250%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: -100% -100%, 0 0;
+  pointer-events: none;
+}
+
+.glare-hover:hover::before {
+  background-position: 100% 100%, 0 0;
+}
+
+/* Light theme adjustment for glare */
+[data-theme="light"] .glare-hover::before {
+  background: linear-gradient(
+    -45deg,
+    hsla(0, 0%, 100%, 0) 60%,
+    rgba(255, 255, 255, 0.9) 70%,
+    hsla(0, 0%, 100%, 0),
+    hsla(0, 0%, 100%, 0) 100%
+  );
+}
+
+/**
+ * Magnet Effect
+ * Elements with this class will have magnetic pull effect applied via JavaScript
+ * The transform is applied dynamically based on mouse position
+ */
+.magnet-hover {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.5s ease-in-out;
+  will-change: transform;
+}
+
+.magnet-hover.magnet-active {
+  transition: transform 0.3s ease-out;
+}
+
+/**
+ * Enhanced Card Hover Effects
+ * Combines existing hover effects with new animation capabilities
+ */
+.hero-card.glare-hover,
+.feature-card.glare-hover,
+.quest-card.glare-hover,
+.mission-card.glare-hover {
+  overflow: hidden;
+}
+
+/**
+ * Shimmer Effect
+ * A subtle shimmer animation that can be applied to cards
+ */
+.shimmer-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transition: left 0.6s ease-in-out;
+  pointer-events: none;
+}
+
+.shimmer-hover:hover::after {
+  left: 100%;
+}
+
+[data-theme="light"] .shimmer-hover::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+}
+
+/**
+ * Tilt Effect
+ * 3D tilt effect on hover using CSS transforms
+ */
+.tilt-hover {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}
+
+.tilt-hover:hover {
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale3d(1.02, 1.02, 1.02);
+}
+
+/**
+ * Glow Effect on Hover
+ * Adds a soft glow around elements
+ */
+.glow-hover {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.glow-hover:hover {
+  box-shadow: 
+    0 0 20px rgba(76, 245, 199, 0.3),
+    0 0 40px rgba(76, 245, 199, 0.2),
+    0 24px 60px rgba(0, 0, 0, 0.35);
+  border-color: rgba(76, 245, 199, 0.5);
+}
+
+[data-theme="light"] .glow-hover:hover {
+  box-shadow: 
+    0 0 20px rgba(30, 216, 162, 0.4),
+    0 0 40px rgba(30, 216, 162, 0.25),
+    0 24px 60px rgba(0, 0, 0, 0.15);
+  border-color: rgba(30, 216, 162, 0.6);
+}
+
+/**
+ * Float Effect
+ * Makes elements float up slightly on hover
+ */
+.float-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.float-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] .float-hover:hover {
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.15);
+}
+
+/**
+ * Combine glare with existing effects
+ */
+.hero-card.glare-hover:hover,
+.feature-card.glare-hover:hover,
+.launchpad-card.glare-hover:hover {
+  transform: translateY(-4px);
+}
+
+/**
+ * Button magnet effects
+ */
+.btn.magnet-hover,
+.icon-btn.magnet-hover {
+  cursor: pointer;
+}
+
+/**
+ * Respect user's motion preferences
+ */
+@media (prefers-reduced-motion: reduce) {
+  .glare-hover::before,
+  .shimmer-hover::after,
+  .magnet-hover,
+  .tilt-hover,
+  .glow-hover,
+  .float-hover {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .glare-hover:hover::before,
+  .shimmer-hover:hover::after,
+  .tilt-hover:hover {
+    transform: none !important;
+  }
+}
