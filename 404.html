@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>404 — Page Not Found | Ectoplasm</title>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#1ed8a2" />
+
+  <script>
+    // Hydrate theme early to keep light/dark consistent across pages
+    (function(){
+      const stored = localStorage.getItem('ectoplasm-theme');
+      const theme = stored || 'dark'; // Default to dark mode
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .error-page {
+      min-height: calc(100vh - 200px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .error-code {
+      font-size: clamp(6rem, 20vw, 12rem);
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      animation: pulse404 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse404 {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(0.98); }
+    }
+
+    .error-ghost {
+      font-size: 4rem;
+      margin-bottom: 24px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .error-title {
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+    }
+
+    .error-message {
+      max-width: 400px;
+      margin-bottom: 32px;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .error-links {
+      margin-top: 48px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .error-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .error-links a:hover {
+      color: var(--accent-primary);
+    }
+
+    .ghost-trail {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .ghost-particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      opacity: 0.2;
+      animation: drift 8s linear infinite;
+    }
+
+    @keyframes drift {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.1; }
+      100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-grid">
+      <div class="logo-menu">
+        <a class="logo logo-toggle" id="logoMenuToggle" href="/" aria-haspopup="true" aria-expanded="false" aria-controls="logoMenu">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+          <span class="chevron" aria-hidden="true">&#8964;</span>
+        </a>
+        <div class="logo-menu-panel" id="logoMenu" hidden>
+          <div class="menu-grid">
+            <div class="menu-section">
+              <div class="menu-heading">Products</div>
+              <a class="menu-item" href="/swap.html">
+                <div>
+                  <strong>Swap</strong>
+                  <p>Fast token swaps on Casper</p>
+                </div>
+                <span class="pill">Live</span>
+              </a>
+              <a class="menu-item" href="/launchpad.html">
+                <div>
+                  <strong>Launch Pad</strong>
+                  <p>Create and launch tokens</p>
+                </div>
+                <span class="pill">Beta</span>
+              </a>
+              <a class="menu-item" href="/liquidity.html">
+                <div>
+                  <strong>Earn</strong>
+                  <p>Provide liquidity and farm</p>
+                </div>
+                <span class="pill">Live</span>
+              </a>
+              <a class="menu-item" href="/dashboard.html">
+                <div>
+                  <strong>Dashboard</strong>
+                  <p>Track quests and positions</p>
+                </div>
+                <span class="pill">Gamified</span>
+              </a>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Use for</div>
+              <ul class="menu-list">
+                <li><a href="/#swap">Swap crypto</a></li>
+                <li><a href="/liquidity.html">Provide liquidity</a></li>
+                <li><a href="/launchpad.html">Launch tokens</a></li>
+                <li><a href="/dashboard.html">Track positions</a></li>
+              </ul>
+            </div>
+            <div class="menu-section">
+              <div class="menu-heading">Company</div>
+              <ul class="menu-list">
+                <li><a href="/docs/roadmap.html">About</a></li>
+                <li><a href="/docs/careers.html">Careers</a></li>
+                <li><a href="/docs/blog.html">Blog</a></li>
+              </ul>
+              <div class="menu-heading">Legal &amp; Privacy</div>
+              <ul class="menu-list">
+                <li><a href="/privacy.html">Privacy Policy</a></li>
+                <li><a href="/docs/terms.html">Terms</a></li>
+              </ul>
+              <div class="menu-heading">Settings</div>
+              <ul class="menu-list">
+                <li><button id="themeToggle" class="btn ghost" aria-pressed="false" style="width: 100%; text-align: left;">Dark mode</button></li>
+              </ul>
+            </div>
+          </div>
+          <div class="menu-footer">
+            <div>
+              <div class="menu-heading">Get started</div>
+              <p>Trade tokens, provide liquidity, and launch on the Casper Network with low fees and fast finality.</p>
+            </div>
+            <a class="btn primary" href="/swap.html">Start trading</a>
+          </div>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/#swap">Swap</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/launchpad.html">Launch Pad</a>
+        <a href="/liquidity.html">Earn</a>
+        <button id="navThemeToggle" class="btn ghost" aria-pressed="false" aria-label="Toggle theme"></button>
+        <button id="connectWallet" class="btn primary">Connect Wallet</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="ghost-trail" aria-hidden="true">
+      <div class="ghost-particle" style="left: 10%; animation-delay: 0s;"></div>
+      <div class="ghost-particle" style="left: 25%; animation-delay: 1.5s;"></div>
+      <div class="ghost-particle" style="left: 40%; animation-delay: 3s;"></div>
+      <div class="ghost-particle" style="left: 55%; animation-delay: 0.5s;"></div>
+      <div class="ghost-particle" style="left: 70%; animation-delay: 2s;"></div>
+      <div class="ghost-particle" style="left: 85%; animation-delay: 4s;"></div>
+    </div>
+
+    <section class="error-page">
+      <div class="error-ghost" aria-hidden="true"></div>
+      <div class="error-code">404</div>
+      <h1 class="error-title">Page vanished into the ether</h1>
+      <p class="error-message muted">
+        The page you're looking for has gone ghost. It may have been moved, deleted, or never existed in this dimension.
+      </p>
+      <div class="error-actions">
+        <a href="/" class="btn primary large">Return Home</a>
+        <a href="/swap.html" class="btn ghost large">Go to Swap</a>
+      </div>
+      <nav class="error-links" aria-label="Quick links">
+        <a href="/liquidity.html">Liquidity</a>
+        <a href="/launchpad.html">Launchpad</a>
+        <a href="/dashboard.html">Dashboard</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="logo" href="/">
+          <img src="/assets/electoplasmlogo.png" width="38" height="38" alt="Ectoplasm logo" />
+          <span>Ectoplasm</span>
+        </a>
+        <p class="muted">Built on Casper Network · Open source · © <span id="year"></span> EcosystemNetwork</p>
+      </div>
+      <nav aria-label="Footer navigation">
+        <a href="/docs">Docs</a>
+        <a href="/whitepaper.pdf">Whitepaper</a>
+        <a href="/audit-report.pdf">Audit</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -157,6 +157,7 @@
             <div class="panel-row" style="display: block;">
               <div class="lp-tabs" style="display: flex; gap: 8px; margin-bottom: 16px;">
                 <button class="pill filled" id="addLiquidityTab">Add Liquidity</button>
+                <button class="pill" id="removeLiquidityTab">Remove Liquidity</button>
                 <button class="pill" id="positionsTab">Your Positions</button>
               </div>
 
@@ -207,11 +208,129 @@
                 </form>
               </div>
 
+              <!-- Remove Liquidity Panel -->
+              <div id="removeLiquidityPanel" hidden>
+                <form id="removeLiquidityForm" class="lp-form">
+                  <div class="token-row" style="margin-bottom: 16px;">
+                    <label class="muted tiny">Select LP Position</label>
+                    <div class="select" style="margin-top: 6px;">
+                      <select id="removeLpSelect" class="full">
+                        <option value="">Select a position...</option>
+                        <option value="USDC-ECTO">USDC / ECTO LP</option>
+                        <option value="CSPR-ECTO">CSPR / ECTO LP</option>
+                        <option value="WETH-USDC">WETH / USDC LP</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="remove-amount-section" style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                      <label class="muted tiny">Amount to Remove</label>
+                      <span id="removePercentLabel" style="font-weight: 600;">50%</span>
+                    </div>
+                    <input type="range" id="removePercent" min="0" max="100" value="50" style="width: 100%;" />
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                      <button type="button" class="pill subtle" onclick="document.getElementById('removePercent').value=25; updateRemovePercent();">25%</button>
+                      <button type="button" class="pill subtle" onclick="document.getElementById('removePercent').value=50; updateRemovePercent();">50%</button>
+                      <button type="button" class="pill subtle" onclick="document.getElementById('removePercent').value=75; updateRemovePercent();">75%</button>
+                      <button type="button" class="pill filled" onclick="document.getElementById('removePercent').value=100; updateRemovePercent();">MAX</button>
+                    </div>
+                  </div>
+
+                  <div class="lp-summary" style="padding: 12px; background: var(--glass); border-radius: 8px; margin-bottom: 12px;">
+                    <div class="muted tiny" style="margin-bottom: 8px;">You will receive:</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                      <span>Token A</span>
+                      <span id="removeTokenA">0.00 USDC</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span>Token B</span>
+                      <span id="removeTokenB">0.00 ECTO</span>
+                    </div>
+                  </div>
+
+                  <button type="submit" id="removeLiquidityBtn" class="btn primary full">Remove Liquidity</button>
+                </form>
+              </div>
+
               <!-- Positions Panel -->
               <div id="positionsPanel" hidden>
-                <p class="muted tiny">Your Liquidity Positions</p>
+                <p class="muted tiny" style="margin-bottom: 12px;">Your Liquidity Positions</p>
                 <div id="lpPositionsContainer">
-                  <!-- LP positions will be populated by JavaScript -->
+                  <!-- Demo positions -->
+                  <div class="position-card" style="background: var(--glass); border-radius: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid rgba(232,255,249,0.08);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="avatar-stack" style="display: flex;">
+                          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #04131a;">U</span>
+                          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; margin-left: -8px; border: 2px solid var(--bg);">E</span>
+                        </div>
+                        <strong>USDC / ECTO</strong>
+                      </div>
+                      <span class="pill subtle">0.3% fee</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
+                      <div>
+                        <div class="muted tiny">Your Share</div>
+                        <div style="font-weight: 500;">0.42%</div>
+                      </div>
+                      <div>
+                        <div class="muted tiny">Value</div>
+                        <div style="font-weight: 500;">$1,245.80</div>
+                      </div>
+                      <div>
+                        <div class="muted tiny">USDC</div>
+                        <div style="font-weight: 500;">623.45</div>
+                      </div>
+                      <div>
+                        <div class="muted tiny">ECTO</div>
+                        <div style="font-weight: 500;">4,892.30</div>
+                      </div>
+                    </div>
+                    <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(232,255,249,0.08);">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="muted tiny">Unclaimed fees: <strong style="color: var(--accent-primary);">$12.45</strong></span>
+                        <button class="btn ghost small">Manage</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="position-card" style="background: var(--glass); border-radius: 12px; padding: 14px; border: 1px solid rgba(232,255,249,0.08);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="avatar-stack" style="display: flex;">
+                          <span style="width: 28px; height: 28px; border-radius: 50%; background: #627eea; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: white;">W</span>
+                          <span style="width: 28px; height: 28px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; margin-left: -8px; border: 2px solid var(--bg); color: #04131a;">U</span>
+                        </div>
+                        <strong>WETH / USDC</strong>
+                      </div>
+                      <span class="pill subtle">0.05% fee</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.85rem;">
+                      <div>
+                        <div class="muted tiny">Your Share</div>
+                        <div style="font-weight: 500;">0.08%</div>
+                      </div>
+                      <div>
+                        <div class="muted tiny">Value</div>
+                        <div style="font-weight: 500;">$3,890.20</div>
+                      </div>
+                      <div>
+                        <div class="muted tiny">WETH</div>
+                        <div style="font-weight: 500;">0.85</div>
+                      </div>
+                      <div>
+                        <div class="muted tiny">USDC</div>
+                        <div style="font-weight: 500;">1,945.10</div>
+                      </div>
+                    </div>
+                    <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(232,255,249,0.08);">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="muted tiny">Unclaimed fees: <strong style="color: var(--accent-primary);">$8.72</strong></span>
+                        <button class="btn ghost small">Manage</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -177,55 +177,189 @@
       </div>
     </section>
 
-    <section id="daily" class="section">
-      <div class="container">
-        <div class="section-heading">
-          <div class="brand-mark" aria-hidden="true">
-            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
-          </div>
-          <h2>Daily tasks</h2>
-        </div>
-        <p class="lead">Login rewards, warm-up trades, and quick-hit quests you can clear every day to keep the streak alive and earn XP.</p>
-        <ul class="task-list" id="dailyTasks" aria-live="polite"></ul>
-      </div>
-    </section>
-
-    <section class="section alt" id="mission-board">
-      <div class="container">
-        <div class="section-heading">
-          <div class="brand-mark" aria-hidden="true">
-            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
-          </div>
-          <h2>Weekly questlines</h2>
-        </div>
-        <p class="lead">Bigger missions with better loot: climb volume tiers, complete combo trades, and rack up login streaks to unlock redeemable prizes.</p>
-        <div class="quest-grid" id="questGrid" aria-live="polite"></div>
-      </div>
-    </section>
-
+    <!-- Dashboard Layout with Sidebar -->
     <section class="section">
       <div class="container">
-        <div class="section-heading">
-          <div class="brand-mark" aria-hidden="true">
-            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+        <div class="dashboard-layout">
+          <!-- XP Tracker Sidebar -->
+          <aside class="dashboard-sidebar">
+            <div class="xp-tracker pump-card">
+              <div class="level-display">
+                <div class="level-badge" id="levelBadge">
+                  <span class="level-number" id="levelNumber">1</span>
+                  <span class="level-label">Level</span>
+                </div>
+                <div class="level-info">
+                  <div class="level-progress-header">
+                    <span class="current-xp" id="currentXp">0 XP</span>
+                    <span class="muted">/ <span id="nextLevelXp">100</span> XP</span>
+                  </div>
+                  <div class="level-progress-bar">
+                    <div class="level-progress-fill" id="levelProgressFill" style="width: 0%"></div>
+                  </div>
+                  <p class="muted tiny"><span id="xpToNext">100</span> XP to level <span id="nextLevel">2</span></p>
+                </div>
+              </div>
+
+              <div class="xp-stats">
+                <div class="stat-card">
+                  <span class="stat-value" id="totalXpStat">0</span>
+                  <span class="stat-label">Total XP</span>
+                </div>
+                <div class="stat-card streak">
+                  <div class="streak-display">
+                    <span class="streak-emoji" id="streakEmoji">💫</span>
+                    <span class="stat-value" id="streakStat">0</span>
+                  </div>
+                  <span class="stat-label">
+                    Day Streak
+                    <span class="streak-tier" id="streakTier">Starting</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="streak-bonus-info" id="streakBonusInfo">
+                <p class="muted tiny">Keep it up! 7 more days for XP bonus.</p>
+              </div>
+            </div>
+
+            <button class="btn ghost small" id="resetProgressBtn" style="margin-top: 12px; opacity: 0.6; width: 100%;">Reset Progress (Demo)</button>
+          </aside>
+
+          <!-- Main Dashboard Content -->
+          <div class="dashboard-main">
+            <!-- Tab Navigation -->
+            <div class="dashboard-tabs">
+              <button class="tab-btn active" data-tab="quests" id="tabQuests">
+                <span class="tab-icon">📋</span>
+                Quests
+                <span class="tab-badge" id="questsBadge">0/6</span>
+              </button>
+              <button class="tab-btn" data-tab="missions" id="tabMissions">
+                <span class="tab-icon">🏆</span>
+                Missions
+                <span class="tab-badge" id="missionsBadge">0/6</span>
+              </button>
+              <button class="tab-btn" data-tab="rewards" id="tabRewards">
+                <span class="tab-icon">🎁</span>
+                Rewards
+                <span class="tab-badge" id="rewardsBadge">0/3</span>
+              </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="dashboard-content">
+              <!-- Quests Tab -->
+              <div class="tab-panel active" id="panelQuests">
+                <div class="quest-section">
+                  <div class="quest-header">
+                    <h3>Daily Tasks</h3>
+                    <div class="quest-progress-summary">
+                      <span class="xp-badge" id="dailyXpEarned">+0 / 650 XP</span>
+                    </div>
+                  </div>
+                  <div class="daily-progress-bar">
+                    <div class="daily-progress-fill" id="dailyProgressFill" style="width: 0%"></div>
+                  </div>
+                  <p class="muted tiny"><span id="tasksCompleted">0</span> of 6 tasks completed</p>
+                  <ul class="task-list" id="dailyTasks" aria-live="polite"></ul>
+                </div>
+
+                <div class="quest-section" style="margin-top: 28px;">
+                  <div class="quest-header">
+                    <h3>Weekly Quests</h3>
+                    <span class="pill subtle">Resets Monday</span>
+                  </div>
+                  <div class="quest-grid" id="questGrid" aria-live="polite"></div>
+                </div>
+              </div>
+
+              <!-- Missions Tab -->
+              <div class="tab-panel" id="panelMissions" hidden>
+                <div class="quest-header" style="margin-bottom: 16px;">
+                  <h3>Missions</h3>
+                  <div class="achievements-summary">
+                    <span class="achievement-count" id="missionsCount">0 / 6</span>
+                    <span class="xp-badge" id="missionsXpEarned">+0 XP earned</span>
+                  </div>
+                </div>
+                <div class="mission-grid" id="missionBoardGrid" aria-live="polite"></div>
+              </div>
+
+              <!-- Rewards Tab -->
+              <div class="tab-panel" id="panelRewards" hidden>
+                <div class="rewards-header" style="margin-bottom: 20px;">
+                  <h3>Reward Shop</h3>
+                  <div class="xp-balance">
+                    <span class="xp-icon">⭐</span>
+                    <span class="xp-amount" id="xpBalance">0 XP</span>
+                    <span class="muted">available</span>
+                  </div>
+                </div>
+                <div class="reward-grid" id="rewardCatalog"></div>
+                <div class="rewards-footer" style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(232,255,249,0.08);">
+                  <p class="muted tiny">Rewards refresh weekly. Earn XP by completing tasks, quests, and missions.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h2>Arcade mission board</h2>
         </div>
-        <p class="lead">Track specialty runs that feel like a video game season pass. Each card shows objectives, progress, and the reward bundle waiting to be claimed.</p>
-        <div class="mission-grid" id="missionBoardGrid" aria-live="polite"></div>
+
+        <!-- Stats Summary -->
+        <div class="dashboard-stats">
+          <div class="stat-summary-card">
+            <span class="stat-icon">📈</span>
+            <div class="stat-info">
+              <span class="stat-value" id="todayTasksCompleted">0</span>
+              <span class="stat-label">Tasks completed today</span>
+            </div>
+          </div>
+          <div class="stat-summary-card">
+            <span class="stat-icon">⚡</span>
+            <div class="stat-info">
+              <span class="stat-value" id="todayXpEarned">0</span>
+              <span class="stat-label">XP earned today</span>
+            </div>
+          </div>
+          <div class="stat-summary-card">
+            <span class="stat-icon">🎯</span>
+            <div class="stat-info">
+              <span class="stat-value" id="totalMissionsCompleted">0</span>
+              <span class="stat-label">Missions completed</span>
+            </div>
+          </div>
+          <div class="stat-summary-card">
+            <span class="stat-icon">🔓</span>
+            <div class="stat-info">
+              <span class="stat-value" id="totalRewardsRedeemed">0</span>
+              <span class="stat-label">Rewards redeemed</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section">
+    <!-- How XP Works Section -->
+    <section class="section alt">
       <div class="container">
-        <div class="section-heading">
-          <div class="brand-mark" aria-hidden="true">
-            <img src="/assets/electoplasmlogo.png" width="28" height="28" alt="" />
+        <h2>How XP Works</h2>
+        <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px;">
+          <div class="pump-card" style="text-align: center; padding: 28px;">
+            <div style="font-size: 2.5rem; margin-bottom: 12px;">🎯</div>
+            <h3>Complete Tasks</h3>
+            <p class="muted">Daily tasks reset each day. Complete them all to maximize your XP gains and maintain your streak.</p>
           </div>
-          <h2>Redeem rewards</h2>
+          <div class="pump-card" style="text-align: center; padding: 28px;">
+            <div style="font-size: 2.5rem; margin-bottom: 12px;">🔥</div>
+            <h3>Build Streaks</h3>
+            <p class="muted">Log in and complete at least one task daily to build your streak. Higher streaks unlock XP multipliers.</p>
+          </div>
+          <div class="pump-card" style="text-align: center; padding: 28px;">
+            <div style="font-size: 2.5rem; margin-bottom: 12px;">⭐</div>
+            <h3>Redeem Rewards</h3>
+            <p class="muted">Spend your XP on exclusive rewards like fee rebates, priority slots, and trading boosts.</p>
+          </div>
         </div>
-        <p class="lead">Cash in your XP and loot tokens for in-app perks, merch drops, and special access prizes.</p>
-        <div class="reward-grid" id="rewardCatalog"></div>
       </div>
     </section>
   </main>

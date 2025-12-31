@@ -2325,29 +2325,43 @@ function renderDashboard(){
 /**
  * Render launchpad token library
  * Displays a filterable table of 50 mock tokens with performance metrics
- * 
+ *
  * Features:
  * - 50 procedurally generated tokens for demo
  * - Real-time filtering by name or symbol (debounced for performance)
- * - Status badges (Hot, Trending, New)
+ * - Status filtering (All, Live, Launching, Ended)
+ * - Sorting by recent, growth, or liquidity
  * - Performance metrics (24h change, liquidity)
  * - Formatted currency display
  * - Optimized rendering with document fragment
- * 
- * NOTE: This uses generated demo data. In production:
- * - Fetch real token data from backend API or blockchain
- * - Display actual liquidity pool metrics
- * - Show real-time price changes
- * - Link to individual token detail pages
- * - Add sorting capabilities
  */
 function renderLaunchpadTokens(){
   const table = document.getElementById('tokenTable');
   const filterInput = document.getElementById('tokenFilter');
   const filterResult = document.getElementById('filterResult');
   const tokenCount = document.getElementById('tokenCount');
+  const sortSelect = document.getElementById('tokenSort');
+  const statusFilters = document.querySelectorAll('[data-status]');
 
   if (!table) return; // Exit if not on launchpad page
+
+  // Current filter state
+  let currentStatusFilter = 'all';
+  let currentSort = 'recent';
+
+  // Token names for more realistic demo
+  const tokenNames = [
+    'Phantom Cat', 'Spectral Dog', 'Ghost Panda', 'Spirit Bear', 'Shadow Fox',
+    'Ethereal Owl', 'Mystic Wolf', 'Cosmic Tiger', 'Lunar Lion', 'Solar Snake',
+    'Astral Eagle', 'Nebula Narwhal', 'Quantum Quail', 'Void Viper', 'Plasma Penguin',
+    'Crystal Crow', 'Diamond Duck', 'Emerald Elk', 'Ruby Rabbit', 'Sapphire Seal',
+    'Topaz Turtle', 'Onyx Otter', 'Pearl Parrot', 'Jade Jaguar', 'Amber Ant',
+    'Neon Newt', 'Electric Eel', 'Cyber Coyote', 'Digital Dolphin', 'Pixel Peacock',
+    'Retro Raven', 'Synth Shark', 'Vapor Vulture', 'Holo Hawk', 'Glitch Gorilla',
+    'Matrix Moose', 'Binary Beaver', 'Crypto Crane', 'Defi Deer', 'Web3 Whale',
+    'Meta Mantis', 'Chain Cheetah', 'Block Butterfly', 'Hash Hamster', 'Node Nightingale',
+    'Stake Starling', 'Yield Yak', 'Pool Pelican', 'Swap Swan', 'Farm Falcon'
+  ];
 
   /**
    * Generate 50 mock tokens for demonstration
@@ -2355,62 +2369,129 @@ function renderLaunchpadTokens(){
    */
   const tokens = Array.from({ length: 50 }, (_, i) => {
     const index = i + 1;
-    const name = `Mock Token ${index.toString().padStart(2, '0')}`;
-    const symbol = `M${index.toString().padStart(2, '0')}`;
+    const name = tokenNames[i] || `Mock Token ${index.toString().padStart(2, '0')}`;
+    const symbol = name.split(' ').map(w => w[0]).join('').toUpperCase();
     // Use sin function for varied but deterministic price changes
-    const change = (Math.sin(index) * 8).toFixed(2);
-    const liquidity = 50_000 + (index * 1234);
-    // Rotate status based on index
-    const status = index % 3 === 0 ? 'Hot' : (index % 2 === 0 ? 'Trending' : 'New');
-    return { name, symbol, change, liquidity, status };
+    const change = parseFloat((Math.sin(index) * 15 + Math.cos(index * 2) * 5).toFixed(2));
+    const liquidity = Math.floor(10_000 + Math.random() * 500_000);
+    // Assign status based on index for demo variety
+    const statuses = ['live', 'launching', 'ended'];
+    const status = statuses[index % 3];
+    // Creation time for sorting (most recent first)
+    const createdAt = Date.now() - (i * 3600000); // Each token 1 hour apart
+    return { name, symbol, change, liquidity, status, createdAt, index };
   });
 
   /**
-   * Render the token table with optional filtering
+   * Get status badge class based on status
+   */
+  const getStatusClass = (status) => {
+    switch(status) {
+      case 'live': return 'status-live';
+      case 'launching': return 'status-launching';
+      case 'ended': return 'status-ended';
+      default: return '';
+    }
+  };
+
+  /**
+   * Get status display text
+   */
+  const getStatusLabel = (status) => {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
+  /**
+   * Render the token table with filtering and sorting
    * Uses document fragment for efficient DOM manipulation
    */
   const render = () => {
     const term = filterInput?.value?.toLowerCase().trim() || '';
-    
-    // Filter tokens by search term (searches name and symbol)
-    const visible = !term ? tokens : tokens.filter(t => 
-      `${t.name} ${t.symbol}`.toLowerCase().includes(term)
-    );
-    
+
+    // Filter tokens by search term and status
+    let visible = tokens.filter(t => {
+      const matchesSearch = !term || `${t.name} ${t.symbol}`.toLowerCase().includes(term);
+      const matchesStatus = currentStatusFilter === 'all' || t.status === currentStatusFilter;
+      return matchesSearch && matchesStatus;
+    });
+
+    // Sort tokens
+    switch(currentSort) {
+      case 'growth':
+        visible.sort((a, b) => b.change - a.change);
+        break;
+      case 'liquidity':
+        visible.sort((a, b) => b.liquidity - a.liquidity);
+        break;
+      case 'recent':
+      default:
+        visible.sort((a, b) => b.createdAt - a.createdAt);
+        break;
+    }
+
     // Use document fragment for better performance
     const fragment = document.createDocumentFragment();
-    
+
     // Render table rows
     visible.forEach(token => {
       const row = document.createElement('div');
       row.className = 'table-row';
       row.setAttribute('role', 'row');
+      const changeSign = token.change >= 0 ? '+' : '';
       row.innerHTML = `
-        <span role="cell">${sanitizeHTML(token.name)}</span>
-        <span role="cell">${sanitizeHTML(token.symbol)}</span>
-        <span role="cell" class="${Number(token.change) >= 0 ? 'pos' : 'neg'}">${token.change}%</span>
+        <span role="cell">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--glass); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.8rem;">${sanitizeHTML(token.symbol.charAt(0))}</div>
+            <div>
+              <strong>${sanitizeHTML(token.name)}</strong>
+              <div class="muted tiny">${sanitizeHTML(token.symbol)}</div>
+            </div>
+          </div>
+        </span>
+        <span role="cell"><span class="pill subtle">${sanitizeHTML(token.symbol)}</span></span>
+        <span role="cell" class="${token.change >= 0 ? 'pos' : 'neg'}">${changeSign}${token.change}%</span>
         <span role="cell">${formatCurrency(token.liquidity)}</span>
-        <span role="cell"><span class="chip">${sanitizeHTML(token.status)}</span></span>
+        <span role="cell"><span class="status-badge ${getStatusClass(token.status)}">${getStatusLabel(token.status)}</span></span>
       `;
       fragment.appendChild(row);
     });
-    
+
     // Batch DOM update
     table.innerHTML = '';
     table.appendChild(fragment);
 
     // Update filter results text
-    if (filterResult) filterResult.textContent = `Showing ${visible.length} of ${tokens.length} tokens`;
+    if (filterResult) filterResult.textContent = `Showing ${visible.length} tokens`;
     if (tokenCount) tokenCount.textContent = tokens.length.toString();
   };
 
   // Initial render
   render();
-  
+
   // Setup live filtering with debouncing to improve performance
   if (filterInput) {
     const debouncedRender = debounce(render, DEBOUNCE_DELAY_SEARCH);
     filterInput.addEventListener('input', debouncedRender);
+  }
+
+  // Setup status filter buttons
+  statusFilters.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Update active state
+      statusFilters.forEach(b => b.classList.remove('filled'));
+      btn.classList.add('filled');
+      // Update filter and re-render
+      currentStatusFilter = btn.dataset.status;
+      render();
+    });
+  });
+
+  // Setup sort dropdown
+  if (sortSelect) {
+    sortSelect.addEventListener('change', () => {
+      currentSort = sortSelect.value;
+      render();
+    });
   }
 }
 
@@ -2509,29 +2590,135 @@ if (document.readyState === 'loading') {
 // ============================================
 
 /**
+ * Update remove liquidity percentage display
+ */
+function updateRemovePercent() {
+  const slider = document.getElementById('removePercent');
+  const label = document.getElementById('removePercentLabel');
+  const tokenADisplay = document.getElementById('removeTokenA');
+  const tokenBDisplay = document.getElementById('removeTokenB');
+  const lpSelect = document.getElementById('removeLpSelect');
+
+  if (!slider || !label) return;
+
+  const percent = slider.value;
+  label.textContent = `${percent}%`;
+
+  // Demo calculation based on selected position
+  const selectedPosition = lpSelect?.value || '';
+  if (selectedPosition && tokenADisplay && tokenBDisplay) {
+    const multiplier = percent / 100;
+    if (selectedPosition === 'USDC-ECTO') {
+      tokenADisplay.textContent = `${(623.45 * multiplier).toFixed(2)} USDC`;
+      tokenBDisplay.textContent = `${(4892.30 * multiplier).toFixed(2)} ECTO`;
+    } else if (selectedPosition === 'CSPR-ECTO') {
+      tokenADisplay.textContent = `${(1500 * multiplier).toFixed(2)} CSPR`;
+      tokenBDisplay.textContent = `${(2500 * multiplier).toFixed(2)} ECTO`;
+    } else if (selectedPosition === 'WETH-USDC') {
+      tokenADisplay.textContent = `${(0.85 * multiplier).toFixed(4)} WETH`;
+      tokenBDisplay.textContent = `${(1945.10 * multiplier).toFixed(2)} USDC`;
+    }
+  }
+}
+
+// Make it globally available for inline onclick handlers
+window.updateRemovePercent = updateRemovePercent;
+
+/**
  * Setup liquidity form handlers
  */
 function setupLiquidityForm() {
   const addLiquidityForm = document.getElementById('addLiquidityForm');
+  const removeLiquidityForm = document.getElementById('removeLiquidityForm');
   const addLiquidityTab = document.getElementById('addLiquidityTab');
+  const removeLiquidityTab = document.getElementById('removeLiquidityTab');
   const positionsTab = document.getElementById('positionsTab');
   const addLiquidityPanel = document.getElementById('addLiquidityPanel');
+  const removeLiquidityPanel = document.getElementById('removeLiquidityPanel');
   const positionsPanel = document.getElementById('positionsPanel');
 
-  // Tab switching
-  if (addLiquidityTab && positionsTab) {
-    addLiquidityTab.addEventListener('click', () => {
-      addLiquidityTab.classList.add('filled');
-      positionsTab.classList.remove('filled');
-      if (addLiquidityPanel) addLiquidityPanel.hidden = false;
-      if (positionsPanel) positionsPanel.hidden = true;
+  // Helper to switch tabs
+  const switchTab = (activeTab, activePanel) => {
+    // Update tab styles
+    [addLiquidityTab, removeLiquidityTab, positionsTab].forEach(tab => {
+      if (tab) tab.classList.remove('filled');
     });
+    if (activeTab) activeTab.classList.add('filled');
 
-    positionsTab.addEventListener('click', () => {
-      positionsTab.classList.add('filled');
-      addLiquidityTab.classList.remove('filled');
-      if (positionsPanel) positionsPanel.hidden = false;
-      if (addLiquidityPanel) addLiquidityPanel.hidden = true;
+    // Show/hide panels
+    [addLiquidityPanel, removeLiquidityPanel, positionsPanel].forEach(panel => {
+      if (panel) panel.hidden = true;
+    });
+    if (activePanel) activePanel.hidden = false;
+  };
+
+  // Tab switching
+  if (addLiquidityTab) {
+    addLiquidityTab.addEventListener('click', () => switchTab(addLiquidityTab, addLiquidityPanel));
+  }
+  if (removeLiquidityTab) {
+    removeLiquidityTab.addEventListener('click', () => switchTab(removeLiquidityTab, removeLiquidityPanel));
+  }
+  if (positionsTab) {
+    positionsTab.addEventListener('click', () => switchTab(positionsTab, positionsPanel));
+  }
+
+  // Remove liquidity slider
+  const removePercentSlider = document.getElementById('removePercent');
+  const removeLpSelect = document.getElementById('removeLpSelect');
+
+  if (removePercentSlider) {
+    removePercentSlider.addEventListener('input', updateRemovePercent);
+  }
+  if (removeLpSelect) {
+    removeLpSelect.addEventListener('change', updateRemovePercent);
+  }
+
+  // Remove liquidity form submission
+  if (removeLiquidityForm) {
+    removeLiquidityForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const lpPosition = removeLpSelect?.value;
+      const percent = removePercentSlider?.value || 50;
+      const btn = document.getElementById('removeLiquidityBtn');
+
+      if (!lpPosition) {
+        alert('Please select a liquidity position');
+        return;
+      }
+
+      if (!window.connectedAccount) {
+        alert('Please connect your wallet first');
+        return;
+      }
+
+      const originalText = btn?.textContent || 'Remove Liquidity';
+
+      try {
+        if (btn) {
+          btn.textContent = 'Processing...';
+          btn.disabled = true;
+        }
+
+        // Demo: simulate removal
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        alert(`Successfully removed ${percent}% of your ${lpPosition} position!\n\n(Demo mode - no actual transaction)`);
+
+        // Reset form
+        if (removePercentSlider) removePercentSlider.value = 50;
+        updateRemovePercent();
+
+      } catch (error) {
+        console.error('Remove liquidity error:', error);
+        alert('Failed to remove liquidity: ' + error.message);
+      } finally {
+        if (btn) {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }
+      }
     });
   }
 
@@ -2649,3 +2836,293 @@ if (document.readyState === 'loading') {
 } else {
   setupLiquidityForm();
 }
+
+// ============================================================================
+// DASHBOARD TABS AND XP TRACKER
+// ============================================================================
+
+/**
+ * XP Level Calculation
+ * Uses an exponential scaling formula where each level requires more XP
+ */
+const XP_CONFIG = {
+  baseXP: 100,      // XP required for level 2
+  scaleFactor: 1.5, // Each level requires 1.5x more XP
+  maxLevel: 50
+};
+
+/**
+ * Calculate the total XP required to reach a specific level
+ */
+function getXPForLevel(level) {
+  if (level <= 1) return 0;
+  let total = 0;
+  for (let i = 2; i <= level; i++) {
+    total += Math.floor(XP_CONFIG.baseXP * Math.pow(XP_CONFIG.scaleFactor, i - 2));
+  }
+  return total;
+}
+
+/**
+ * Calculate the current level based on total XP
+ */
+function getLevelFromXP(xp) {
+  let level = 1;
+  let totalRequired = 0;
+
+  while (level < XP_CONFIG.maxLevel) {
+    const nextLevelXP = Math.floor(XP_CONFIG.baseXP * Math.pow(XP_CONFIG.scaleFactor, level - 1));
+    if (totalRequired + nextLevelXP > xp) break;
+    totalRequired += nextLevelXP;
+    level++;
+  }
+
+  return {
+    level,
+    currentLevelXP: xp - totalRequired,
+    xpForNextLevel: Math.floor(XP_CONFIG.baseXP * Math.pow(XP_CONFIG.scaleFactor, level - 1)),
+    totalXP: xp
+  };
+}
+
+/**
+ * Get streak tier info based on streak count
+ */
+function getStreakTier(streak) {
+  if (streak >= 30) return { name: 'Legendary', emoji: '🔥' };
+  if (streak >= 14) return { name: 'Epic', emoji: '⚡' };
+  if (streak >= 7) return { name: 'Hot', emoji: '🌟' };
+  if (streak >= 3) return { name: 'Building', emoji: '✨' };
+  return { name: 'Starting', emoji: '💫' };
+}
+
+/**
+ * Update the XP tracker sidebar with current state
+ */
+function updateXPTracker() {
+  const state = DashboardState.get();
+  const levelInfo = getLevelFromXP(state.xp);
+  const streakTier = getStreakTier(state.streak);
+
+  // Level badge
+  const levelNumber = document.getElementById('levelNumber');
+  const levelBadge = document.getElementById('levelBadge');
+  if (levelNumber) levelNumber.textContent = levelInfo.level;
+
+  // Level progress
+  const currentXpEl = document.getElementById('currentXp');
+  const nextLevelXpEl = document.getElementById('nextLevelXp');
+  const xpToNextEl = document.getElementById('xpToNext');
+  const nextLevelEl = document.getElementById('nextLevel');
+  const levelProgressFill = document.getElementById('levelProgressFill');
+
+  if (currentXpEl) currentXpEl.textContent = `${levelInfo.currentLevelXP} XP`;
+  if (nextLevelXpEl) nextLevelXpEl.textContent = levelInfo.xpForNextLevel;
+  if (xpToNextEl) xpToNextEl.textContent = levelInfo.xpForNextLevel - levelInfo.currentLevelXP;
+  if (nextLevelEl) nextLevelEl.textContent = levelInfo.level + 1;
+
+  const progressPercent = (levelInfo.currentLevelXP / levelInfo.xpForNextLevel) * 100;
+  if (levelProgressFill) levelProgressFill.style.width = `${Math.min(100, progressPercent)}%`;
+
+  // XP stats
+  const totalXpStat = document.getElementById('totalXpStat');
+  const streakStat = document.getElementById('streakStat');
+  const streakEmoji = document.getElementById('streakEmoji');
+  const streakTierEl = document.getElementById('streakTier');
+
+  if (totalXpStat) totalXpStat.textContent = state.xp.toLocaleString();
+  if (streakStat) streakStat.textContent = state.streak;
+  if (streakEmoji) streakEmoji.textContent = streakTier.emoji;
+  if (streakTierEl) streakTierEl.textContent = streakTier.name;
+
+  // Streak bonus info
+  const streakBonusInfo = document.getElementById('streakBonusInfo');
+  if (streakBonusInfo) {
+    const nextMilestone = state.streak < 3 ? 3 : state.streak < 7 ? 7 : state.streak < 14 ? 14 : 30;
+    const daysToNext = nextMilestone - state.streak;
+    if (daysToNext > 0 && state.streak < 30) {
+      streakBonusInfo.innerHTML = `<p class="muted tiny">Keep it up! ${daysToNext} more ${daysToNext === 1 ? 'day' : 'days'} for XP bonus.</p>`;
+    } else {
+      streakBonusInfo.innerHTML = `<p class="muted tiny success">Max streak bonus active!</p>`;
+    }
+  }
+
+  // Update tab badges
+  updateTabBadges();
+
+  // Update stats summary
+  updateStatsSummary();
+}
+
+/**
+ * Update tab badge counts
+ */
+function updateTabBadges() {
+  const state = DashboardState.get();
+  const { dailyTasks, weeklyQuests, missions, rewards } = DASHBOARD_DATA;
+
+  // Quests badge
+  const questsBadge = document.getElementById('questsBadge');
+  if (questsBadge) {
+    const completedTasks = state.completedTasks.length;
+    const totalTasks = dailyTasks.length;
+    questsBadge.textContent = `${completedTasks}/${totalTasks}`;
+  }
+
+  // Missions badge
+  const missionsBadge = document.getElementById('missionsBadge');
+  if (missionsBadge) {
+    const completedMissions = state.completedMissions.length;
+    const totalMissions = missions.length;
+    missionsBadge.textContent = `${completedMissions}/${totalMissions}`;
+  }
+
+  // Rewards badge
+  const rewardsBadge = document.getElementById('rewardsBadge');
+  if (rewardsBadge) {
+    const redeemedRewards = state.redeemedRewards.length;
+    const totalRewards = rewards.length;
+    rewardsBadge.textContent = `${redeemedRewards}/${totalRewards}`;
+  }
+
+  // XP balance in rewards panel
+  const xpBalance = document.getElementById('xpBalance');
+  if (xpBalance) {
+    xpBalance.textContent = `${state.xp.toLocaleString()} XP`;
+  }
+
+  // Daily progress
+  const dailyXpEarned = document.getElementById('dailyXpEarned');
+  const dailyProgressFill = document.getElementById('dailyProgressFill');
+  const tasksCompleted = document.getElementById('tasksCompleted');
+
+  if (dailyXpEarned || dailyProgressFill || tasksCompleted) {
+    const completedCount = state.completedTasks.length;
+    const totalDaily = dailyTasks.length;
+    const earnedXP = state.completedTasks.reduce((sum, taskId) => {
+      const task = dailyTasks.find(t => t.id === taskId);
+      return sum + (task?.xp || 0);
+    }, 0);
+    const maxXP = dailyTasks.reduce((sum, t) => sum + t.xp, 0);
+
+    if (dailyXpEarned) dailyXpEarned.textContent = `+${earnedXP} / ${maxXP} XP`;
+    if (dailyProgressFill) dailyProgressFill.style.width = `${(completedCount / totalDaily) * 100}%`;
+    if (tasksCompleted) tasksCompleted.textContent = completedCount;
+  }
+
+  // Missions XP earned
+  const missionsCount = document.getElementById('missionsCount');
+  const missionsXpEarned = document.getElementById('missionsXpEarned');
+  if (missionsCount || missionsXpEarned) {
+    const completedMissions = state.completedMissions.length;
+    const totalMissions = missions.length;
+    const missionXP = state.completedMissions.reduce((sum, missionId) => {
+      const mission = missions.find(m => m.id === missionId);
+      return sum + (mission?.xp || 0);
+    }, 0);
+
+    if (missionsCount) missionsCount.textContent = `${completedMissions} / ${totalMissions}`;
+    if (missionsXpEarned) missionsXpEarned.textContent = `+${missionXP} XP earned`;
+  }
+}
+
+/**
+ * Update stats summary cards
+ */
+function updateStatsSummary() {
+  const state = DashboardState.get();
+  const { dailyTasks, missions } = DASHBOARD_DATA;
+
+  const todayTasksCompleted = document.getElementById('todayTasksCompleted');
+  const todayXpEarned = document.getElementById('todayXpEarned');
+  const totalMissionsCompleted = document.getElementById('totalMissionsCompleted');
+  const totalRewardsRedeemed = document.getElementById('totalRewardsRedeemed');
+
+  if (todayTasksCompleted) {
+    todayTasksCompleted.textContent = state.completedTasks.length;
+  }
+
+  if (todayXpEarned) {
+    const earnedXP = state.completedTasks.reduce((sum, taskId) => {
+      const task = dailyTasks.find(t => t.id === taskId);
+      return sum + (task?.xp || 0);
+    }, 0);
+    todayXpEarned.textContent = earnedXP;
+  }
+
+  if (totalMissionsCompleted) {
+    totalMissionsCompleted.textContent = state.completedMissions.length;
+  }
+
+  if (totalRewardsRedeemed) {
+    totalRewardsRedeemed.textContent = state.redeemedRewards.length;
+  }
+}
+
+/**
+ * Setup dashboard tab switching
+ */
+function setupDashboardTabs() {
+  const tabButtons = document.querySelectorAll('.dashboard-tabs .tab-btn');
+  const tabPanels = {
+    quests: document.getElementById('panelQuests'),
+    missions: document.getElementById('panelMissions'),
+    rewards: document.getElementById('panelRewards')
+  };
+
+  if (!tabButtons.length) return; // Not on dashboard page
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.dataset.tab;
+
+      // Update active button
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Update panels
+      Object.entries(tabPanels).forEach(([key, panel]) => {
+        if (panel) {
+          if (key === targetTab) {
+            panel.hidden = false;
+            panel.classList.add('active');
+          } else {
+            panel.hidden = true;
+            panel.classList.remove('active');
+          }
+        }
+      });
+    });
+  });
+
+  // Setup reset progress button
+  const resetBtn = document.getElementById('resetProgressBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Reset all progress? This will clear your XP, streak, and completed tasks.')) {
+        localStorage.removeItem('ectoplasm-dashboard-state');
+        renderDashboard();
+        updateXPTracker();
+      }
+    });
+  }
+
+  // Initial XP tracker update
+  updateXPTracker();
+}
+
+// Initialize dashboard tabs when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupDashboardTabs);
+} else {
+  setupDashboardTabs();
+}
+
+// Hook into renderDashboard to update XP tracker
+const originalRenderDashboard = renderDashboard;
+window.renderDashboard = function() {
+  originalRenderDashboard();
+  updateXPTracker();
+};
+// Also export for use elsewhere
+window.updateXPTracker = updateXPTracker;
