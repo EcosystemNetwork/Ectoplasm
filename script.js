@@ -2644,8 +2644,8 @@ function applyHoverAnimations() {
   const launchpadCards = document.querySelectorAll('.launchpad-card:not(.glare-hover)');
   launchpadCards.forEach(card => card.classList.add('glare-hover'));
   
-  // Apply magnet effect to primary buttons (excluding Swapper and Wallet Connect buttons)
-  const primaryButtons = document.querySelectorAll('.btn.primary:not(.magnet-hover):not(#swapActionBtn):not(#connectWallet)');
+  // Apply magnet effect to primary buttons (excluding Swapper, Wallet Connect, and View Pool buttons)
+  const primaryButtons = document.querySelectorAll('.btn.primary:not(.magnet-hover):not(#swapActionBtn):not(#connectWallet):not([data-popout-target])');
   primaryButtons.forEach(btn => {
     btn.classList.add('magnet-hover');
     btn.dataset.magnetPadding = '60';
