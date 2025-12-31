@@ -39,10 +39,6 @@
     scrollThreshold: 0.15, // Start animation when 15% visible
   };
 
-  // Check if GSAP is available
-  const hasGSAP = typeof gsap !== 'undefined';
-  const useGSAP = hasGSAP; // Can be toggled for testing
-
   // ============================================================================
   // UTILITY FUNCTIONS
   // ============================================================================

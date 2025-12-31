@@ -9,25 +9,7 @@
    ANIMATION KEYFRAMES
    ============================================================================ */
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Note: fadeIn and slideUp are already defined in styles.css */
 
 @keyframes slideDown {
   from {
@@ -152,30 +134,30 @@
    ANIMATION UTILITY CLASSES
    ============================================================================ */
 
-/* Fade animations */
+/* Fade animations - using opacity to maintain accessibility */
 [data-animate="fade-in"] {
-  visibility: hidden;
+  opacity: 0;
 }
 
 /* Slide animations */
 [data-animate="slide-left"],
 [data-animate="slide-right"] {
-  visibility: hidden;
+  opacity: 0;
 }
 
 /* Scale animations */
 [data-animate="scale"] {
-  visibility: hidden;
+  opacity: 0;
 }
 
 /* Blur fade animations */
 [data-animate="blur-fade"] {
-  visibility: hidden;
+  opacity: 0;
 }
 
 /* Stagger container */
 [data-animate="stagger"] > * {
-  visibility: hidden;
+  opacity: 0;
 }
 
 /* ============================================================================
