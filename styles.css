@@ -327,8 +327,7 @@ main{flex:1;display:block}
 .btn{font-weight:600;border:0;padding:8px 12px;border-radius:10px;cursor:pointer;transition:transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease}
 .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(232,255,249,0.08)}
 .btn.primary{background:var(--accent);background-size:200%;color:#021024;position:relative;overflow:hidden}
-.btn.primary:hover{transform:scale(1.05);box-shadow:0 8px 24px rgba(76,245,199,0.4);filter:brightness(1.1)}
-.btn.primary:active{transform:scale(0.98);box-shadow:0 4px 12px rgba(76,245,199,0.3)}
+.btn.primary:active{transform:scale(1.05);box-shadow:0 8px 24px rgba(76,245,199,0.4);filter:brightness(1.1)}
 .btn.large{padding:10px 16px}
 .btn.full{width:100%}
 
