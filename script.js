@@ -2486,3 +2486,279 @@ if (document.readyState === 'loading') {
 } else {
   populateMockLPPositions();
 }
+
+// ============================================================================
+// MODERN HOVER-TRIGGERED ANIMATIONS (Native Web APIs)
+// ============================================================================
+
+/**
+ * Magnet Effect Implementation
+ * Creates magnetic pull effect on elements with .magnet-hover class
+ * Uses native mousemove events and CSS transforms
+ */
+function initMagnetEffect() {
+  const magnetElements = document.querySelectorAll('.magnet-hover');
+  
+  magnetElements.forEach(element => {
+    // Configuration
+    const padding = parseInt(element.dataset.magnetPadding) || 100;
+    const strength = parseFloat(element.dataset.magnetStrength) || 2;
+    
+    // State
+    let isActive = false;
+    let rafId = null;
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    
+    // Smooth animation using requestAnimationFrame
+    function animate() {
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+      
+      currentX += dx * 0.1;
+      currentY += dy * 0.1;
+      
+      element.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+      
+      if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+        rafId = requestAnimationFrame(animate);
+      } else {
+        rafId = null;
+      }
+    }
+    
+    function handleMouseMove(e) {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      const distX = Math.abs(centerX - e.clientX);
+      const distY = Math.abs(centerY - e.clientY);
+      
+      // Check if mouse is within magnetic field
+      if (distX < rect.width / 2 + padding && distY < rect.height / 2 + padding) {
+        if (!isActive) {
+          isActive = true;
+          element.classList.add('magnet-active');
+        }
+        
+        targetX = (e.clientX - centerX) / strength;
+        targetY = (e.clientY - centerY) / strength;
+        
+        if (!rafId) {
+          animate();
+        }
+      } else {
+        if (isActive) {
+          isActive = false;
+          element.classList.remove('magnet-active');
+        }
+        
+        targetX = 0;
+        targetY = 0;
+        
+        if (!rafId) {
+          animate();
+        }
+      }
+    }
+    
+    // Add event listener
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    
+    // Store cleanup function
+    element._magnetCleanup = () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
+  });
+}
+
+/**
+ * Tilt Effect Implementation
+ * Creates 3D tilt effect on elements with .tilt-hover class
+ * Uses native mousemove events and CSS 3D transforms
+ */
+function initTiltEffect() {
+  const tiltElements = document.querySelectorAll('.tilt-hover');
+  
+  tiltElements.forEach(element => {
+    // Configuration
+    const maxTilt = parseInt(element.dataset.tiltMax) || 10;
+    
+    function handleMouseMove(e) {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      
+      // Calculate tilt based on mouse position relative to center
+      const percentX = (e.clientX - centerX) / (rect.width / 2);
+      const percentY = (e.clientY - centerY) / (rect.height / 2);
+      
+      const tiltY = percentX * maxTilt;
+      const tiltX = -percentY * maxTilt;
+      
+      element.style.setProperty('--tilt-x', `${tiltX}deg`);
+      element.style.setProperty('--tilt-y', `${tiltY}deg`);
+    }
+    
+    function handleMouseLeave() {
+      element.style.setProperty('--tilt-x', '0deg');
+      element.style.setProperty('--tilt-y', '0deg');
+    }
+    
+    // Add event listeners
+    element.addEventListener('mousemove', handleMouseMove, { passive: true });
+    element.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+    
+    // Store cleanup function
+    element._tiltCleanup = () => {
+      element.removeEventListener('mousemove', handleMouseMove);
+      element.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  });
+}
+
+/**
+ * Apply hover animations to specific elements
+ * Automatically adds appropriate classes based on element type
+ */
+function applyHoverAnimations() {
+  // Apply glare effect to cards
+  const heroCards = document.querySelectorAll('.hero-card:not(.glare-hover)');
+  heroCards.forEach(card => card.classList.add('glare-hover'));
+  
+  const featureCards = document.querySelectorAll('.feature-card:not(.glare-hover)');
+  featureCards.forEach(card => card.classList.add('glare-hover'));
+  
+  const questCards = document.querySelectorAll('.quest-card:not(.glare-hover)');
+  questCards.forEach(card => card.classList.add('glare-hover'));
+  
+  const missionCards = document.querySelectorAll('.mission-card:not(.glare-hover)');
+  missionCards.forEach(card => card.classList.add('glare-hover'));
+  
+  const launchpadCards = document.querySelectorAll('.launchpad-card:not(.glare-hover)');
+  launchpadCards.forEach(card => card.classList.add('glare-hover'));
+  
+  // Apply magnet effect to primary buttons
+  const primaryButtons = document.querySelectorAll('.btn.primary:not(.magnet-hover)');
+  primaryButtons.forEach(btn => {
+    btn.classList.add('magnet-hover');
+    btn.dataset.magnetPadding = '60';
+    btn.dataset.magnetStrength = '3';
+  });
+  
+  // Apply tilt effect to icon buttons
+  const iconButtons = document.querySelectorAll('.icon-btn:not(.tilt-hover)');
+  iconButtons.forEach(btn => {
+    btn.classList.add('tilt-hover');
+    btn.dataset.tiltMax = '8';
+  });
+  
+  // Apply shimmer to certain cards on dashboard
+  const rewardCards = document.querySelectorAll('.reward-card:not(.shimmer-hover)');
+  rewardCards.forEach(card => card.classList.add('shimmer-hover'));
+}
+
+/**
+ * Check if user prefers reduced motion
+ */
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
+ * Initialize all hover animations
+ */
+function initHoverAnimations() {
+  // Skip if user prefers reduced motion
+  if (prefersReducedMotion()) {
+    console.log('Hover animations disabled due to user preference for reduced motion');
+    return;
+  }
+  
+  // Apply animation classes to elements
+  applyHoverAnimations();
+  
+  // Initialize interactive effects
+  initMagnetEffect();
+  initTiltEffect();
+  
+  console.log('Modern hover animations initialized');
+}
+
+/**
+ * Cleanup hover animations
+ * Useful for SPA navigation or dynamic content
+ */
+function cleanupHoverAnimations() {
+  // Cleanup magnet effects
+  document.querySelectorAll('.magnet-hover').forEach(element => {
+    if (element._magnetCleanup) {
+      element._magnetCleanup();
+      delete element._magnetCleanup;
+    }
+  });
+  
+  // Cleanup tilt effects
+  document.querySelectorAll('.tilt-hover').forEach(element => {
+    if (element._tiltCleanup) {
+      element._tiltCleanup();
+      delete element._tiltCleanup;
+    }
+  });
+}
+
+// Initialize hover animations when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initHoverAnimations);
+} else {
+  initHoverAnimations();
+}
+
+// Listen for motion preference changes
+window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+  if (e.matches) {
+    cleanupHoverAnimations();
+    console.log('Hover animations disabled due to motion preference change');
+  } else {
+    initHoverAnimations();
+    console.log('Hover animations enabled due to motion preference change');
+  }
+});
+
+// Expose functions for potential manual usage
+window.EctoplasmAnimations = {
+  init: initHoverAnimations,
+  cleanup: cleanupHoverAnimations,
+  applyToElement: (element, type) => {
+    if (prefersReducedMotion()) return;
+    
+    switch(type) {
+      case 'glare':
+        element.classList.add('glare-hover');
+        break;
+      case 'magnet':
+        element.classList.add('magnet-hover');
+        initMagnetEffect();
+        break;
+      case 'tilt':
+        element.classList.add('tilt-hover');
+        initTiltEffect();
+        break;
+      case 'shimmer':
+        element.classList.add('shimmer-hover');
+        break;
+      case 'glow':
+        element.classList.add('glow-hover');
+        break;
+      case 'float':
+        element.classList.add('float-hover');
+        break;
+    }
+  }
+};
