@@ -2762,3 +2762,82 @@ window.EctoplasmAnimations = {
     }
   }
 };
+
+// ============================================================================
+// LIQUID BLOB MOUSE AVOIDANCE
+// ============================================================================
+
+/**
+ * Make liquid blobs avoid the mouse cursor
+ * Creates a repulsion effect where blobs move away from the cursor
+ */
+function initLiquidBlobAvoidance() {
+  const liquidContainer = document.querySelector('.liquid-container');
+  if (!liquidContainer) return;
+  
+  const blobs = document.querySelectorAll('.liquid-blob');
+  if (!blobs.length) return;
+  
+  let mouseX = 0;
+  let mouseY = 0;
+  let rafId = null;
+  
+  // Configuration
+  const avoidanceRadius = 200; // Distance at which blobs start avoiding
+  const avoidanceStrength = 80; // How far blobs move away
+  
+  function handleMouseMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    if (!rafId) {
+      rafId = requestAnimationFrame(updateBlobPositions);
+    }
+  }
+  
+  function updateBlobPositions() {
+    blobs.forEach(blob => {
+      const rect = blob.getBoundingClientRect();
+      const blobCenterX = rect.left + rect.width / 2;
+      const blobCenterY = rect.top + rect.height / 2;
+      
+      // Calculate distance from mouse to blob center
+      const dx = blobCenterX - mouseX;
+      const dy = blobCenterY - mouseY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // If mouse is within avoidance radius, push blob away
+      if (distance < avoidanceRadius && distance > 0) {
+        const force = (avoidanceRadius - distance) / avoidanceRadius;
+        const pushX = (dx / distance) * avoidanceStrength * force;
+        const pushY = (dy / distance) * avoidanceStrength * force;
+        
+        blob.classList.add('avoiding-mouse');
+        blob.style.transform = `translate(${pushX}px, ${pushY}px)`;
+      } else {
+        blob.classList.remove('avoiding-mouse');
+        blob.style.transform = '';
+      }
+    });
+    
+    rafId = null;
+  }
+  
+  // Add event listener
+  liquidContainer.addEventListener('mousemove', handleMouseMove, { passive: true });
+  
+  // Clean up on page unload
+  window.addEventListener('beforeunload', () => {
+    liquidContainer.removeEventListener('mousemove', handleMouseMove);
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+  });
+}
+
+// Initialize liquid blob avoidance when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLiquidBlobAvoidance);
+} else {
+  initLiquidBlobAvoidance();
+}
