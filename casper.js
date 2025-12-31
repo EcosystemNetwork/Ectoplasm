@@ -6,42 +6,114 @@
  * - Swap quote calculations
  * - Transaction building and signing
  */
+
+/**
+ * Convert hex string to Uint8Array (browser-compatible, no Buffer needed)
+ * @param {string} hex - Hex string (with or without 'hash-' prefix)
+ * @returns {Uint8Array}
+ */
+function hexToBytes(hex) {
+  const cleanHex = hex.replace('hash-', '');
+  const bytes = new Uint8Array(cleanHex.length / 2);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = parseInt(cleanHex.substr(i * 2, 2), 16);
+  }
+  return bytes;
+}
+
+// SDK class references (set during init)
+let CasperClientClass = null;
+let CLPublicKeyClass = null;
+let CLValueBuilderClass = null;
+let RuntimeArgsClass = null;
+let DeployUtilClass = null;
+let CLListClass = null;
+
 const CasperService = {
   client: null,
   initialized: false,
+  sdkAvailable: false,
+  initError: null,
 
   /**
-   * Initialize the Casper client
+   * Initialize the Casper client and resolve SDK classes
+   * @returns {boolean} Whether initialization was successful
    */
   init() {
-    if (this.initialized) return;
+    if (this.initialized) return this.sdkAvailable;
 
     const network = EctoplasmConfig.getNetwork();
 
+    // Resolve SDK classes from global scope
+    // lib.web.js exposes classes under different possible namespaces
+    const sdk = window.Casper || window.CasperSDK || window.casper_js_sdk || window;
+
+    // Try to find classes in various locations
+    CasperClientClass = sdk.CasperClient || window.CasperClient;
+    CLPublicKeyClass = sdk.CLPublicKey || window.CLPublicKey;
+    CLValueBuilderClass = sdk.CLValueBuilder || window.CLValueBuilder;
+    RuntimeArgsClass = sdk.RuntimeArgs || window.RuntimeArgs;
+    DeployUtilClass = sdk.DeployUtil || window.DeployUtil;
+    CLListClass = sdk.CLList || window.CLList;
+
     // Check if casper-js-sdk is loaded
-    if (typeof CasperClient === 'undefined') {
-      console.warn('CasperService: casper-js-sdk not loaded yet');
-      return;
+    if (!CasperClientClass) {
+      this.initError = 'Casper SDK not loaded. Blockchain features are unavailable.';
+      console.warn('CasperService:', this.initError);
+      console.warn('Make sure casper-js-sdk is loaded before casper.js');
+      this.initialized = true;
+      this.sdkAvailable = false;
+      return false;
     }
 
     try {
-      this.client = new CasperClient(network.rpcUrl);
+      this.client = new CasperClientClass(network.rpcUrl);
       this.initialized = true;
-      console.log(`CasperService initialized for ${network.name}`);
+      this.sdkAvailable = true;
+      console.log(`CasperService initialized for ${network.name}`, {
+        rpcUrl: network.rpcUrl,
+        sdkClasses: {
+          CasperClient: !!CasperClientClass,
+          CLPublicKey: !!CLPublicKeyClass,
+          CLValueBuilder: !!CLValueBuilderClass,
+          DeployUtil: !!DeployUtilClass
+        }
+      });
+      return true;
     } catch (error) {
-      console.error('CasperService: Failed to initialize', error);
+      this.initError = `Failed to connect to ${network.name}: ${error.message}`;
+      console.error('CasperService:', this.initError);
+      this.initialized = true;
+      this.sdkAvailable = false;
+      return false;
     }
   },
 
   /**
-   * Ensure service is initialized
+   * Check if SDK is available and show user-friendly error if not
+   * @returns {boolean} Whether SDK is available
+   */
+  isAvailable() {
+    this.init();
+    return this.sdkAvailable;
+  },
+
+  /**
+   * Get initialization error message (for UI display)
+   * @returns {string|null}
+   */
+  getError() {
+    return this.initError;
+  },
+
+  /**
+   * Ensure service is initialized and SDK is available
+   * @throws {Error} If SDK is not available
    */
   ensureInit() {
-    if (!this.initialized) {
-      this.init();
-    }
-    if (!this.client) {
-      throw new Error('CasperService not initialized. Is casper-js-sdk loaded?');
+    this.init();
+    if (!this.sdkAvailable || !this.client) {
+      throw new Error(this.initError || 'CasperService not initialized. Is casper-js-sdk loaded?');
     }
   },
 
@@ -64,7 +136,7 @@ const CasperService = {
 
     try {
       // Convert public key to account hash
-      const publicKey = CLPublicKey.fromHex(publicKeyHex);
+      const publicKey = CLPublicKeyClass.fromHex(publicKeyHex);
       const accountHash = publicKey.toAccountHashStr();
 
       // Get state root hash
@@ -104,24 +176,56 @@ const CasperService = {
   },
 
   /**
-   * Get native CSPR balance
+   * Get native CSPR balance using direct RPC call (no SDK required)
    * @param {string} publicKeyHex - Account public key in hex
    * @returns {Promise<{raw: bigint, formatted: string, decimals: number}>}
    */
   async getNativeBalance(publicKeyHex) {
-    this.ensureInit();
-
     try {
-      const publicKey = CLPublicKey.fromHex(publicKeyHex);
-      const balance = await this.client.balanceOfByPublicKey(publicKey);
+      const network = EctoplasmConfig.getNetwork();
+
+      // Use the query_balance RPC method directly
+      const response = await fetch(network.rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'query_balance',
+          params: {
+            purse_identifier: {
+              main_purse_under_public_key: publicKeyHex
+            }
+          }
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        // Account might not exist or have no balance
+        if (data.error.code === -32003 || data.error.message?.includes('not found')) {
+          console.log('Account not found on chain (no transactions yet)');
+          return { raw: BigInt(0), formatted: '0', decimals: 9 };
+        }
+        throw new Error(data.error.message || 'RPC error');
+      }
+
+      const balanceBigInt = BigInt(data.result?.balance || '0');
+
+      console.log('CSPR balance fetched via RPC:', {
+        publicKey: publicKeyHex.slice(0, 10) + '...',
+        balance: balanceBigInt.toString(),
+        formatted: this.formatTokenAmount(balanceBigInt, 9)
+      });
 
       return {
-        raw: BigInt(balance.toString()),
-        formatted: this.formatTokenAmount(BigInt(balance.toString()), 9),
+        raw: balanceBigInt,
+        formatted: this.formatTokenAmount(balanceBigInt, 9),
         decimals: 9
       };
     } catch (error) {
-      console.error('Error fetching CSPR balance:', error);
+      console.error('Error fetching CSPR balance:', error.message || error);
       return { raw: BigInt(0), formatted: '0', decimals: 9 };
     }
   },
@@ -138,26 +242,36 @@ const CasperService = {
     const balances = {};
     const tokens = EctoplasmConfig.tokens;
 
-    // Fetch all CEP-18 token balances in parallel
-    const tokenPromises = Object.entries(tokens)
-      .filter(([_, config]) => config.hash) // Only tokens with deployed contracts
-      .map(async ([symbol, config]) => {
-        try {
-          const balance = await this.getTokenBalance(config.hash, window.connectedAccount);
-          return [symbol, balance];
-        } catch (e) {
-          console.warn(`Failed to fetch ${symbol} balance:`, e);
-          return [symbol, { raw: BigInt(0), formatted: '0', decimals: config.decimals }];
-        }
-      });
-
-    const results = await Promise.all(tokenPromises);
-    results.forEach(([symbol, balance]) => {
-      balances[symbol] = balance;
-    });
-
-    // Get native CSPR balance
+    // Get native CSPR balance first (uses REST API, doesn't need SDK)
     balances.CSPR = await this.getNativeBalance(window.connectedAccount);
+
+    // Only fetch CEP-18 token balances if SDK is available
+    if (this.isAvailable()) {
+      const tokenPromises = Object.entries(tokens)
+        .filter(([_, config]) => config.hash) // Only tokens with deployed contracts
+        .map(async ([symbol, config]) => {
+          try {
+            const balance = await this.getTokenBalance(config.hash, window.connectedAccount);
+            return [symbol, balance];
+          } catch (e) {
+            console.warn(`Failed to fetch ${symbol} balance:`, e);
+            return [symbol, { raw: BigInt(0), formatted: '0', decimals: config.decimals }];
+          }
+        });
+
+      const results = await Promise.all(tokenPromises);
+      results.forEach(([symbol, balance]) => {
+        balances[symbol] = balance;
+      });
+    } else {
+      // SDK not available, set token balances to 0 for now
+      console.warn('Casper SDK not available, token balances unavailable');
+      Object.entries(tokens)
+        .filter(([_, config]) => config.hash)
+        .forEach(([symbol, config]) => {
+          balances[symbol] = { raw: BigInt(0), formatted: '0', decimals: config.decimals };
+        });
+    }
 
     return balances;
   },
@@ -167,12 +281,20 @@ const CasperService = {
   // ============================================
 
   /**
-   * Get pair contract address from Factory
+   * Get pair contract address - first checks config, then Factory
    * @param {string} tokenA - First token contract hash
    * @param {string} tokenB - Second token contract hash
    * @returns {Promise<string|null>} Pair contract hash or null
    */
   async getPairAddress(tokenA, tokenB) {
+    // First, check if we have a pre-configured pair address
+    const configuredPair = this.getConfiguredPairAddress(tokenA, tokenB);
+    if (configuredPair) {
+      console.log('Using configured pair address:', configuredPair);
+      return configuredPair;
+    }
+
+    // Fall back to querying Factory contract
     this.ensureInit();
 
     try {
@@ -201,6 +323,29 @@ const CasperService = {
       console.error('Error fetching pair address:', error);
       throw error;
     }
+  },
+
+  /**
+   * Look up pair address from pre-configured pairs in config.js
+   * @param {string} tokenA - First token hash
+   * @param {string} tokenB - Second token hash
+   * @returns {string|null} Pair address or null if not configured
+   */
+  getConfiguredPairAddress(tokenA, tokenB) {
+    const pairs = EctoplasmConfig.contracts.pairs;
+    if (!pairs) return null;
+
+    // Get token symbols for this pair
+    const tokenAConfig = EctoplasmConfig.getTokenByHash(tokenA);
+    const tokenBConfig = EctoplasmConfig.getTokenByHash(tokenB);
+
+    if (!tokenAConfig || !tokenBConfig) return null;
+
+    // Try both orderings (A/B and B/A)
+    const key1 = `${tokenAConfig.symbol}/${tokenBConfig.symbol}`;
+    const key2 = `${tokenBConfig.symbol}/${tokenAConfig.symbol}`;
+
+    return pairs[key1] || pairs[key2] || null;
   },
 
   /**
@@ -336,8 +481,16 @@ const CasperService = {
     }
 
     // Check if token contracts are deployed
+    // Native CSPR (hash: null) requires special handling via WCSPR or router
     if (!tokenIn.hash || !tokenOut.hash) {
-      // Return demo quote for now if tokens not deployed
+      // For swaps involving native CSPR, use demo mode until WCSPR is integrated
+      console.log('Native CSPR swap - using demo quote (WCSPR integration pending)');
+      return this.getDemoQuote(tokenInSymbol, tokenOutSymbol, amountIn);
+    }
+
+    // Check if CasperService is available for real quotes
+    if (!this.isAvailable()) {
+      console.log('CasperService not available - using demo quote');
       return this.getDemoQuote(tokenInSymbol, tokenOutSymbol, amountIn);
     }
 
@@ -462,7 +615,7 @@ const CasperService = {
     if (!tokenHash) return false;
 
     try {
-      const accountHash = CLPublicKey.fromHex(ownerPublicKey).toAccountHashStr();
+      const accountHash = CLPublicKeyClass.fromHex(ownerPublicKey).toAccountHashStr();
       const routerHash = EctoplasmConfig.contracts.router;
 
       const stateRootHash = await this.client.nodeClient.getStateRootHash();
@@ -499,35 +652,35 @@ const CasperService = {
       throw new Error('Wallet not connected');
     }
 
-    const publicKey = CLPublicKey.fromHex(window.connectedAccount);
+    const publicKey = CLPublicKeyClass.fromHex(window.connectedAccount);
     const routerHash = EctoplasmConfig.contracts.router;
     const gasLimit = EctoplasmConfig.gasLimits.approve;
     const network = EctoplasmConfig.getNetwork();
 
     // Build deploy arguments for CEP-18 approve
-    const args = RuntimeArgs.fromMap({
-      spender: CLValueBuilder.key(
-        CLValueBuilder.byteArray(
-          Uint8Array.from(Buffer.from(routerHash.replace('hash-', ''), 'hex'))
+    const args = RuntimeArgsClass.fromMap({
+      spender: CLValueBuilderClass.key(
+        CLValueBuilderClass.byteArray(
+          hexToBytes(routerHash)
         )
       ),
-      amount: CLValueBuilder.u256(amount.toString())
+      amount: CLValueBuilderClass.u256(amount.toString())
     });
 
     // Build the deploy
-    const deploy = DeployUtil.makeDeploy(
-      new DeployUtil.DeployParams(
+    const deploy = DeployUtilClass.makeDeploy(
+      new DeployUtilClass.DeployParams(
         publicKey,
         network.chainName,
         1, // Gas price
         3600000 // TTL: 1 hour
       ),
-      DeployUtil.ExecutableDeployItem.newStoredContractByHash(
-        Uint8Array.from(Buffer.from(tokenHash.replace('hash-', ''), 'hex')),
+      DeployUtilClass.ExecutableDeployItem.newStoredContractByHash(
+        hexToBytes(tokenHash),
         'approve',
         args
       ),
-      DeployUtil.standardPayment(gasLimit)
+      DeployUtilClass.standardPayment(gasLimit)
     );
 
     // Sign with connected wallet
@@ -580,7 +733,7 @@ const CasperService = {
     }
 
     // Step 2: Build swap transaction
-    const publicKey = CLPublicKey.fromHex(window.connectedAccount);
+    const publicKey = CLPublicKeyClass.fromHex(window.connectedAccount);
     const routerHash = EctoplasmConfig.contracts.router;
     const gasLimit = EctoplasmConfig.gasLimits.swap;
     const network = EctoplasmConfig.getNetwork();
@@ -593,32 +746,201 @@ const CasperService = {
     const amountOutMin = quote.amountOutRaw * slippageMultiplier / BigInt(10000);
 
     // Build path as list of contract hashes
-    const pathList = new CLList([
-      CLValueBuilder.byteArray(Uint8Array.from(Buffer.from(quote.path[0].replace('hash-', ''), 'hex'))),
-      CLValueBuilder.byteArray(Uint8Array.from(Buffer.from(quote.path[1].replace('hash-', ''), 'hex')))
+    const pathList = new CLListClass([
+      CLValueBuilderClass.byteArray(hexToBytes(quote.path[0])),
+      CLValueBuilderClass.byteArray(hexToBytes(quote.path[1]))
     ]);
 
-    const args = RuntimeArgs.fromMap({
-      amount_in: CLValueBuilder.u256(quote.amountInRaw.toString()),
-      amount_out_min: CLValueBuilder.u256(amountOutMin.toString()),
+    const args = RuntimeArgsClass.fromMap({
+      amount_in: CLValueBuilderClass.u256(quote.amountInRaw.toString()),
+      amount_out_min: CLValueBuilderClass.u256(amountOutMin.toString()),
       path: pathList,
-      to: CLValueBuilder.key(CLValueBuilder.byteArray(publicKey.toAccountHash())),
-      deadline: CLValueBuilder.u64(deadline)
+      to: CLValueBuilderClass.key(CLValueBuilderClass.byteArray(publicKey.toAccountHash())),
+      deadline: CLValueBuilderClass.u64(deadline)
     });
 
-    const deploy = DeployUtil.makeDeploy(
-      new DeployUtil.DeployParams(
+    const deploy = DeployUtilClass.makeDeploy(
+      new DeployUtilClass.DeployParams(
         publicKey,
         network.chainName,
         1,
         3600000
       ),
-      DeployUtil.ExecutableDeployItem.newStoredContractByHash(
-        Uint8Array.from(Buffer.from(routerHash.replace('hash-', ''), 'hex')),
+      DeployUtilClass.ExecutableDeployItem.newStoredContractByHash(
+        hexToBytes(routerHash),
         'swap_exact_tokens_for_tokens',
         args
       ),
-      DeployUtil.standardPayment(gasLimit)
+      DeployUtilClass.standardPayment(gasLimit)
+    );
+
+    const signedDeploy = await this.signDeploy(deploy);
+    const deployHash = await this.client.putDeploy(signedDeploy);
+
+    return deployHash;
+  },
+
+  /**
+   * Add liquidity to a pool
+   * @param {string} tokenASymbol - First token symbol
+   * @param {string} tokenBSymbol - Second token symbol
+   * @param {string} amountA - Amount of token A (human-readable)
+   * @param {string} amountB - Amount of token B (human-readable)
+   * @param {number} slippagePercent - Slippage tolerance
+   * @returns {Promise<string>} Deploy hash
+   */
+  async addLiquidity(tokenASymbol, tokenBSymbol, amountA, amountB, slippagePercent = 1.0) {
+    this.ensureInit();
+
+    if (!window.connectedAccount || !window.connectedWallet) {
+      throw new Error('Wallet not connected');
+    }
+
+    const tokenA = EctoplasmConfig.getToken(tokenASymbol);
+    const tokenB = EctoplasmConfig.getToken(tokenBSymbol);
+
+    if (!tokenA?.hash || !tokenB?.hash) {
+      throw new Error('Invalid tokens or token contracts not deployed');
+    }
+
+    const publicKey = CLPublicKeyClass.fromHex(window.connectedAccount);
+    const routerHash = EctoplasmConfig.contracts.router;
+    const gasLimit = EctoplasmConfig.gasLimits.addLiquidity;
+    const network = EctoplasmConfig.getNetwork();
+
+    // Parse amounts
+    const amountADesired = this.parseTokenAmount(amountA, tokenA.decimals);
+    const amountBDesired = this.parseTokenAmount(amountB, tokenB.decimals);
+
+    // Calculate minimum amounts with slippage
+    const slippageMultiplier = BigInt(Math.floor((1 - slippagePercent / 100) * 10000));
+    const amountAMin = amountADesired * slippageMultiplier / BigInt(10000);
+    const amountBMin = amountBDesired * slippageMultiplier / BigInt(10000);
+
+    // Calculate deadline
+    const deadline = Date.now() + (EctoplasmConfig.swap.deadlineMinutes * 60 * 1000);
+
+    // Step 1: Approve both tokens for Router
+    for (const [tokenHash, amount] of [[tokenA.hash, amountADesired], [tokenB.hash, amountBDesired]]) {
+      const hasAllowance = await this.checkAllowance(tokenHash, window.connectedAccount, amount);
+      if (!hasAllowance) {
+        console.log(`Approving ${tokenHash}...`);
+        const approvalHash = await this.approveToken(tokenHash, amount);
+        const approvalResult = await this.waitForDeploy(approvalHash);
+        if (!approvalResult.success) {
+          throw new Error(`Token approval failed: ${approvalResult.error}`);
+        }
+      }
+    }
+
+    // Step 2: Build add_liquidity transaction
+    const args = RuntimeArgsClass.fromMap({
+      token_a: CLValueBuilderClass.key(CLValueBuilderClass.byteArray(hexToBytes(tokenA.hash))),
+      token_b: CLValueBuilderClass.key(CLValueBuilderClass.byteArray(hexToBytes(tokenB.hash))),
+      amount_a_desired: CLValueBuilderClass.u256(amountADesired.toString()),
+      amount_b_desired: CLValueBuilderClass.u256(amountBDesired.toString()),
+      amount_a_min: CLValueBuilderClass.u256(amountAMin.toString()),
+      amount_b_min: CLValueBuilderClass.u256(amountBMin.toString()),
+      to: CLValueBuilderClass.key(CLValueBuilderClass.byteArray(publicKey.toAccountHash())),
+      deadline: CLValueBuilderClass.u64(deadline)
+    });
+
+    const deploy = DeployUtilClass.makeDeploy(
+      new DeployUtilClass.DeployParams(
+        publicKey,
+        network.chainName,
+        1,
+        3600000
+      ),
+      DeployUtilClass.ExecutableDeployItem.newStoredContractByHash(
+        hexToBytes(routerHash),
+        'add_liquidity',
+        args
+      ),
+      DeployUtilClass.standardPayment(gasLimit)
+    );
+
+    const signedDeploy = await this.signDeploy(deploy);
+    const deployHash = await this.client.putDeploy(signedDeploy);
+
+    return deployHash;
+  },
+
+  /**
+   * Remove liquidity from a pool
+   * @param {string} tokenASymbol - First token symbol
+   * @param {string} tokenBSymbol - Second token symbol
+   * @param {string} lpAmount - Amount of LP tokens to burn (human-readable)
+   * @param {number} slippagePercent - Slippage tolerance
+   * @returns {Promise<string>} Deploy hash
+   */
+  async removeLiquidity(tokenASymbol, tokenBSymbol, lpAmount, slippagePercent = 1.0) {
+    this.ensureInit();
+
+    if (!window.connectedAccount || !window.connectedWallet) {
+      throw new Error('Wallet not connected');
+    }
+
+    const tokenA = EctoplasmConfig.getToken(tokenASymbol);
+    const tokenB = EctoplasmConfig.getToken(tokenBSymbol);
+
+    if (!tokenA?.hash || !tokenB?.hash) {
+      throw new Error('Invalid tokens or token contracts not deployed');
+    }
+
+    const publicKey = CLPublicKeyClass.fromHex(window.connectedAccount);
+    const routerHash = EctoplasmConfig.contracts.router;
+    const lpTokenHash = EctoplasmConfig.contracts.lpToken;
+    const gasLimit = EctoplasmConfig.gasLimits.removeLiquidity;
+    const network = EctoplasmConfig.getNetwork();
+
+    // LP tokens typically have 18 decimals
+    const lpAmountRaw = this.parseTokenAmount(lpAmount, 18);
+
+    // Calculate minimum amounts (we'd need reserves to calculate exact amounts)
+    // For now, use very conservative minimum to ensure transaction succeeds
+    const slippageMultiplier = BigInt(Math.floor((1 - slippagePercent / 100) * 10000));
+    const amountAMin = BigInt(0); // Allow any amount (could be improved with reserve calculation)
+    const amountBMin = BigInt(0);
+
+    // Calculate deadline
+    const deadline = Date.now() + (EctoplasmConfig.swap.deadlineMinutes * 60 * 1000);
+
+    // Step 1: Approve LP tokens for Router
+    const hasAllowance = await this.checkAllowance(lpTokenHash, window.connectedAccount, lpAmountRaw);
+    if (!hasAllowance) {
+      console.log('Approving LP tokens...');
+      const approvalHash = await this.approveToken(lpTokenHash, lpAmountRaw);
+      const approvalResult = await this.waitForDeploy(approvalHash);
+      if (!approvalResult.success) {
+        throw new Error(`LP token approval failed: ${approvalResult.error}`);
+      }
+    }
+
+    // Step 2: Build remove_liquidity transaction
+    const args = RuntimeArgsClass.fromMap({
+      token_a: CLValueBuilderClass.key(CLValueBuilderClass.byteArray(hexToBytes(tokenA.hash))),
+      token_b: CLValueBuilderClass.key(CLValueBuilderClass.byteArray(hexToBytes(tokenB.hash))),
+      liquidity: CLValueBuilderClass.u256(lpAmountRaw.toString()),
+      amount_a_min: CLValueBuilderClass.u256(amountAMin.toString()),
+      amount_b_min: CLValueBuilderClass.u256(amountBMin.toString()),
+      to: CLValueBuilderClass.key(CLValueBuilderClass.byteArray(publicKey.toAccountHash())),
+      deadline: CLValueBuilderClass.u64(deadline)
+    });
+
+    const deploy = DeployUtilClass.makeDeploy(
+      new DeployUtilClass.DeployParams(
+        publicKey,
+        network.chainName,
+        1,
+        3600000
+      ),
+      DeployUtilClass.ExecutableDeployItem.newStoredContractByHash(
+        hexToBytes(routerHash),
+        'remove_liquidity',
+        args
+      ),
+      DeployUtilClass.standardPayment(gasLimit)
     );
 
     const signedDeploy = await this.signDeploy(deploy);
@@ -631,7 +953,7 @@ const CasperService = {
    * Sign deploy using connected wallet provider
    */
   async signDeploy(deploy) {
-    const deployJson = DeployUtil.deployToJson(deploy);
+    const deployJson = DeployUtilClass.deployToJson(deploy);
 
     if (window.connectedWallet === 'casperwallet') {
       // CasperWallet browser extension
@@ -640,10 +962,10 @@ const CasperService = {
         JSON.stringify(deployJson),
         window.connectedAccount
       );
-      return DeployUtil.setSignature(
+      return DeployUtilClass.setSignature(
         deploy,
         signature.signature,
-        CLPublicKey.fromHex(window.connectedAccount)
+        CLPublicKeyClass.fromHex(window.connectedAccount)
       );
     } else if (window.connectedWallet === 'caspersigner') {
       // Casper Signer (legacy)
@@ -652,11 +974,11 @@ const CasperService = {
         deployJson,
         window.connectedAccount
       );
-      return DeployUtil.deployFromJson(signedDeployJson).unwrap();
+      return DeployUtilClass.deployFromJson(signedDeployJson).unwrap();
     } else if (window.connectedWallet === 'csprcloud') {
       // CSPR.Cloud wallet
       const signedDeployJson = await window.csprclick.sign(deployJson);
-      return DeployUtil.deployFromJson(signedDeployJson).unwrap();
+      return DeployUtilClass.deployFromJson(signedDeployJson).unwrap();
     }
 
     throw new Error(`Unsupported wallet: ${window.connectedWallet}`);

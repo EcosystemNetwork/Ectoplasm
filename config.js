@@ -7,15 +7,19 @@ const EctoplasmConfig = {
   networks: {
     testnet: {
       name: 'Casper Testnet',
-      rpcUrl: 'https://rpc.testnet.casperlabs.io/rpc',
+      rpcUrl: 'https://node.testnet.casper.network/rpc',
+      apiUrl: 'https://api.testnet.cspr.cloud',
       chainName: 'casper-test',
     },
     mainnet: {
       name: 'Casper Mainnet',
-      rpcUrl: 'https://rpc.mainnet.casperlabs.io/rpc',
+      rpcUrl: 'https://node.mainnet.casper.network/rpc',
+      apiUrl: 'https://api.cspr.cloud',
       chainName: 'casper',
     }
   },
+
+  // Note: Balance queries now use direct RPC calls - no API key required
 
   // Current Network (toggle for deployment)
   currentNetwork: 'testnet',

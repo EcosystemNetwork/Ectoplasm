@@ -651,7 +651,11 @@ async function connectWalletHandler(){
 
       // Refresh token balances after connection
       if (typeof CasperService !== 'undefined') {
+        console.log('CasperService available, fetching balances...');
+        CasperService.init(); // Ensure initialized
         updateTokenBalances();
+      } else {
+        console.warn('CasperService not available - balance fetching skipped');
       }
     }
   }catch(err){
@@ -1316,9 +1320,17 @@ async function demoSwap(){
     return;
   }
 
-  // Check if this is a demo quote (contracts not deployed)
+  // Check if this is a demo quote (CSPR swaps or SDK not available)
   if (window.currentSwapQuote.demo) {
-    alert('Demo mode: Token contracts not yet deployed on testnet.\n\nOnce contracts are deployed and config.js is updated with token hashes, real swaps will be enabled.');
+    const tokenIn = window.currentSwapQuote.tokenIn?.symbol || 'Unknown';
+    const tokenOut = window.currentSwapQuote.tokenOut?.symbol || 'Unknown';
+
+    // Check if this is a CSPR swap
+    if (tokenIn === 'CSPR' || tokenOut === 'CSPR') {
+      alert('CSPR swaps coming soon!\n\nNative CSPR swaps require WCSPR integration. For now, try swapping between tokens like ECTO, USDC, WETH, or WBTC.');
+    } else {
+      alert('Demo mode: Blockchain connection unavailable.\n\nPlease ensure the Casper SDK is loaded and try refreshing the page.');
+    }
     return;
   }
 
@@ -1406,6 +1418,11 @@ async function updateTokenBalances() {
     // Store balances globally for easy access
     window.tokenBalances = balances;
     console.log('Token balances updated:', balances);
+
+    // Also update liquidity form balances if on that page
+    if (typeof updateLiquidityBalances === 'function') {
+      updateLiquidityBalances();
+    }
   } catch (error) {
     console.error('Failed to update token balances:', error);
   }
@@ -2485,4 +2502,150 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', populateMockLPPositions);
 } else {
   populateMockLPPositions();
+}
+
+// ============================================
+// Liquidity Form Handlers
+// ============================================
+
+/**
+ * Setup liquidity form handlers
+ */
+function setupLiquidityForm() {
+  const addLiquidityForm = document.getElementById('addLiquidityForm');
+  const addLiquidityTab = document.getElementById('addLiquidityTab');
+  const positionsTab = document.getElementById('positionsTab');
+  const addLiquidityPanel = document.getElementById('addLiquidityPanel');
+  const positionsPanel = document.getElementById('positionsPanel');
+
+  // Tab switching
+  if (addLiquidityTab && positionsTab) {
+    addLiquidityTab.addEventListener('click', () => {
+      addLiquidityTab.classList.add('filled');
+      positionsTab.classList.remove('filled');
+      if (addLiquidityPanel) addLiquidityPanel.hidden = false;
+      if (positionsPanel) positionsPanel.hidden = true;
+    });
+
+    positionsTab.addEventListener('click', () => {
+      positionsTab.classList.add('filled');
+      addLiquidityTab.classList.remove('filled');
+      if (positionsPanel) positionsPanel.hidden = false;
+      if (addLiquidityPanel) addLiquidityPanel.hidden = true;
+    });
+  }
+
+  // Form submission
+  if (addLiquidityForm) {
+    addLiquidityForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const tokenA = document.getElementById('lpTokenA')?.value;
+      const tokenB = document.getElementById('lpTokenB')?.value;
+      const amountA = document.getElementById('lpAmountA')?.value;
+      const amountB = document.getElementById('lpAmountB')?.value;
+      const btn = document.getElementById('addLiquidityBtn');
+
+      if (!tokenA || !tokenB || !amountA || !amountB) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      if (tokenA === tokenB) {
+        alert('Please select different tokens');
+        return;
+      }
+
+      if (!window.connectedAccount) {
+        alert('Please connect your wallet first');
+        return;
+      }
+
+      if (typeof CasperService === 'undefined' || !CasperService.isAvailable()) {
+        alert('Blockchain service unavailable. Please refresh the page.');
+        return;
+      }
+
+      const originalText = btn?.textContent || 'Add Liquidity';
+
+      try {
+        if (btn) {
+          btn.textContent = 'Approving...';
+          btn.disabled = true;
+        }
+
+        const deployHash = await CasperService.addLiquidity(tokenA, tokenB, amountA, amountB);
+
+        if (btn) btn.textContent = 'Confirming...';
+
+        const result = await CasperService.waitForDeploy(deployHash);
+
+        if (result.success) {
+          alert(`Liquidity added successfully!\n\nTransaction hash:\n${deployHash}`);
+
+          // Clear form
+          document.getElementById('lpAmountA').value = '';
+          document.getElementById('lpAmountB').value = '';
+          document.getElementById('poolShare').textContent = '0.00%';
+          document.getElementById('lpTokensReceived').textContent = '0.00';
+
+          // Refresh balances
+          if (typeof updateTokenBalances === 'function') {
+            await updateTokenBalances();
+          }
+        } else {
+          alert(`Adding liquidity failed: ${result.error}`);
+        }
+      } catch (error) {
+        console.error('Add liquidity error:', error);
+        alert(`Failed to add liquidity: ${error.message}`);
+      } finally {
+        if (btn) {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }
+      }
+    });
+  }
+
+  // Update balance displays when tokens change
+  const lpTokenA = document.getElementById('lpTokenA');
+  const lpTokenB = document.getElementById('lpTokenB');
+
+  if (lpTokenA) {
+    lpTokenA.addEventListener('change', updateLiquidityBalances);
+  }
+  if (lpTokenB) {
+    lpTokenB.addEventListener('change', updateLiquidityBalances);
+  }
+}
+
+/**
+ * Update balance displays for liquidity form
+ */
+async function updateLiquidityBalances() {
+  if (!window.tokenBalances) return;
+
+  const tokenASymbol = document.getElementById('lpTokenA')?.value?.toUpperCase();
+  const tokenBSymbol = document.getElementById('lpTokenB')?.value?.toUpperCase();
+
+  const balanceA = window.tokenBalances[tokenASymbol];
+  const balanceB = window.tokenBalances[tokenBSymbol];
+
+  const balanceAEl = document.querySelector('#addLiquidityPanel .token-row:first-of-type .balance');
+  const balanceBEl = document.querySelector('#addLiquidityPanel .token-row:last-of-type .balance');
+
+  if (balanceAEl && balanceA) {
+    balanceAEl.textContent = `Balance: ${balanceA.formatted}`;
+  }
+  if (balanceBEl && balanceB) {
+    balanceBEl.textContent = `Balance: ${balanceB.formatted}`;
+  }
+}
+
+// Initialize liquidity form when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupLiquidityForm);
+} else {
+  setupLiquidityForm();
 }

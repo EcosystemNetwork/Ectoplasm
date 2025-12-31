@@ -155,9 +155,64 @@
           </div>
           <div class="hero-card panel">
             <div class="panel-row" style="display: block;">
-              <p class="muted tiny">Your Liquid Staking Positions</p>
-              <div id="lpPositionsContainer">
-                <!-- Liquid staking positions will be populated by JavaScript -->
+              <div class="lp-tabs" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button class="pill filled" id="addLiquidityTab">Add Liquidity</button>
+                <button class="pill" id="positionsTab">Your Positions</button>
+              </div>
+
+              <!-- Add Liquidity Form -->
+              <div id="addLiquidityPanel">
+                <form id="addLiquidityForm" class="lp-form">
+                  <div class="token-row" style="margin-bottom: 12px;">
+                    <div class="token-field">
+                      <label class="muted tiny">Token A</label>
+                      <div class="input shell">
+                        <input type="number" id="lpAmountA" placeholder="0.00" step="any" min="0" />
+                        <select id="lpTokenA" class="token-select">
+                          <option value="ECTO">ECTO</option>
+                          <option value="USDC" selected>USDC</option>
+                          <option value="WETH">WETH</option>
+                          <option value="WBTC">WBTC</option>
+                        </select>
+                      </div>
+                      <span class="balance muted tiny">Balance: 0</span>
+                    </div>
+                  </div>
+                  <div class="token-row" style="margin-bottom: 12px;">
+                    <div class="token-field">
+                      <label class="muted tiny">Token B</label>
+                      <div class="input shell">
+                        <input type="number" id="lpAmountB" placeholder="0.00" step="any" min="0" />
+                        <select id="lpTokenB" class="token-select">
+                          <option value="ECTO" selected>ECTO</option>
+                          <option value="USDC">USDC</option>
+                          <option value="WETH">WETH</option>
+                          <option value="WBTC">WBTC</option>
+                        </select>
+                      </div>
+                      <span class="balance muted tiny">Balance: 0</span>
+                    </div>
+                  </div>
+                  <div class="lp-summary" style="padding: 12px; background: var(--glass); border-radius: 8px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                      <span class="muted tiny">Pool Share</span>
+                      <span id="poolShare">0.00%</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                      <span class="muted tiny">LP Tokens Received</span>
+                      <span id="lpTokensReceived">0.00</span>
+                    </div>
+                  </div>
+                  <button type="submit" id="addLiquidityBtn" class="btn primary full">Add Liquidity</button>
+                </form>
+              </div>
+
+              <!-- Positions Panel -->
+              <div id="positionsPanel" hidden>
+                <p class="muted tiny">Your Liquidity Positions</p>
+                <div id="lpPositionsContainer">
+                  <!-- LP positions will be populated by JavaScript -->
+                </div>
               </div>
             </div>
           </div>
@@ -549,6 +604,10 @@
     </div>
   </footer>
 
+  <!-- Casper SDK for blockchain interactions -->
+  <script src="https://cdn.jsdelivr.net/npm/casper-js-sdk@2.15.4/dist/lib.web.js"></script>
+  <script src="config.js"></script>
+  <script src="casper.js"></script>
   <script src="script.js" defer></script>
 </body>
 </html>

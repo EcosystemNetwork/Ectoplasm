@@ -15,7 +15,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.coingecko.com https://*.cspr.cloud https://cspr.cloud https://rpc.testnet.casperlabs.io https://rpc.mainnet.casperlabs.io; font-src 'self'"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.cspr.click; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.coingecko.com https://*.cspr.cloud https://cspr.cloud https://api.testnet.cspr.cloud https://api.cspr.cloud https://rpc.testnet.casperlabs.io https://rpc.mainnet.casperlabs.io https://node.testnet.casper.network https://node.mainnet.casper.network; font-src 'self'"
         }
       ]
     },
