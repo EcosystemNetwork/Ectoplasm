@@ -113,14 +113,51 @@ const CasperService = {
 
     try {
       const publicKey = CLPublicKey.fromHex(publicKeyHex);
-      const balance = await this.client.balanceOfByPublicKey(publicKey);
+      
+      // Use the account hash to query balance via state_get_balance RPC
+      // This is more reliable across Casper network versions
+      const accountHash = publicKey.toAccountHashStr();
+      const stateRootHash = await this.client.nodeClient.getStateRootHash();
+      
+      // Query the account's main purse balance
+      // First, get the account info to find the main purse URef
+      const accountInfo = await this.client.nodeClient.getBlockState(
+        stateRootHash,
+        accountHash,
+        []
+      );
+      
+      // Extract the main purse URef from account info
+      const mainPurse = accountInfo?.Account?.main_purse;
+      if (!mainPurse) {
+        // Account may not exist yet (no balance)
+        return { raw: BigInt(0), formatted: '0', decimals: 9 };
+      }
+      
+      // Query the balance of the main purse
+      const balanceResult = await this.client.nodeClient.getAccountBalance(
+        stateRootHash,
+        mainPurse
+      );
+      
+      // Safely convert balance to BigInt, defaulting to 0 if null/undefined
+      const balance = balanceResult ? BigInt(balanceResult.toString()) : BigInt(0);
 
       return {
-        raw: BigInt(balance.toString()),
-        formatted: this.formatTokenAmount(BigInt(balance.toString()), 9),
+        raw: balance,
+        formatted: this.formatTokenAmount(balance, 9),
         decimals: 9
       };
     } catch (error) {
+      // Handle specific error cases
+      if (error.message?.includes('ValueNotFound') || 
+          error.message?.includes('Failed to find') ||
+          error.message?.includes('query_balance') ||
+          error.code === -32003 ||
+          error.code === -32602) {
+        // Account doesn't exist or has no balance
+        return { raw: BigInt(0), formatted: '0', decimals: 9 };
+      }
       console.error('Error fetching CSPR balance:', error);
       return { raw: BigInt(0), formatted: '0', decimals: 9 };
     }
@@ -636,13 +673,32 @@ const CasperService = {
     if (window.connectedWallet === 'casperwallet') {
       // CasperWallet browser extension
       const provider = window.CasperWalletProvider();
-      const signature = await provider.sign(
+      const response = await provider.sign(
         JSON.stringify(deployJson),
         window.connectedAccount
       );
+      
+      // Handle different response formats from CasperWallet
+      let signatureHex;
+      if (response.signature) {
+        signatureHex = response.signature;
+      } else if (response.deploy?.approvals?.[0]?.signature) {
+        signatureHex = response.deploy.approvals[0].signature;
+      } else {
+        throw new Error('Invalid signature response from CasperWallet');
+      }
+      
+      // Ensure signature is properly formatted (with algorithm prefix)
+      if (!signatureHex.startsWith('01') && !signatureHex.startsWith('02')) {
+        // Add the appropriate signature prefix based on key type (01=Ed25519, 02=Secp256k1)
+        const publicKey = CLPublicKey.fromHex(window.connectedAccount);
+        const keyType = publicKey.isEd25519() ? '01' : '02';
+        signatureHex = keyType + signatureHex;
+      }
+      
       return DeployUtil.setSignature(
         deploy,
-        signature.signature,
+        signatureHex,
         CLPublicKey.fromHex(window.connectedAccount)
       );
     } else if (window.connectedWallet === 'caspersigner') {
@@ -652,11 +708,25 @@ const CasperService = {
         deployJson,
         window.connectedAccount
       );
-      return DeployUtil.deployFromJson(signedDeployJson).unwrap();
+      
+      // Handle both direct JSON and wrapped response formats
+      const deployData = signedDeployJson.deploy || signedDeployJson;
+      const result = DeployUtil.deployFromJson(deployData);
+      if (result.err) {
+        throw new Error(`Failed to parse signed deploy: ${result.err}`);
+      }
+      return result.unwrap();
     } else if (window.connectedWallet === 'csprcloud') {
       // CSPR.Cloud wallet
       const signedDeployJson = await window.csprclick.sign(deployJson);
-      return DeployUtil.deployFromJson(signedDeployJson).unwrap();
+      
+      // Handle both direct JSON and wrapped response formats
+      const deployData = signedDeployJson.deploy || signedDeployJson;
+      const result = DeployUtil.deployFromJson(deployData);
+      if (result.err) {
+        throw new Error(`Failed to parse signed deploy: ${result.err}`);
+      }
+      return result.unwrap();
     }
 
     throw new Error(`Unsupported wallet: ${window.connectedWallet}`);
